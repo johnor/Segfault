@@ -1,0 +1,50 @@
+compiler:
+  path: gcc
+  source_path:     'src/'
+  unit_tests_path: &unit_tests_path 'build/unit_test/'
+  build_path:      &build_path 'build/release/'
+  options:
+    - -c
+  includes:
+    prefix: '-I'
+    items:
+      - 'src/'
+      - '../src/'
+      - '../vendor/unity/src/'
+      - '../vendor/unity/examples/helper/'
+      - 'mocks/'
+      - *unit_tests_path
+  defines:
+    prefix: '-D'
+    items:
+      - __monitor
+  object_files:
+    prefix: '-o'
+    extension: '.o'
+    destination: *build_path
+linker:
+  path: gcc
+  options:
+    - -lm
+  includes:
+    prefix: '-I'
+  object_files:
+    path: *build_path
+    extension: '.o'
+  bin_files:
+    prefix: '-o'
+    extension: '.exe'
+    destination: *build_path
+:cmock:
+  :plugins: [array, callback, ignore, ignore_arg, callback, return_thru_ptr]
+#  :includes:
+#    - Types.h
+  :mock_path: build/unit_test/mocks
+  :mock_prefix: mock_
+# Using ignore with args_only makes all the following expect calls also ignore args.
+# Use IgnoreArg plugin instead when argument(s) should be ignored.
+# Ignore can then be used to Ignore all calls on a method instead.
+## Configures ignore plugin to expect call but ignore arguments (really want to have both..)
+##  :ignore: :args_only
+
+colour: true

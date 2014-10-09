@@ -1,0 +1,31 @@
+AUTO_SRC_DIR = $(BUILD_OUTPUT_DIR)/auto_src
+UNITY_SRC_DIR = $(UNITY_DIR)/src
+UNITY_AUTO_DIR = $(UNITY_DIR)/auto
+UNITY_LIB = $(LIB_DIR)/unity.a
+UNITY_SRC = $(UNITY_SRC_DIR)/unity.c
+UNITY_OBJ = $(OBJ_DIR)/unity.o
+
+CFLAGS += -isystem$(UNITY_SRC_DIR)
+UNITY_WARNING_SUPPRESSION = -Wno-missing-braces
+
+GEN_TEST_RUNNER = @$(RUBY) $(UNITY_AUTO_DIR)/generate_test_runner.rb
+
+.PRECIOUS: $(OBJ_DIR)/%_runner.o
+$(OBJ_DIR)/%_runner.o : $(AUTO_SRC_DIR)/%_runner.c
+	@echo Compiling $^
+	$(CC) $(CFLAGS) -c $^ -o $@
+	@echo ' '
+ 
+$(OBJ_DIR)/unity.o : $(UNITY_SRC)
+	@echo Compiling $^
+	$(CC) $(CFLAGS) $(UNITY_WARNING_SUPPRESSION) -c $^ -o $@
+	@echo ' '
+
+$(UNITY_LIB) : $(OBJ_DIR)/unity.o
+	@echo Archiving $^ into $@
+	$(AR) $(ARFLAGS) $@ $(OBJ_DIR)/unity.o
+	@echo ' '
+
+$(AUTO_SRC_DIR) :
+	@$(MKDIR) $@
+	@echo ' '
