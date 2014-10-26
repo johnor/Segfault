@@ -8,7 +8,7 @@
 #ifndef MODEL_H_
 #define MODEL_H_
 
-#include "../headers/int_typedefs.h"
+#include "../headers/numeric_typedefs.h"
 #include <string>
 #include <vector>
 

@@ -1,12 +1,19 @@
+/*
+* This file defines classes implementing the Measurement interface.
+*/
+
 #include "measurements.h"
-#include "../headers/int_typedefs.h"
+
+#include "../headers/numeric_typedefs.h"
 #include "../interfaces/measurement.h"
 #include "../interfaces/measurement_visitor.h"
+
 #include <string>
 #include <sstream>
+#include <iomanip>
 
 /* Scalar measurement */
-ScalarMeasurement::ScalarMeasurement(const S16 value)
+ScalarMeasurement::ScalarMeasurement(const F32 value)
 	: value(value)
 {
 }
@@ -15,6 +22,7 @@ std::string ScalarMeasurement::ToString(const std::string& header, const std::st
 {
 	std::ostringstream os;
 
+	os << std::fixed << std::setprecision(2);
 	os << header << '\n';
 	os << "Value: " << value << ' ' << unit;
 	os << '\n';
@@ -22,13 +30,13 @@ std::string ScalarMeasurement::ToString(const std::string& header, const std::st
 	return os.str();
 }
 
-S16 ScalarMeasurement::GetValue() const
+F32 ScalarMeasurement::GetValue() const
 {
 	return value;
 }
 
 /* Vectorial measurement */
-VectorialMeasurement::VectorialMeasurement(const S16 xValue, const S16 yValue, const S16 zValue)
+VectorialMeasurement::VectorialMeasurement(const F32 xValue, const F32 yValue, const F32 zValue)
 	: xValue(xValue), yValue(yValue), zValue(zValue)
 {
 }
@@ -37,6 +45,7 @@ std::string VectorialMeasurement::ToString(const std::string& header, const std:
 {
 	std::ostringstream os;
 
+	os << std::fixed << std::setprecision(2);
 	os << header << '\n';
 	os << "X: " << xValue << ' ' << unit;
 	os << "Y: " << yValue << ' ' << unit;
@@ -46,23 +55,23 @@ std::string VectorialMeasurement::ToString(const std::string& header, const std:
 	return os.str();
 }
 
-S16 VectorialMeasurement::GetXValue() const
+F32 VectorialMeasurement::GetXValue() const
 {
 	return xValue;
 }
 
-S16 VectorialMeasurement::GetYValue() const
+F32 VectorialMeasurement::GetYValue() const
 {
 	return yValue;
 }
 
-S16 VectorialMeasurement::GetZValue() const
+F32 VectorialMeasurement::GetZValue() const
 {
 	return zValue;
 }
 
 /* Accelerometer measurement */
-AccelerometerMeasurement::AccelerometerMeasurement(const S16 xValue, const S16 yValue, const S16 zValue)
+AccelerometerMeasurement::AccelerometerMeasurement(const F32 xValue, const F32 yValue, const F32 zValue)
 	: VectorialMeasurement(xValue, yValue, zValue)
 {
 }
@@ -78,7 +87,7 @@ void AccelerometerMeasurement::Accept(MeasurementVisitor& visitor) const
 }
 
 /* Gyroscope measurement */
-GyroscopeMeasurement::GyroscopeMeasurement(const S16 xValue, const S16 yValue, const S16 zValue)
+GyroscopeMeasurement::GyroscopeMeasurement(const F32 xValue, const F32 yValue, const F32 zValue)
 	: VectorialMeasurement(xValue, yValue, zValue)
 {
 }
@@ -94,14 +103,14 @@ void GyroscopeMeasurement::Accept(MeasurementVisitor& visitor) const
 }
 
 /* Compass measurement */
-CompassMeasurement::CompassMeasurement(const S16 xValue, const S16 yValue, const S16 zValue)
+CompassMeasurement::CompassMeasurement(const F32 xValue, const F32 yValue, const F32 zValue)
 	: VectorialMeasurement(xValue, yValue, zValue)
 {
 }
 
 std::string CompassMeasurement::ToString() const
 {
-	return VectorialMeasurement::ToString("Accelerometer measurement", "m/s^2");
+	return VectorialMeasurement::ToString("Compass measurement", "T");
 }
 
 void CompassMeasurement::Accept(MeasurementVisitor& visitor) const
@@ -110,7 +119,7 @@ void CompassMeasurement::Accept(MeasurementVisitor& visitor) const
 }
 
 /* Pressure measurement */
-PressureMeasurement::PressureMeasurement(const S16 value)
+PressureMeasurement::PressureMeasurement(const F32 value)
 	: ScalarMeasurement(value)
 {
 }
@@ -126,7 +135,7 @@ void PressureMeasurement::Accept(MeasurementVisitor& visitor) const
 }
 
 /* Temperature measurement */
-TemperatureMeasurement::TemperatureMeasurement(const S16 value)
+TemperatureMeasurement::TemperatureMeasurement(const F32 value)
 	: ScalarMeasurement(value)
 {
 }
