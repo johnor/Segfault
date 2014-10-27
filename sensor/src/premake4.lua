@@ -16,5 +16,8 @@ solution "Sensor"
       configuration "Release"
          defines { "NDEBUG" }
          flags { "Optimize" }
-         targetdir "bin/release"  
+         targetdir "bin/release" 
+
+      configuration { "linux", "gmake" }
+         buildoptions { "-std=c++0x" }
 
