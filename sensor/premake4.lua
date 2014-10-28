@@ -32,12 +32,12 @@ newplatform {
 solution "Sensor"
    configurations { "Debug", "Release" }
    platforms {"rpi", "native"}
+   location "build"
    
    project "Sensor"
       kind "ConsoleApp"
       language "C++"
-      location "build"
-      
+
       files { "src/**.h", "src/**.cc"}
 
       configuration "Debug"
