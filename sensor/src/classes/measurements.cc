@@ -81,9 +81,9 @@ std::string AccelerometerMeasurement::ToString() const
 	return VectorialMeasurement::ToString("Accelerometer measurement", "m/s^2");
 }
 
-void AccelerometerMeasurement::Accept(MeasurementVisitor& visitor) const
+void AccelerometerMeasurement::Accept(MeasurementVisitor *const visitor) const
 {
-	visitor.Visit(*this);
+	visitor->Visit(*this);
 }
 
 /* Gyroscope measurement */
@@ -97,9 +97,9 @@ std::string GyroscopeMeasurement::ToString() const
 	return VectorialMeasurement::ToString("Gyroscope measurement", "rad/s");
 }
 
-void GyroscopeMeasurement::Accept(MeasurementVisitor& visitor) const
+void GyroscopeMeasurement::Accept(MeasurementVisitor *const visitor) const
 {
-	visitor.Visit(*this);
+	visitor->Visit(*this);
 }
 
 /* Compass measurement */
@@ -113,9 +113,9 @@ std::string CompassMeasurement::ToString() const
 	return VectorialMeasurement::ToString("Compass measurement", "T");
 }
 
-void CompassMeasurement::Accept(MeasurementVisitor& visitor) const
+void CompassMeasurement::Accept(MeasurementVisitor *const visitor) const
 {
-	visitor.Visit(*this);
+	visitor->Visit(*this);
 }
 
 /* Pressure measurement */
@@ -129,9 +129,9 @@ std::string PressureMeasurement::ToString() const
 	return ScalarMeasurement::ToString("Pressure measurement", "hPa");
 }
 
-void PressureMeasurement::Accept(MeasurementVisitor& visitor) const
+void PressureMeasurement::Accept(MeasurementVisitor *const visitor) const
 {
-	visitor.Visit(*this);
+	visitor->Visit(*this);
 }
 
 /* Temperature measurement */
@@ -145,7 +145,7 @@ std::string TemperatureMeasurement::ToString() const
 	return ScalarMeasurement::ToString("Temperature measurement", "degrees Celcius");
 }
 
-void TemperatureMeasurement::Accept(MeasurementVisitor& visitor) const
+void TemperatureMeasurement::Accept(MeasurementVisitor *const visitor) const
 {
-	visitor.Visit(*this);
+	visitor->Visit(*this);
 }

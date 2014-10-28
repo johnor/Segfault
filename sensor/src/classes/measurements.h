@@ -56,7 +56,7 @@ public:
 	AccelerometerMeasurement(const F32 xValue, const F32 yValue, const F32 zValue);
 	virtual ~AccelerometerMeasurement() {}
 	virtual std::string ToString() const;
-	virtual void Accept(MeasurementVisitor& visitor) const;
+	virtual void Accept(MeasurementVisitor *const visitor) const;
 private:
 	AccelerometerMeasurement(const AccelerometerMeasurement&);
 	AccelerometerMeasurement& operator=(const AccelerometerMeasurement&);
@@ -73,7 +73,7 @@ public:
 	GyroscopeMeasurement(const F32 xValue, const F32 yValue, const F32 zValue);
 	virtual ~GyroscopeMeasurement() {}
 	virtual std::string ToString() const;
-	virtual void Accept(MeasurementVisitor& visitor) const;
+	virtual void Accept(MeasurementVisitor *const visitor) const;
 private:
 	GyroscopeMeasurement(const GyroscopeMeasurement&);
 	GyroscopeMeasurement& operator=(const GyroscopeMeasurement&);
@@ -90,7 +90,7 @@ public:
 	CompassMeasurement(const F32 xValue, const F32 yValue, const F32 zValue);
 	virtual ~CompassMeasurement() {}
 	virtual std::string ToString() const;
-	virtual void Accept(MeasurementVisitor& visitor) const;
+	virtual void Accept(MeasurementVisitor *const visitor) const;
 private:
 	CompassMeasurement(const CompassMeasurement&);
 	CompassMeasurement& operator=(const CompassMeasurement&);
@@ -107,7 +107,7 @@ public:
 	virtual ~PressureMeasurement() {}
 
 	virtual std::string ToString() const;
-	virtual void Accept(MeasurementVisitor& visitor) const;
+	virtual void Accept(MeasurementVisitor *const visitor) const;
 private:
 	PressureMeasurement(const PressureMeasurement&);
 	PressureMeasurement& operator=(const PressureMeasurement&);
@@ -123,7 +123,7 @@ public:
 	TemperatureMeasurement(const F32 value);
 	virtual ~TemperatureMeasurement() {}
 	virtual std::string ToString() const;
-	virtual void Accept(MeasurementVisitor& visitor) const;
+	virtual void Accept(MeasurementVisitor *const visitor) const;
 private:
 	TemperatureMeasurement(const TemperatureMeasurement&);
 	TemperatureMeasurement& operator=(const TemperatureMeasurement&);

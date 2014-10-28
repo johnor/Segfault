@@ -16,7 +16,7 @@ class Measurement
 {
 public:
 	virtual ~Measurement() {}
-	virtual void Accept(MeasurementVisitor& visitor) const = 0;
+	virtual void Accept(MeasurementVisitor *const visitor) const = 0;
 	virtual std::string ToString() const = 0;
 };
 
