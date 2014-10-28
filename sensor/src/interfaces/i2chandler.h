@@ -13,7 +13,7 @@ class I2CHandler
 {
 public:
 	virtual ~I2CHandler() {}
-	virtual Measurement* GetNextMeasurement() const = 0;
+	virtual const Measurement* GetNextMeasurement() const = 0;
 	virtual bool HasAvailableMeasurements() const = 0;
 };
 

@@ -15,7 +15,7 @@ class AccAndMagHandler : public I2CHandler
 public:
 	AccAndMagHandler();
 	virtual ~AccAndMagHandler();
-	virtual Measurement* GetNextMeasurement() const;
+	virtual const Measurement* GetNextMeasurement() const;
 	virtual bool HasAvailableMeasurements() const;
 private:
 	AccAndMagHandler(const AccAndMagHandler&);

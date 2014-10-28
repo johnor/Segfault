@@ -18,7 +18,7 @@ BarometerHandler::~BarometerHandler()
 	/* Not implemented yet */
 }
 
-Measurement* BarometerHandler::GetNextMeasurement() const
+const Measurement* BarometerHandler::GetNextMeasurement() const
 {
 	/* For testing purposes only */
 	static bool returnPressure = true;

@@ -15,7 +15,7 @@ class BarometerHandler : public I2CHandler
 public:
 	BarometerHandler();
 	virtual ~BarometerHandler();
-	virtual Measurement* GetNextMeasurement() const;
+	virtual const Measurement* GetNextMeasurement() const;
 	virtual bool HasAvailableMeasurements() const;
 private:
 	BarometerHandler(const BarometerHandler&);

@@ -18,7 +18,7 @@ AccAndMagHandler::~AccAndMagHandler()
 	/* Not implemented yet */
 }
 
-Measurement* AccAndMagHandler::GetNextMeasurement() const
+const Measurement* AccAndMagHandler::GetNextMeasurement() const
 {
 	/* For testing purposes only */
 	static bool returnAcc = true;

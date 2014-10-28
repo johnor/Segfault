@@ -18,7 +18,7 @@ GyroscopeHandler::~GyroscopeHandler()
 	/* Not implemented yet */
 }
 
-Measurement* GyroscopeHandler::GetNextMeasurement() const
+const Measurement* GyroscopeHandler::GetNextMeasurement() const
 {
 	/* For testing purposes only */
 	return new GyroscopeMeasurement(1.f, 2.f, 3.f);

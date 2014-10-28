@@ -15,7 +15,7 @@ class GyroscopeHandler : public I2CHandler
 public:
 	GyroscopeHandler();
 	virtual ~GyroscopeHandler();
-	virtual Measurement* GetNextMeasurement() const;
+	virtual const Measurement* GetNextMeasurement() const;
 	virtual bool HasAvailableMeasurements() const;
 private:
 	GyroscopeHandler(const GyroscopeHandler&);
