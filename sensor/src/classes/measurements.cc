@@ -47,8 +47,8 @@ std::string VectorialMeasurement::ToString(const std::string& header, const std:
 
 	os << std::fixed << std::setprecision(2);
 	os << header << '\n';
-	os << "X: " << xValue << ' ' << unit;
-	os << "Y: " << yValue << ' ' << unit;
+	os << "X: " << xValue << ' ';
+	os << "Y: " << yValue << ' ';
 	os << "Z: " << zValue << ' ' << unit;
 	os << '\n';
 
@@ -78,7 +78,7 @@ AccelerometerMeasurement::AccelerometerMeasurement(const F32 xValue, const F32 y
 
 std::string AccelerometerMeasurement::ToString() const
 {
-	return VectorialMeasurement::ToString("Accelerometer measurement", "m/s^2");
+	return VectorialMeasurement::ToString("Accelerometer measurement", "[m/s^2]");
 }
 
 void AccelerometerMeasurement::Accept(MeasurementVisitor *const visitor) const
@@ -94,7 +94,7 @@ GyroscopeMeasurement::GyroscopeMeasurement(const F32 xValue, const F32 yValue, c
 
 std::string GyroscopeMeasurement::ToString() const
 {
-	return VectorialMeasurement::ToString("Gyroscope measurement", "rad/s");
+	return VectorialMeasurement::ToString("Gyroscope measurement", "[rad/s]");
 }
 
 void GyroscopeMeasurement::Accept(MeasurementVisitor *const visitor) const
@@ -110,7 +110,7 @@ CompassMeasurement::CompassMeasurement(const F32 xValue, const F32 yValue, const
 
 std::string CompassMeasurement::ToString() const
 {
-	return VectorialMeasurement::ToString("Compass measurement", "T");
+	return VectorialMeasurement::ToString("Compass measurement", "[T]");
 }
 
 void CompassMeasurement::Accept(MeasurementVisitor *const visitor) const
@@ -126,7 +126,7 @@ PressureMeasurement::PressureMeasurement(const F32 value)
 
 std::string PressureMeasurement::ToString() const
 {
-	return ScalarMeasurement::ToString("Pressure measurement", "hPa");
+	return ScalarMeasurement::ToString("Pressure measurement", "[hPa]");
 }
 
 void PressureMeasurement::Accept(MeasurementVisitor *const visitor) const
@@ -142,7 +142,7 @@ TemperatureMeasurement::TemperatureMeasurement(const F32 value)
 
 std::string TemperatureMeasurement::ToString() const
 {
-	return ScalarMeasurement::ToString("Temperature measurement", "degrees Celcius");
+	return ScalarMeasurement::ToString("Temperature measurement", "[degrees Celcius]");
 }
 
 void TemperatureMeasurement::Accept(MeasurementVisitor *const visitor) const

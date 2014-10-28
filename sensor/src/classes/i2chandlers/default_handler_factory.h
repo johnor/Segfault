@@ -14,10 +14,14 @@ class I2CHandler;
 class DefaultHandlerFactory : public I2CHandlerFactory
 {
 public:
+	DefaultHandlerFactory() {}
 	virtual ~DefaultHandlerFactory() {}
 	virtual I2CHandler* MakeAccAndMagHandler() const;
 	virtual I2CHandler* MakeGyroscopeHandler() const;
 	virtual I2CHandler* MakeBarometerHandler() const;
+private:
+	DefaultHandlerFactory(const DefaultHandlerFactory&);
+	DefaultHandlerFactory& operator=(const DefaultHandlerFactory&);
 };
 
 #endif
