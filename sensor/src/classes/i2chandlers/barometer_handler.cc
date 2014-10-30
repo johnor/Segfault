@@ -6,31 +6,19 @@
 #include "barometer_handler.h"
 #include "../measurements.h"
 
-class Measurement;
-
-BarometerHandler::BarometerHandler()
-{
-	/* Not implemented yet */
-}
-
-BarometerHandler::~BarometerHandler()
-{
-	/* Not implemented yet */
-}
-
 const Measurement* BarometerHandler::GetNextMeasurement() const
 {
 	/* For testing purposes only */
-	static bool returnPressure = true;
+	static bool returnPressure{true};
 	if (returnPressure)
 	{
 		returnPressure = false;
-		return new PressureMeasurement(1.f);
+		return new PressureMeasurement{1.f};
 	}
 	else
 	{
 		returnPressure = true;
-		return new TemperatureMeasurement(1.f);
+		return new TemperatureMeasurement{1.f};
 	}
 }
 

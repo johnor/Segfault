@@ -13,13 +13,13 @@ class Measurement;
 class BarometerHandler : public I2CHandler
 {
 public:
-	BarometerHandler();
-	virtual ~BarometerHandler();
-	virtual const Measurement* GetNextMeasurement() const;
-	virtual bool HasAvailableMeasurements() const;
+	BarometerHandler() = default;
+	virtual ~BarometerHandler() = default;
+	virtual const Measurement* GetNextMeasurement() const override;
+	virtual bool HasAvailableMeasurements() const override;
 private:
-	BarometerHandler(const BarometerHandler&);
-	BarometerHandler& operator=(const BarometerHandler&);
+	BarometerHandler(const BarometerHandler&) = delete;
+	BarometerHandler& operator=(const BarometerHandler&) = delete;
 };
 
 #endif

@@ -24,7 +24,7 @@ AltIMU::~AltIMU()
 
 std::vector<const Measurement*> AltIMU::GetNextMeasurementBatch() const
 {
-	std::vector<const Measurement*> measurementBatch;
+	std::vector<const Measurement*> measurementBatch{};
 
 	/* For testing purposes only */
 	measurementBatch.push_back(accAndMagHandler->GetNextMeasurement());

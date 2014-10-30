@@ -13,13 +13,13 @@ class Measurement;
 class GyroscopeHandler : public I2CHandler
 {
 public:
-	GyroscopeHandler();
-	virtual ~GyroscopeHandler();
-	virtual const Measurement* GetNextMeasurement() const;
-	virtual bool HasAvailableMeasurements() const;
+	GyroscopeHandler() = default;
+	virtual ~GyroscopeHandler() = default;
+	virtual const Measurement* GetNextMeasurement() const override;
+	virtual bool HasAvailableMeasurements() const override;
 private:
-	GyroscopeHandler(const GyroscopeHandler&);
-	GyroscopeHandler& operator=(const GyroscopeHandler&);
+	GyroscopeHandler(const GyroscopeHandler&) = delete;
+	GyroscopeHandler& operator=(const GyroscopeHandler&) = delete;
 };
 
 #endif
