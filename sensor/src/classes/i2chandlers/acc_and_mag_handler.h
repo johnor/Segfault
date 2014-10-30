@@ -13,13 +13,13 @@ class Measurement;
 class AccAndMagHandler : public I2CHandler
 {
 public:
-	AccAndMagHandler();
-	virtual ~AccAndMagHandler();
-	virtual const Measurement* GetNextMeasurement() const;
-	virtual bool HasAvailableMeasurements() const;
+	AccAndMagHandler() = default;
+	virtual ~AccAndMagHandler() = default;
+	virtual const Measurement* GetNextMeasurement() const override;
+	virtual bool HasAvailableMeasurements() const override;
 private:
-	AccAndMagHandler(const AccAndMagHandler&);
-	AccAndMagHandler& operator=(const AccAndMagHandler&);
+	AccAndMagHandler(const AccAndMagHandler&) = delete;
+	AccAndMagHandler& operator=(const AccAndMagHandler&) = delete;
 };
 
 #endif

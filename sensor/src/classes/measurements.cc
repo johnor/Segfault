@@ -14,13 +14,13 @@
 
 /* Scalar measurement */
 ScalarMeasurement::ScalarMeasurement(const F32 value)
-	: value(value)
+	: value{value}
 {
 }
 
 std::string ScalarMeasurement::ToString(const std::string& header, const std::string& unit) const
 {
-	std::ostringstream os;
+	std::ostringstream os{};
 
 	os << std::fixed << std::setprecision(2);
 	os << header << '\n';
@@ -37,13 +37,13 @@ F32 ScalarMeasurement::GetValue() const
 
 /* Vectorial measurement */
 VectorialMeasurement::VectorialMeasurement(const F32 xValue, const F32 yValue, const F32 zValue)
-	: xValue(xValue), yValue(yValue), zValue(zValue)
+	: xValue{xValue}, yValue{yValue}, zValue{zValue}
 {
 }
 
 std::string VectorialMeasurement::ToString(const std::string& header, const std::string& unit) const
 {
-	std::ostringstream os;
+	std::ostringstream os{};
 
 	os << std::fixed << std::setprecision(2);
 	os << header << '\n';
@@ -72,7 +72,7 @@ F32 VectorialMeasurement::GetZValue() const
 
 /* Accelerometer measurement */
 AccelerometerMeasurement::AccelerometerMeasurement(const F32 xValue, const F32 yValue, const F32 zValue)
-	: VectorialMeasurement(xValue, yValue, zValue)
+	: VectorialMeasurement{xValue, yValue, zValue}
 {
 }
 
@@ -88,7 +88,7 @@ void AccelerometerMeasurement::Accept(MeasurementVisitor *const visitor) const
 
 /* Gyroscope measurement */
 GyroscopeMeasurement::GyroscopeMeasurement(const F32 xValue, const F32 yValue, const F32 zValue)
-	: VectorialMeasurement(xValue, yValue, zValue)
+	: VectorialMeasurement{xValue, yValue, zValue}
 {
 }
 
@@ -104,7 +104,7 @@ void GyroscopeMeasurement::Accept(MeasurementVisitor *const visitor) const
 
 /* Compass measurement */
 CompassMeasurement::CompassMeasurement(const F32 xValue, const F32 yValue, const F32 zValue)
-	: VectorialMeasurement(xValue, yValue, zValue)
+	: VectorialMeasurement{xValue, yValue, zValue}
 {
 }
 
@@ -120,7 +120,7 @@ void CompassMeasurement::Accept(MeasurementVisitor *const visitor) const
 
 /* Pressure measurement */
 PressureMeasurement::PressureMeasurement(const F32 value)
-	: ScalarMeasurement(value)
+	: ScalarMeasurement{value}
 {
 }
 
@@ -136,7 +136,7 @@ void PressureMeasurement::Accept(MeasurementVisitor *const visitor) const
 
 /* Temperature measurement */
 TemperatureMeasurement::TemperatureMeasurement(const F32 value)
-	: ScalarMeasurement(value)
+	: ScalarMeasurement{value}
 {
 }
 

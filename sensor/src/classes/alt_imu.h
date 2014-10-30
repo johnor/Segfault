@@ -18,10 +18,10 @@ class AltIMU : public IMU
 public:
 	explicit AltIMU(const I2CHandlerFactory *const handlerFactory);
 	virtual ~AltIMU();
-	virtual std::vector<const Measurement*> GetNextMeasurementBatch() const;
+	virtual std::vector<const Measurement*> GetNextMeasurementBatch() const override;
 private:
-	AltIMU(const AltIMU&);
-	AltIMU& operator=(const AltIMU&);
+	AltIMU(const AltIMU&) = delete;
+	AltIMU& operator=(const AltIMU&) = delete;
 
 	void GetAllAvailableMeasurementsFromHandler(std::vector<const Measurement*>& measurementBatch,
 												const I2CHandler *const handler) const;
