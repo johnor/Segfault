@@ -29,16 +29,26 @@ newplatform {
     }
 }
 
+if _ACTION == 'clean' then
+    os.rmdir('./build')
+    os.rmdir('./bin')
+end
+
 solution "Sensor"
    configurations { "Debug", "Release" }
    platforms {"rpi", "native"}
    location "build"
    
-   project "Sensor"
+   -- prevent "warning LNK4098: defaultlib 'MSVCRTD' conflicts with use of other libs; use /NODEFAULTLIB:library"
+   configuration { "Debug", "vs*" }
+      buildoptions { "/MDd" }
+   
+   project "SensorApp"
       kind "ConsoleApp"
       language "C++"
-
+      
       files { "src/**.h", "src/**.cc"}
+      includedirs { "lib" }
 
       configuration "Debug"
          defines { "DEBUG" }
@@ -49,13 +59,29 @@ solution "Sensor"
          defines { "NDEBUG" }
          flags { "Optimize" }
          targetdir "bin/release" 
-
+   
+      -- compiler flags
       configuration { "gmake" }
          buildoptions { "-std=c++0x" }
-         
-         includedirs { "lib/wiringPi" }
-         libdirs { "lib/wiringPi" }
-         links { "wiringPi" }
-         
+      
+      -- Link wiringPi
+      configuration { "not rpi" } 
+         links { "wiringPi-x86" }
 
+      configuration { "rpi" }
+         includedirs { "lib/wiringPi/headers" }
+         libdirs { "lib/wiringPi/lib-rpi" }
+         links { "wiringPi" }
+   
+   -- wiringRpi for x86
+   if _OPTIONS["platform"] ~= "rpi"
+   then
+      project "wiringPi-x86"
+         kind "StaticLib"
+         language "C"
+         targetdir "build/libs"
+         
+         includedirs { "lib/wiringPi/headers" }
+         files { "lib/wiringPi/headers/**.h", "lib/wiringPi/src-x86/**.c"}
+   end   
 

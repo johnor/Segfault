@@ -7,6 +7,8 @@
 #include "classes\i2chandlers\default_handler_factory.h"
 #include "classes\alt_imu.h"
 
+#include "wiringPi/headers/wiringPiI2C.h"
+
 #include <iostream>
 
 void PrintMeasurements(const std::vector<const Measurement*>& measurementBatch)
@@ -43,6 +45,8 @@ int main(int argc, char* argv[])
 	DeleteMeasurements(measurementBatch);
 	delete factory;
 	delete imu;
+
+	wiringPiI2CSetup(0);
 
 	/* Do not close console immediately */
 	std::cout << "Press any key to exit the application." << std::endl;
