@@ -62,7 +62,7 @@ solution "Sensor"
    
       -- compiler flags
       configuration { "gmake" }
-         buildoptions { "-std=c++0x" }
+         buildoptions { "-std=c++0x -mcpu=arm1176jzf-s -mthumb -mtune=arm1176jzf-s -mfpu=vfp -marm -march=armv6k -mfloat-abi=hard" }
       
       -- Link wiringPi
       configuration { "not rpi" } 
