@@ -12,7 +12,7 @@ class I2CHandler;
 class I2CHandlerFactory
 {
 public:
-	virtual ~I2CHandlerFactory() = default;
+	virtual ~I2CHandlerFactory() {};
 	virtual I2CHandler* MakeAccAndMagHandler() const = 0;
 	virtual I2CHandler* MakeGyroscopeHandler() const = 0;
 	virtual I2CHandler* MakeBarometerHandler() const = 0;
