@@ -49,6 +49,7 @@ solution "Sensor"
       
       files { "src/**.h", "src/**.cc"}
       includedirs { "lib" }
+      vpaths { ["*"] = "src" }
 
       configuration "Debug"
          defines { "DEBUG" }
@@ -83,5 +84,6 @@ solution "Sensor"
          
          includedirs { "lib/wiringPi/headers" }
          files { "lib/wiringPi/headers/**.h", "lib/wiringPi/src-x86/**.c"}
+         vpaths { ["*"] = "lib/wiringPi" }
    end   
 

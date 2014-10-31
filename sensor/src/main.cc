@@ -51,6 +51,6 @@ void DeleteMeasurements(const std::vector<const Measurement*>& measurementBatch)
 	for (auto measurement : measurementBatch)
 	{
 		delete measurement;
-		measurement = NULL;
+		measurement = nullptr;
 	}
 }
