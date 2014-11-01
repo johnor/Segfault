@@ -6,19 +6,19 @@
 #include "acc_and_mag_handler.h"
 #include "../measurements.h"
 
-const Measurement* AccAndMagHandler::GetNextMeasurement() const
+std::unique_ptr<Measurement> AccAndMagHandler::GetNextMeasurement() const
 {
 	/* For testing purposes only */
 	static bool returnAcc{true};
 	if (returnAcc)
 	{
 		returnAcc = false;
-		return new AccelerometerMeasurement{1.f, 2.f, 3.f};
+		return std::unique_ptr<Measurement>{new AccelerometerMeasurement{1.f, 2.f, 3.f}};
 	}
 	else
 	{
 		returnAcc = true;
-		return new CompassMeasurement{1.f, 2.f, 3.f};
+		return std::unique_ptr<Measurement>{new CompassMeasurement{1.f, 2.f, 3.f}};
 	}
 }
 

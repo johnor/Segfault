@@ -8,18 +8,18 @@
 #ifndef MODEL_H_
 #define MODEL_H_
 
+#include "../interfaces/measurement.h"
 #include "../headers/numeric_typedefs.h"
-#include <string>
+#include <memory>
 #include <vector>
-
-class Measurement;
+#include <string>
 
 class Model
 {
 public:
-	virtual ~Model() {};
+	virtual ~Model() = default;
 	virtual void TimeUpdate(const U32 dtInMilliseconds) = 0;
-	virtual void MeasurementUpdate(const std::vector<const Measurement*>& measurementBatch) = 0;
+	virtual void MeasurementUpdate(const std::vector<std::unique_ptr<Measurement>>& measurementBatch) = 0;
 	virtual std::string CurrentStateToString() const = 0;
 };
 

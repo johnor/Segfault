@@ -9,25 +9,18 @@
 
 #include <iostream>
 #include <vector>
+#include <memory>
 
-class I2CHandlerFactory;
-
-void PrintMeasurements(const std::vector<const Measurement*>& measurementBatch);
-void DeleteMeasurements(const std::vector<const Measurement*>& measurementBatch);
+void PrintMeasurements(const std::vector<std::unique_ptr<Measurement>>& measurementBatch);
 
 int main(int argc, char* argv[])
 {
 	/* Create factory and IMU */
-	I2CHandlerFactory* factory{new DefaultHandlerFactory{}};
-	IMU* imu{new AltIMU{factory}};
+	std::unique_ptr<I2CHandlerFactory> factory{new DefaultHandlerFactory{}};
+	std::unique_ptr<IMU> imu{new AltIMU{factory}};
 
-	std::vector<const Measurement*> measurementBatch{imu->GetNextMeasurementBatch()};
+	std::vector<std::unique_ptr<Measurement>> measurementBatch{imu->GetNextMeasurementBatch()};
 	PrintMeasurements(measurementBatch);
-
-	/* Cleanup allocated memory */
-	DeleteMeasurements(measurementBatch);
-	delete factory;
-	delete imu;
 
 	wiringPiI2CSetup(0);
 
@@ -38,19 +31,10 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
-void PrintMeasurements(const std::vector<const Measurement*>& measurementBatch)
+void PrintMeasurements(const std::vector<std::unique_ptr<Measurement>>& measurementBatch)
 {
-	for (const auto measurement : measurementBatch)
+	for (const auto& measurement : measurementBatch)
 	{
 		std::cout << measurement->ToString() << std::endl;
-	}
-}
-
-void DeleteMeasurements(const std::vector<const Measurement*>& measurementBatch)
-{
-	for (auto measurement : measurementBatch)
-	{
-		delete measurement;
-		measurement = nullptr;
 	}
 }

@@ -7,15 +7,15 @@
 #define GYROSCOPE_HANDLER_H_
 
 #include "../../interfaces/i2chandler.h"
-
-class Measurement;
+#include "../../interfaces/measurement.h"
+#include <memory>
 
 class GyroscopeHandler : public I2CHandler
 {
 public:
 	GyroscopeHandler() = default;
 	virtual ~GyroscopeHandler() = default;
-	virtual const Measurement* GetNextMeasurement() const override;
+	virtual std::unique_ptr<Measurement> GetNextMeasurement() const override;
 	virtual bool HasAvailableMeasurements() const override;
 private:
 	GyroscopeHandler(const GyroscopeHandler&) = delete;

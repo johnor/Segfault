@@ -8,17 +8,17 @@
 #define DEFAULT_HANDLER_FACTORY_H_
 
 #include "../../interfaces/i2c_handler_factory.h"
-
-class I2CHandler;
+#include "../../interfaces/i2chandler.h"
+#include <memory>
 
 class DefaultHandlerFactory : public I2CHandlerFactory
 {
 public:
 	DefaultHandlerFactory() = default;
 	virtual ~DefaultHandlerFactory() = default;
-	virtual I2CHandler* MakeAccAndMagHandler() const override;
-	virtual I2CHandler* MakeGyroscopeHandler() const override;
-	virtual I2CHandler* MakeBarometerHandler() const override;
+	virtual std::unique_ptr<I2CHandler> MakeAccAndMagHandler() const override;
+	virtual std::unique_ptr<I2CHandler> MakeGyroscopeHandler() const override;
+	virtual std::unique_ptr<I2CHandler> MakeBarometerHandler() const override;
 private:
 	DefaultHandlerFactory(const DefaultHandlerFactory&) = delete;
 	DefaultHandlerFactory& operator=(const DefaultHandlerFactory&) = delete;

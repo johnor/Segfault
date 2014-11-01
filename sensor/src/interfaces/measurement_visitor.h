@@ -16,7 +16,7 @@ class TemperatureMeasurement;
 class MeasurementVisitor
 {
 public:
-	virtual ~MeasurementVisitor() {};
+	virtual ~MeasurementVisitor() = default;
 	virtual void Visit(const AccelerometerMeasurement& accMeas) = 0;
 	virtual void Visit(const GyroscopeMeasurement& gyroMeas) = 0;
 	virtual void Visit(const CompassMeasurement& compassMeas) = 0;

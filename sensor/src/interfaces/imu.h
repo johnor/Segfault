@@ -7,15 +7,15 @@
 #ifndef IMU_H_
 #define IMU_H_
 
+#include "../interfaces/measurement.h"
+#include <memory>
 #include <vector>
-
-class Measurement;
 
 class IMU
 {
 public:
-	virtual ~IMU() {};
-	virtual std::vector<const Measurement*> GetNextMeasurementBatch() const = 0;
+	virtual ~IMU() = default;
+	virtual std::vector<std::unique_ptr<Measurement>> GetNextMeasurementBatch() const = 0;
 };
 
 #endif
