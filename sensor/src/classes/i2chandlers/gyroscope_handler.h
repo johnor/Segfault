@@ -14,7 +14,7 @@ class GyroscopeHandler : public I2CHandler
 {
 public:
 	GyroscopeHandler() = default;
-	virtual ~GyroscopeHandler() = default;
+	virtual ~GyroscopeHandler() {}
 	virtual std::unique_ptr<Measurement> GetNextMeasurement() const override;
 	virtual bool HasAvailableMeasurements() const override;
 private:

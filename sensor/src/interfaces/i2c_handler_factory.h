@@ -13,7 +13,7 @@
 class I2CHandlerFactory
 {
 public:
-	virtual ~I2CHandlerFactory() = default;
+	virtual ~I2CHandlerFactory() {}
 	virtual std::unique_ptr<I2CHandler> MakeAccAndMagHandler() const = 0;
 	virtual std::unique_ptr<I2CHandler> MakeGyroscopeHandler() const = 0;
 	virtual std::unique_ptr<I2CHandler> MakeBarometerHandler() const = 0;

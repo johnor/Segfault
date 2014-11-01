@@ -17,7 +17,7 @@
 class ScalarMeasurement : public Measurement
 {
 public:
-	virtual ~ScalarMeasurement() = default;
+	virtual ~ScalarMeasurement() {}
 	F32 GetValue() const;
 protected:
 	explicit ScalarMeasurement(const F32 value);
@@ -32,7 +32,7 @@ private:
 class VectorialMeasurement : public Measurement
 {
 public:
-	virtual ~VectorialMeasurement() = default;
+	virtual ~VectorialMeasurement() {}
 	F32 GetXValue() const;
 	F32 GetYValue() const;
 	F32 GetZValue() const;
@@ -54,7 +54,7 @@ class AccelerometerMeasurement : public VectorialMeasurement
 {
 public:
 	AccelerometerMeasurement(const F32 xValue, const F32 yValue, const F32 zValue);
-	virtual ~AccelerometerMeasurement() = default;
+	virtual ~AccelerometerMeasurement() {}
 	virtual std::string ToString() const override;
 	virtual void Accept(const std::unique_ptr<MeasurementVisitor>& visitor) const override;
 private:
@@ -71,7 +71,7 @@ class GyroscopeMeasurement : public VectorialMeasurement
 {
 public:
 	GyroscopeMeasurement(const F32 xValue, const F32 yValue, const F32 zValue);
-	virtual ~GyroscopeMeasurement() = default;
+	virtual ~GyroscopeMeasurement() {}
 	virtual std::string ToString() const override;
 	virtual void Accept(const std::unique_ptr<MeasurementVisitor>& visitor) const override;
 private:
@@ -88,7 +88,7 @@ class CompassMeasurement : public VectorialMeasurement
 {
 public:
 	CompassMeasurement(const F32 xValue, const F32 yValue, const F32 zValue);
-	virtual ~CompassMeasurement() = default;
+	virtual ~CompassMeasurement() {}
 	virtual std::string ToString() const override;
 	virtual void Accept(const std::unique_ptr<MeasurementVisitor>& visitor) const override;
 private:
@@ -104,7 +104,7 @@ class PressureMeasurement : public ScalarMeasurement
 {
 public:
 	explicit PressureMeasurement(const F32 value);
-	virtual ~PressureMeasurement() = default;
+	virtual ~PressureMeasurement() {}
 
 	virtual std::string ToString() const override;
 	virtual void Accept(const std::unique_ptr<MeasurementVisitor>& visitor) const override;
@@ -121,7 +121,7 @@ class TemperatureMeasurement : public ScalarMeasurement
 {
 public:
 	explicit TemperatureMeasurement(const F32 value);
-	virtual ~TemperatureMeasurement() = default;
+	virtual ~TemperatureMeasurement() {}
 	virtual std::string ToString() const override;
 	virtual void Accept(const std::unique_ptr<MeasurementVisitor>& visitor) const override;
 private:

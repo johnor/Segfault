@@ -13,7 +13,7 @@
 class I2CHandler
 {
 public:
-	virtual ~I2CHandler() = default;
+	virtual ~I2CHandler() {}
 	virtual std::unique_ptr<Measurement> GetNextMeasurement() const = 0;
 	virtual bool HasAvailableMeasurements() const = 0;
 };

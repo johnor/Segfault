@@ -15,7 +15,7 @@ class DefaultHandlerFactory : public I2CHandlerFactory
 {
 public:
 	DefaultHandlerFactory() = default;
-	virtual ~DefaultHandlerFactory() = default;
+	virtual ~DefaultHandlerFactory() {}
 	virtual std::unique_ptr<I2CHandler> MakeAccAndMagHandler() const override;
 	virtual std::unique_ptr<I2CHandler> MakeGyroscopeHandler() const override;
 	virtual std::unique_ptr<I2CHandler> MakeBarometerHandler() const override;

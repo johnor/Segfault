@@ -14,7 +14,7 @@ class BarometerHandler : public I2CHandler
 {
 public:
 	BarometerHandler() = default;
-	virtual ~BarometerHandler() = default;
+	virtual ~BarometerHandler() {}
 	virtual std::unique_ptr<Measurement> GetNextMeasurement() const override;
 	virtual bool HasAvailableMeasurements() const override;
 private:

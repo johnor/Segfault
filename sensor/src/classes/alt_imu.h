@@ -17,7 +17,7 @@ class AltIMU : public IMU
 {
 public:
 	explicit AltIMU(const std::unique_ptr<I2CHandlerFactory>& handlerFactory);
-	virtual ~AltIMU() = default;
+	virtual ~AltIMU() {}
 	virtual std::vector<std::unique_ptr<Measurement>> GetNextMeasurementBatch() const override;
 private:
 	AltIMU(const AltIMU&) = delete;

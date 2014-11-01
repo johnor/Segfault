@@ -14,7 +14,7 @@
 class IMU
 {
 public:
-	virtual ~IMU() = default;
+	virtual ~IMU() {}
 	virtual std::vector<std::unique_ptr<Measurement>> GetNextMeasurementBatch() const = 0;
 };
 

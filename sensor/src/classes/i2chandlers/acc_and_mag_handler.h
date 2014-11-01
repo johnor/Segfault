@@ -14,7 +14,7 @@ class AccAndMagHandler : public I2CHandler
 {
 public:
 	AccAndMagHandler() = default;
-	virtual ~AccAndMagHandler() = default;
+	virtual ~AccAndMagHandler() {}
 	virtual std::unique_ptr<Measurement> GetNextMeasurement() const override;
 	virtual bool HasAvailableMeasurements() const override;
 private:

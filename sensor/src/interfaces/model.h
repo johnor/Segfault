@@ -17,7 +17,7 @@
 class Model
 {
 public:
-	virtual ~Model() = default;
+	virtual ~Model() {}
 	virtual void TimeUpdate(const U32 dtInMilliseconds) = 0;
 	virtual void MeasurementUpdate(const std::vector<std::unique_ptr<Measurement>>& measurementBatch) = 0;
 	virtual std::string CurrentStateToString() const = 0;
