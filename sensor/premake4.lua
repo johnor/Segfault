@@ -48,7 +48,7 @@ solution "Sensor"
       language "C++"
       
       files { "src/**.h", "src/**.cc"}
-      includedirs { "lib" }
+      includedirs { "lib", "src" }
       vpaths { ["*"] = "src" }
 
       configuration "Debug"

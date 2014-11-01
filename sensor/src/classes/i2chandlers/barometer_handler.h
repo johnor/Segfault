@@ -17,6 +17,9 @@ public:
 	virtual ~BarometerHandler() {}
 	virtual std::unique_ptr<Measurement> GetNextMeasurement() const override;
 	virtual bool HasAvailableMeasurements() const override;
+
+	virtual void Update() override;
+
 private:
 	BarometerHandler(const BarometerHandler&) = delete;
 	BarometerHandler& operator=(const BarometerHandler&) = delete;

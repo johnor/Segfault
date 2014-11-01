@@ -3,7 +3,9 @@
 * the project. It uses an I2CHandler factory to initialize its I2CHandlers.
 */
 
+#include <stdexcept>
 #include "alt_imu.h"
+#include "classes/logger.h"
 
 AltIMU::AltIMU(const std::unique_ptr<I2CHandlerFactory>& handlerFactory)
 {
@@ -22,6 +24,16 @@ std::vector<std::unique_ptr<Measurement>> AltIMU::GetNextMeasurementBatch() cons
 	measurementBatch.push_back(gyroscopeHandler->GetNextMeasurement());
 	measurementBatch.push_back(barometerHandler->GetNextMeasurement());
 	measurementBatch.push_back(barometerHandler->GetNextMeasurement());
+
+	// For testing
+	try
+	{
+		accAndMagHandler->Update();
+	}
+	catch (std::runtime_error &e)
+	{
+		Logger::Log(LogLevel::Error) << "Exception in GetNextMeasurementBatch(): " << e.what();
+	}
 
 	return measurementBatch;
 }

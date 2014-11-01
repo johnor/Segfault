@@ -15,11 +15,15 @@ class AccAndMagHandler : public I2CHandler
 public:
 	AccAndMagHandler() = default;
 	virtual ~AccAndMagHandler() {}
+    virtual void Update() override;
 	virtual std::unique_ptr<Measurement> GetNextMeasurement() const override;
 	virtual bool HasAvailableMeasurements() const override;
 private:
 	AccAndMagHandler(const AccAndMagHandler&) = delete;
 	AccAndMagHandler& operator=(const AccAndMagHandler&) = delete;
+	void Init(const int devId);
+
+	F32 accelerometerScale{ 0.f };
 };
 
 #endif

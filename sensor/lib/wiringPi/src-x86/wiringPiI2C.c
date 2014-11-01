@@ -34,6 +34,5 @@ int wiringPiI2CWriteReg16 (int fd, int reg, int data)
 
 int wiringPiI2CSetup (const int devId)
 {
-	printf("Hello from wiringPi!\n");
-    return 0;
+    return -1;
 }

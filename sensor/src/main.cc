@@ -16,7 +16,6 @@ void PrintMeasurements(const std::vector<std::unique_ptr<Measurement>>& measurem
 int main(int argc, char* argv[])
 {
 	Logger::Log(LogLevel::Info) << "SensorApp initialized";
-	Logger::Log(LogLevel::Debug) << "Test debug: " << 2;
 
 	/* Create factory and IMU */
 	std::unique_ptr<I2CHandlerFactory> factory{new DefaultHandlerFactory{}};

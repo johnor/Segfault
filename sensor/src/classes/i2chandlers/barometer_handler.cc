@@ -27,3 +27,7 @@ bool BarometerHandler::HasAvailableMeasurements() const
 	/* For testing purposes only */
 	return true;
 }
+
+void BarometerHandler::Update()
+{
+}
