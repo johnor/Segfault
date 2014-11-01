@@ -6,6 +6,7 @@
 #include "classes\alt_imu.h"
 
 #include "wiringPi/headers/wiringPiI2C.h"
+#include "classes/Logger.h"
 
 #include <iostream>
 #include <vector>
@@ -17,6 +18,9 @@ void DeleteMeasurements(const std::vector<const Measurement*>& measurementBatch)
 
 int main(int argc, char* argv[])
 {
+	Logger::Log(LogLevel::Info) << "SensorApp initialized";
+	Logger::Log(LogLevel::Debug) << "Test debug: " << 2;
+
 	/* Create factory and IMU */
 	I2CHandlerFactory* factory{new DefaultHandlerFactory{}};
 	IMU* imu{new AltIMU{factory}};
@@ -29,8 +33,6 @@ int main(int argc, char* argv[])
 	delete factory;
 	delete imu;
 
-	wiringPiI2CSetup(0);
-
 	/* Do not close console immediately */
 	std::cout << "Press any key to exit the application." << std::endl;
 	std::cin.get();
@@ -42,7 +44,7 @@ void PrintMeasurements(const std::vector<const Measurement*>& measurementBatch)
 {
 	for (const auto measurement : measurementBatch)
 	{
-		std::cout << measurement->ToString() << std::endl;
+		Logger::Log(LogLevel::Debug, measurement->ToString());
 	}
 }
 
