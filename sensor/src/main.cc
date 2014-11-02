@@ -1,27 +1,26 @@
 /* This file contains the entry point for the OrientationFilter application */
 
+#include "headers\smart_pointer_typedefs.h"
+
 #include "interfaces\imu.h"
 #include "interfaces\measurement.h"
 #include "classes\i2chandlers\default_handler_factory.h"
 #include "classes\alt_imu.h"
-
 #include "classes/Logger.h"
 
 #include <iostream>
-#include <vector>
-#include <memory>
 
-void PrintMeasurements(const std::vector<std::unique_ptr<Measurement>>& measurementBatch);
+void PrintMeasurements(const MeasurementBatch& measurementBatch);
 
 int main(int argc, char* argv[])
 {
 	Logger::Log(LogLevel::Info) << "SensorApp initialized";
 
 	/* Create factory and IMU */
-	std::unique_ptr<I2CHandlerFactory> factory{new DefaultHandlerFactory{}};
-	std::unique_ptr<IMU> imu{new AltIMU{factory}};
+	I2CHandlerFactoryPtr factory{new DefaultHandlerFactory{}};
+	IMUPtr imu{new AltIMU{factory}};
 
-	std::vector<std::unique_ptr<Measurement>> measurementBatch{imu->GetNextMeasurementBatch()};
+	MeasurementBatch measurementBatch{imu->GetNextMeasurementBatch()};
 	PrintMeasurements(measurementBatch);
 
 	/* Do not close console immediately */
@@ -31,7 +30,7 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
-void PrintMeasurements(const std::vector<std::unique_ptr<Measurement>>& measurementBatch)
+void PrintMeasurements(const MeasurementBatch& measurementBatch)
 {
 	for (const auto& measurement : measurementBatch)
 	{

@@ -6,9 +6,8 @@
 #ifndef GYROSCOPE_HANDLER_H_
 #define GYROSCOPE_HANDLER_H_
 
+#include "../../headers/smart_pointer_typedefs.h"
 #include "../../interfaces/i2chandler.h"
-#include "../../interfaces/measurement.h"
-#include <memory>
 
 class GyroscopeHandler : public I2CHandler
 {
@@ -16,7 +15,7 @@ public:
 	GyroscopeHandler() = default;
 	virtual ~GyroscopeHandler() {}
 	virtual void Update() override;
-	virtual std::unique_ptr<Measurement> GetNextMeasurement() const override;
+	virtual MeasurementPtr GetNextMeasurement() const override;
 	virtual bool HasAvailableMeasurements() const override;
 private:
 	GyroscopeHandler(const GyroscopeHandler&) = delete;

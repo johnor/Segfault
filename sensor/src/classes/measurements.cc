@@ -3,6 +3,7 @@
 */
 
 #include "measurements.h"
+#include "../interfaces/measurement_visitor.h"
 
 #include <sstream>
 #include <iomanip>
@@ -76,7 +77,7 @@ std::string AccelerometerMeasurement::ToString() const
 	return VectorialMeasurement::ToString("Accelerometer measurement", "[m/s^2]");
 }
 
-void AccelerometerMeasurement::Accept(const std::unique_ptr<MeasurementVisitor>& visitor) const
+void AccelerometerMeasurement::Accept(const MeasurementVisitorPtr& visitor) const
 {
 	visitor->Visit(*this);
 }
@@ -92,7 +93,7 @@ std::string GyroscopeMeasurement::ToString() const
 	return VectorialMeasurement::ToString("Gyroscope measurement", "[rad/s]");
 }
 
-void GyroscopeMeasurement::Accept(const std::unique_ptr<MeasurementVisitor>& visitor) const
+void GyroscopeMeasurement::Accept(const MeasurementVisitorPtr& visitor) const
 {
 	visitor->Visit(*this);
 }
@@ -108,7 +109,7 @@ std::string CompassMeasurement::ToString() const
 	return VectorialMeasurement::ToString("Compass measurement", "[T]");
 }
 
-void CompassMeasurement::Accept(const std::unique_ptr<MeasurementVisitor>& visitor) const
+void CompassMeasurement::Accept(const MeasurementVisitorPtr& visitor) const
 {
 	visitor->Visit(*this);
 }
@@ -124,7 +125,7 @@ std::string PressureMeasurement::ToString() const
 	return ScalarMeasurement::ToString("Pressure measurement", "[hPa]");
 }
 
-void PressureMeasurement::Accept(const std::unique_ptr<MeasurementVisitor>& visitor) const
+void PressureMeasurement::Accept(const MeasurementVisitorPtr& visitor) const
 {
 	visitor->Visit(*this);
 }
@@ -140,7 +141,7 @@ std::string TemperatureMeasurement::ToString() const
 	return ScalarMeasurement::ToString("Temperature measurement", "[degrees Celcius]");
 }
 
-void TemperatureMeasurement::Accept(const std::unique_ptr<MeasurementVisitor>& visitor) const
+void TemperatureMeasurement::Accept(const MeasurementVisitorPtr& visitor) const
 {
 	visitor->Visit(*this);
 }

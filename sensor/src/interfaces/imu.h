@@ -7,15 +7,13 @@
 #ifndef IMU_H_
 #define IMU_H_
 
-#include "../interfaces/measurement.h"
-#include <memory>
-#include <vector>
+#include "../headers/smart_pointer_typedefs.h"
 
 class IMU
 {
 public:
 	virtual ~IMU() {}
-	virtual std::vector<std::unique_ptr<Measurement>> GetNextMeasurementBatch() const = 0;
+	virtual MeasurementBatch GetNextMeasurementBatch() const = 0;
 };
 
 #endif

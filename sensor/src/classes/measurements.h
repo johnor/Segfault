@@ -7,9 +7,6 @@
 
 #include "../headers/numeric_typedefs.h"
 #include "../interfaces/measurement.h"
-#include "../interfaces/measurement_visitor.h"
-#include <memory>
-#include <string>
 
 /*
 * Abstract base class for scalar measurements
@@ -56,7 +53,7 @@ public:
 	AccelerometerMeasurement(const F32 xValue, const F32 yValue, const F32 zValue);
 	virtual ~AccelerometerMeasurement() {}
 	virtual std::string ToString() const override;
-	virtual void Accept(const std::unique_ptr<MeasurementVisitor>& visitor) const override;
+	virtual void Accept(const MeasurementVisitorPtr& visitor) const override;
 private:
 	AccelerometerMeasurement(const AccelerometerMeasurement&) = delete;
 	AccelerometerMeasurement& operator=(const AccelerometerMeasurement&) = delete;
@@ -73,7 +70,7 @@ public:
 	GyroscopeMeasurement(const F32 xValue, const F32 yValue, const F32 zValue);
 	virtual ~GyroscopeMeasurement() {}
 	virtual std::string ToString() const override;
-	virtual void Accept(const std::unique_ptr<MeasurementVisitor>& visitor) const override;
+	virtual void Accept(const MeasurementVisitorPtr& visitor) const override;
 private:
 	GyroscopeMeasurement(const GyroscopeMeasurement&) = delete;
 	GyroscopeMeasurement& operator=(const GyroscopeMeasurement&) = delete;
@@ -90,7 +87,7 @@ public:
 	CompassMeasurement(const F32 xValue, const F32 yValue, const F32 zValue);
 	virtual ~CompassMeasurement() {}
 	virtual std::string ToString() const override;
-	virtual void Accept(const std::unique_ptr<MeasurementVisitor>& visitor) const override;
+	virtual void Accept(const MeasurementVisitorPtr& visitor) const override;
 private:
 	CompassMeasurement(const CompassMeasurement&) = delete;
 	CompassMeasurement& operator=(const CompassMeasurement&) = delete;
@@ -105,9 +102,8 @@ class PressureMeasurement : public ScalarMeasurement
 public:
 	explicit PressureMeasurement(const F32 value);
 	virtual ~PressureMeasurement() {}
-
 	virtual std::string ToString() const override;
-	virtual void Accept(const std::unique_ptr<MeasurementVisitor>& visitor) const override;
+	virtual void Accept(const MeasurementVisitorPtr& visitor) const override;
 private:
 	PressureMeasurement(const PressureMeasurement&) = delete;
 	PressureMeasurement& operator=(const PressureMeasurement&) = delete;
@@ -123,7 +119,7 @@ public:
 	explicit TemperatureMeasurement(const F32 value);
 	virtual ~TemperatureMeasurement() {}
 	virtual std::string ToString() const override;
-	virtual void Accept(const std::unique_ptr<MeasurementVisitor>& visitor) const override;
+	virtual void Accept(const MeasurementVisitorPtr& visitor) const override;
 private:
 	TemperatureMeasurement(const TemperatureMeasurement&) = delete;
 	TemperatureMeasurement& operator=(const TemperatureMeasurement&) = delete;

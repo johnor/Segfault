@@ -8,15 +8,14 @@
 #ifndef MEASUREMENT_H_
 #define MEASUREMENT_H_
 
-#include "../interfaces/measurement_visitor.h"
-#include <memory>
+#include "../headers/smart_pointer_typedefs.h"
 #include <string>
 
 class Measurement
 {
 public:
 	virtual ~Measurement() {}
-	virtual void Accept(const std::unique_ptr<MeasurementVisitor>& visitor) const = 0;
+	virtual void Accept(const MeasurementVisitorPtr& visitor) const = 0;
 	virtual std::string ToString() const = 0;
 private:
 	Measurement& operator=(const Measurement&) = delete;

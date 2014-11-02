@@ -32,19 +32,19 @@ const U8 LSM303D_ACCEL_SAMPLERATE_50 = 5; // Sample rate 50 hz
 const U8 LSM303D_ACCEL_FSR_8         = 3; // Full scale selection +- 8g
 const U8 LSM303D_ACCEL_LPF_50        = 3; // Low pass filter 50hz
 
-std::unique_ptr<Measurement> AccAndMagHandler::GetNextMeasurement() const
+MeasurementPtr AccAndMagHandler::GetNextMeasurement() const
 {
 	/* For testing purposes only */
 	static bool returnAcc{true};
 	if (returnAcc)
 	{
 		returnAcc = false;
-		return std::unique_ptr<Measurement>{new AccelerometerMeasurement{1.f, 2.f, 3.f}};
+		return MeasurementPtr{new AccelerometerMeasurement{1.f, 2.f, 3.f}};
 	}
 	else
 	{
 		returnAcc = true;
-		return std::unique_ptr<Measurement>{new CompassMeasurement{1.f, 2.f, 3.f}};
+		return MeasurementPtr{new CompassMeasurement{1.f, 2.f, 3.f}};
 	}
 }
 
