@@ -7,15 +7,15 @@
 #define BAROMETER_HANDLER_H_
 
 #include "../../interfaces/i2chandler.h"
-
-class Measurement;
+#include "../../interfaces/measurement.h"
+#include <memory>
 
 class BarometerHandler : public I2CHandler
 {
 public:
 	BarometerHandler() = default;
-	virtual ~BarometerHandler() = default;
-	virtual const Measurement* GetNextMeasurement() const override;
+	virtual ~BarometerHandler() {}
+	virtual std::unique_ptr<Measurement> GetNextMeasurement() const override;
 	virtual bool HasAvailableMeasurements() const override;
 private:
 	BarometerHandler(const BarometerHandler&) = delete;

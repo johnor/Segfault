@@ -7,27 +7,27 @@
 #define ALT_IMU_H_
 
 #include "../interfaces/imu.h"
+#include "../interfaces/measurement.h"
+#include "../interfaces/i2c_handler_factory.h"
+#include "../interfaces/i2chandler.h"
+#include <memory>
 #include <vector>
-
-class I2CHandlerFactory;
-class I2CHandler;
-class Measurement;
 
 class AltIMU : public IMU
 {
 public:
-	explicit AltIMU(const I2CHandlerFactory *const handlerFactory);
-	virtual ~AltIMU();
-	virtual std::vector<const Measurement*> GetNextMeasurementBatch() const override;
+	explicit AltIMU(const std::unique_ptr<I2CHandlerFactory>& handlerFactory);
+	virtual ~AltIMU() {}
+	virtual std::vector<std::unique_ptr<Measurement>> GetNextMeasurementBatch() const override;
 private:
 	AltIMU(const AltIMU&) = delete;
 	AltIMU& operator=(const AltIMU&) = delete;
 
-	void GetAllAvailableMeasurementsFromHandler(std::vector<const Measurement*>& measurementBatch,
-												const I2CHandler *const handler) const;
-	I2CHandler* accAndMagHandler;
-	I2CHandler* gyroscopeHandler;
-	I2CHandler* barometerHandler;
+	void GetAllAvailableMeasurementsFromHandler(std::vector<std::unique_ptr<Measurement>>& measurementBatch,
+												const std::unique_ptr<I2CHandler>& handler) const;
+	std::unique_ptr<I2CHandler> accAndMagHandler;
+	std::unique_ptr<I2CHandler> gyroscopeHandler;
+	std::unique_ptr<I2CHandler> barometerHandler;
 };
 
 #endif

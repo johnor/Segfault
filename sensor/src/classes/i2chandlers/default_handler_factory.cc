@@ -9,17 +9,17 @@
 #include "gyroscope_handler.h"
 #include "barometer_handler.h"
 
-I2CHandler* DefaultHandlerFactory::MakeAccAndMagHandler() const
+std::unique_ptr<I2CHandler> DefaultHandlerFactory::MakeAccAndMagHandler() const
 {
-	return new AccAndMagHandler{};
+	return std::unique_ptr<I2CHandler>{new AccAndMagHandler{}};
 }
 
-I2CHandler* DefaultHandlerFactory::MakeGyroscopeHandler() const
+std::unique_ptr<I2CHandler> DefaultHandlerFactory::MakeGyroscopeHandler() const
 {
-	return new GyroscopeHandler{};
+	return std::unique_ptr<I2CHandler>{new GyroscopeHandler{}};
 }
 
-I2CHandler* DefaultHandlerFactory::MakeBarometerHandler() const
+std::unique_ptr<I2CHandler> DefaultHandlerFactory::MakeBarometerHandler() const
 {
-	return new BarometerHandler{};
+	return std::unique_ptr<I2CHandler>{new BarometerHandler{}};
 }

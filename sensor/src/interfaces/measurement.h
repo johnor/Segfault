@@ -8,15 +8,15 @@
 #ifndef MEASUREMENT_H_
 #define MEASUREMENT_H_
 
+#include "../interfaces/measurement_visitor.h"
+#include <memory>
 #include <string>
-
-class MeasurementVisitor;
 
 class Measurement
 {
 public:
-	virtual ~Measurement() {};
-	virtual void Accept(MeasurementVisitor *const visitor) const = 0;
+	virtual ~Measurement() {}
+	virtual void Accept(const std::unique_ptr<MeasurementVisitor>& visitor) const = 0;
 	virtual std::string ToString() const = 0;
 };
 

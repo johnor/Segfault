@@ -7,15 +7,15 @@
 #define ACC_AND_MAG_HANDLER_H_
 
 #include "../../interfaces/i2chandler.h"
-
-class Measurement;
+#include "../../interfaces/measurement.h"
+#include <memory>
 
 class AccAndMagHandler : public I2CHandler
 {
 public:
 	AccAndMagHandler() = default;
-	virtual ~AccAndMagHandler() = default;
-	virtual const Measurement* GetNextMeasurement() const override;
+	virtual ~AccAndMagHandler() {}
+	virtual std::unique_ptr<Measurement> GetNextMeasurement() const override;
 	virtual bool HasAvailableMeasurements() const override;
 private:
 	AccAndMagHandler(const AccAndMagHandler&) = delete;
