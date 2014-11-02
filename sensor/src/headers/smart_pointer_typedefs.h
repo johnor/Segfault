@@ -16,13 +16,13 @@ class I2CHandlerFactory;
 class IMU;
 class Model;
 
-typedef std::unique_ptr<Measurement> MeasurementPtr;
+typedef std::unique_ptr<const Measurement> MeasurementPtr;
 typedef std::unique_ptr<MeasurementVisitor> MeasurementVisitorPtr;
-typedef std::unique_ptr<I2CHandler> I2CHandlerPtr;
-typedef std::unique_ptr<I2CHandlerFactory> I2CHandlerFactoryPtr;
-typedef std::unique_ptr<IMU> IMUPtr;
+typedef std::unique_ptr<const I2CHandler> I2CHandlerPtr;
+typedef std::unique_ptr<const I2CHandlerFactory> I2CHandlerFactoryPtr;
+typedef std::unique_ptr<const IMU> IMUPtr;
 typedef std::unique_ptr<Model> ModelPtr;
 
-typedef std::vector<std::unique_ptr<Measurement>> MeasurementBatch;
+typedef std::vector<std::unique_ptr<const Measurement>> MeasurementBatch;
 
 #endif
