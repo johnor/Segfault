@@ -6,19 +6,19 @@
 #include "barometer_handler.h"
 #include "../measurements.h"
 
-std::unique_ptr<Measurement> BarometerHandler::GetNextMeasurement() const
+MeasurementPtr BarometerHandler::GetNextMeasurement() const
 {
 	/* For testing purposes only */
 	static bool returnPressure{true};
 	if (returnPressure)
 	{
 		returnPressure = false;
-		return std::unique_ptr<Measurement>{new PressureMeasurement{1.f}};
+		return MeasurementPtr{new PressureMeasurement{1.f}};
 	}
 	else
 	{
 		returnPressure = true;
-		return std::unique_ptr<Measurement>{new TemperatureMeasurement{1.f}};
+		return MeasurementPtr{new TemperatureMeasurement{1.f}};
 	}
 }
 

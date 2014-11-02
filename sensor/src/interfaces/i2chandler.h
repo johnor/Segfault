@@ -7,14 +7,13 @@
 #ifndef I2C_HANDLER_H_
 #define I2C_HANDLER_H_
 
-#include "../interfaces/measurement.h"
-#include <memory>
+#include "../headers/smart_pointer_typedefs.h"
 
 class I2CHandler
 {
 public:
 	virtual ~I2CHandler() {}
-	virtual std::unique_ptr<Measurement> GetNextMeasurement() const = 0;
+	virtual MeasurementPtr GetNextMeasurement() const = 0;
 	virtual bool HasAvailableMeasurements() const = 0;
 };
 

@@ -6,16 +6,15 @@
 #ifndef ACC_AND_MAG_HANDLER_H_
 #define ACC_AND_MAG_HANDLER_H_
 
+#include "../../headers/smart_pointer_typedefs.h"
 #include "../../interfaces/i2chandler.h"
-#include "../../interfaces/measurement.h"
-#include <memory>
 
 class AccAndMagHandler : public I2CHandler
 {
 public:
 	AccAndMagHandler() = default;
 	virtual ~AccAndMagHandler() {}
-	virtual std::unique_ptr<Measurement> GetNextMeasurement() const override;
+	virtual MeasurementPtr GetNextMeasurement() const override;
 	virtual bool HasAvailableMeasurements() const override;
 private:
 	AccAndMagHandler(const AccAndMagHandler&) = delete;

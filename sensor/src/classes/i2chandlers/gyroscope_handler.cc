@@ -6,10 +6,10 @@
 #include "gyroscope_handler.h"
 #include "../measurements.h"
 
-std::unique_ptr<Measurement> GyroscopeHandler::GetNextMeasurement() const
+MeasurementPtr GyroscopeHandler::GetNextMeasurement() const
 {
 	/* For testing purposes only */
-	return std::unique_ptr<Measurement>{new GyroscopeMeasurement{1.f, 2.f, 3.f}};
+	return MeasurementPtr{new GyroscopeMeasurement{1.f, 2.f, 3.f}};
 }
 
 bool GyroscopeHandler::HasAvailableMeasurements() const

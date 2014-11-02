@@ -4,17 +4,19 @@
 */
 
 #include "alt_imu.h"
+#include "../interfaces/i2c_handler_factory.h"
+#include "../interfaces/measurement.h"
 
-AltIMU::AltIMU(const std::unique_ptr<I2CHandlerFactory>& handlerFactory)
+AltIMU::AltIMU(const I2CHandlerFactoryPtr& handlerFactory)
 {
 	accAndMagHandler = handlerFactory->MakeAccAndMagHandler();
 	gyroscopeHandler = handlerFactory->MakeGyroscopeHandler();
 	barometerHandler = handlerFactory->MakeBarometerHandler();
 }
 
-std::vector<std::unique_ptr<Measurement>> AltIMU::GetNextMeasurementBatch() const
+MeasurementBatch AltIMU::GetNextMeasurementBatch() const
 {
-	std::vector<std::unique_ptr<Measurement>> measurementBatch{};
+	MeasurementBatch measurementBatch{};
 
 	/* For testing purposes only */
 	measurementBatch.push_back(accAndMagHandler->GetNextMeasurement());
@@ -26,8 +28,8 @@ std::vector<std::unique_ptr<Measurement>> AltIMU::GetNextMeasurementBatch() cons
 	return measurementBatch;
 }
 
-void AltIMU::GetAllAvailableMeasurementsFromHandler(std::vector<std::unique_ptr<Measurement>>& measurementBatch,
-													const std::unique_ptr<I2CHandler>& handler) const
+void AltIMU::GetAllAvailableMeasurementsFromHandler(MeasurementBatch& measurementBatch,
+	                                                const I2CHandlerPtr& handler) const
 {
 	while (handler->HasAvailableMeasurements())
 	{
