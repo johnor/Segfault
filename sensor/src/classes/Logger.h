@@ -48,7 +48,7 @@ private:
 	static std::shared_ptr<Logger>& GetInstance();
 	static std::string getStringFromLogLevel(const LogLevel level);
 
-	std::string filename{ "log.txt" };
+	std::string filename = "log.txt";
 	std::ofstream fs;
 };
 
