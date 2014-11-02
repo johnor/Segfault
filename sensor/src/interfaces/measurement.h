@@ -18,6 +18,8 @@ public:
 	virtual ~Measurement() {}
 	virtual void Accept(const std::unique_ptr<MeasurementVisitor>& visitor) const = 0;
 	virtual std::string ToString() const = 0;
+private:
+	Measurement& operator=(const Measurement&) = delete;
 };
 
 #endif

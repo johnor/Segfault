@@ -28,7 +28,7 @@ U8 I2CDevice::ReadReg8(const U8 reg)
 		throw std::runtime_error("Could not read from device");
 	}
 	//Logger::Log(LogLevel::Debug) << "Read data: " << std::hex << static_cast<int>(result);
-	return result;
+	return static_cast<U8>(result);
 }
 
 

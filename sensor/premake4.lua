@@ -53,12 +53,12 @@ solution "Sensor"
 
       configuration "Debug"
          defines { "DEBUG" }
-         flags { "Symbols" }
+         flags { "Symbols", "ExtraWarnings" }
          targetdir "bin/debug"
 
       configuration "Release"
          defines { "NDEBUG" }
-         flags { "Optimize" }
+         flags { "Optimize", "ExtraWarnings" }
          targetdir "bin/release" 
    
       -- compiler flags

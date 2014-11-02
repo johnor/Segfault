@@ -76,12 +76,12 @@ std::string Logger::getStringFromLogLevel(const LogLevel level)
 
 
 LogStream::LogStream(Logger& logger_, LogLevel level_) :
-	logger(logger), level(level_)
+std::ostringstream{}, logger(logger_), level(level_)
 {
 }
 
 LogStream::LogStream(const LogStream& ls) :
-	logger(ls.logger), level(ls.level)
+std::basic_ios<char>{}, std::ostringstream{}, logger(ls.logger), level(ls.level)
 {
 }
 

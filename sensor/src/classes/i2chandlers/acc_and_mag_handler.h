@@ -21,7 +21,7 @@ public:
 private:
 	AccAndMagHandler(const AccAndMagHandler&) = delete;
 	AccAndMagHandler& operator=(const AccAndMagHandler&) = delete;
-	void Init(const int devId);
+	void Init(const U8 devId);
 
 	F32 accelerometerScale{ 0.f };
 };

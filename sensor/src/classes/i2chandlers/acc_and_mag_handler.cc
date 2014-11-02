@@ -91,9 +91,9 @@ void AccAndMagHandler::Update()
 }
 
 
-void AccAndMagHandler::Init(const int address)
+void AccAndMagHandler::Init(const U8 devId)
 {
-	i2cDevice.Init(address);
+	i2cDevice.Init(devId);
 	if (int id = i2cDevice.ReadReg8(L3GD20H_WHO_AM_I) != LSM303D_ID)
 	{
 		Logger::Log(LogLevel::Error) << "Wrong id read. Expected: " << std::hex << static_cast<int>(LSM303D_ID) << ", read: " << std::hex << static_cast<int>(id);
