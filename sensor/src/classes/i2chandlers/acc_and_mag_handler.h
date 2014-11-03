@@ -8,6 +8,7 @@
 
 #include "../../headers/smart_pointer_typedefs.h"
 #include "../../interfaces/i2chandler.h"
+#include "classes/i2cdevice.h"
 
 class AccAndMagHandler : public I2CHandler
 {
@@ -22,6 +23,7 @@ private:
 	AccAndMagHandler& operator=(const AccAndMagHandler&) = delete;
 	void Init(const U8 devId);
 
+	I2CDevice i2cDevice;
 	F32 accelerometerScale{ 0.f };
 };
 

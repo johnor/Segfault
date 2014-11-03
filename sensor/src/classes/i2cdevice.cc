@@ -19,7 +19,7 @@ bool I2CDevice::IsOpen() const
 	return fd != deviceNotOpen;
 }
 
-U8 I2CDevice::ReadReg8(const U8 reg)
+U8 I2CDevice::ReadReg8(const U8 reg) const
 {
 	//Logger::Log(LogLevel::Debug) << "ReadReg8: Reading data from register: " << std::hex << static_cast<int>(reg);
 	int result = wiringPiI2CReadReg8(fd, reg);
@@ -32,7 +32,7 @@ U8 I2CDevice::ReadReg8(const U8 reg)
 }
 
 
-F32 I2CDevice::Read16BitToFloat(const U8 reg, const F32 scaling)
+F32 I2CDevice::Read16BitToFloat(const U8 reg, const F32 scaling) const
 {
 	//Logger::Log(LogLevel::Debug) << "Read16BitToFloat: Reading data from register: " << std::hex << static_cast<int>(reg);
 	int low = ReadReg8(reg);
@@ -46,7 +46,7 @@ F32 I2CDevice::Read16BitToFloat(const U8 reg, const F32 scaling)
 }
 
 
-void I2CDevice::WriteReg8(const U8 reg, const U8 data)
+void I2CDevice::WriteReg8(const U8 reg, const U8 data) const
 {
 	//Logger::Log(LogLevel::Debug) << "WriteReg8: Writing: " << std::hex << static_cast<int>(data) << " to register: " << std::hex << static_cast<int>(reg);
 	int result = wiringPiI2CWriteReg8(fd, reg, data);

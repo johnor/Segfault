@@ -13,9 +13,9 @@ public:
 	void Init(const U8 address);
 	bool IsOpen() const;
 
-	U8 ReadReg8(const U8 reg);
-	F32 Read16BitToFloat(const U8 reg, const F32 scaling);
-	void WriteReg8(const U8 reg, const U8 data);
+	U8 ReadReg8(const U8 reg) const;
+	F32 Read16BitToFloat(const U8 reg, const F32 scaling) const;
+	void WriteReg8(const U8 reg, const U8 data) const;
 
 private:
 	static const int deviceNotOpen = -1;
