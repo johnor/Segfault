@@ -3,14 +3,14 @@
 #include "wiringPi/headers/wiringPiI2C.h"
 #include "logger.h"
 
-void I2CDevice::Init(const U8 address)
+I2CDevice::I2CDevice(const U8 address)
 {
 	Logger::Log(LogLevel::Debug) << "Opening i2c device at address: " << std::hex << static_cast<int>(address);
 	fd = wiringPiI2CSetup(address);
 
 	if (fd == deviceNotOpen)
 	{
-		throw std::runtime_error("I2CDevice::Init: Could not open i2c device");
+		throw std::runtime_error("I2CDevice(): Could not open i2c device");
 	}
 }
 

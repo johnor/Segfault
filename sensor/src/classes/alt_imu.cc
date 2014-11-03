@@ -11,7 +11,14 @@
 
 AltIMU::AltIMU(const SensorHandlerFactoryPtr& handlerFactory)
 {
-	accAndMagHandler = handlerFactory->MakeAccAndMagHandler();
+	try
+	{
+		accAndMagHandler = handlerFactory->MakeAccAndMagHandler();
+	}
+	catch (std::runtime_error &e)
+	{
+		Logger::Log(LogLevel::Error) << "Exception in AltIMU::AltIMU: " << e.what();
+	}
 	gyroscopeHandler = handlerFactory->MakeGyroscopeHandler();
 	barometerHandler = handlerFactory->MakeBarometerHandler();
 }
@@ -21,21 +28,16 @@ MeasurementBatch AltIMU::GetNextMeasurementBatch() const
 	MeasurementBatch measurementBatch{};
 
 	/* For testing purposes only */
-	measurementBatch.push_back(accAndMagHandler->GetNextMeasurement());
-	measurementBatch.push_back(accAndMagHandler->GetNextMeasurement());
+	if (accAndMagHandler)
+	{
+		measurementBatch.push_back(accAndMagHandler->GetNextMeasurement());
+		measurementBatch.push_back(accAndMagHandler->GetNextMeasurement());
+		accAndMagHandler->Update();
+	}
+	
 	measurementBatch.push_back(gyroscopeHandler->GetNextMeasurement());
 	measurementBatch.push_back(barometerHandler->GetNextMeasurement());
 	measurementBatch.push_back(barometerHandler->GetNextMeasurement());
-
-	// For testing
-	try
-	{
-		accAndMagHandler->Update();
-	}
-	catch (std::runtime_error &e)
-	{
-		Logger::Log(LogLevel::Error) << "Exception in GetNextMeasurementBatch(): " << e.what();
-	}
 
 	return measurementBatch;
 }

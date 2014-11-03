@@ -11,7 +11,6 @@
 #include "wiringPi/headers/wiringPiI2C.h"
 #include "classes/logger.h"
 
-#include <stdio.h>
 
 const U8 LSM303D_ADDRESS   = 0x1d;
 const U8 LSM303D_ID        = 0x49;
@@ -31,6 +30,19 @@ const U8 LSM303D_OUT_Z_H_A = 0x2D;
 const U8 LSM303D_ACCEL_SAMPLERATE_50 = 5; // Sample rate 50 hz
 const U8 LSM303D_ACCEL_FSR_8         = 3; // Full scale selection +- 8g
 const U8 LSM303D_ACCEL_LPF_50        = 3; // Low pass filter 50hz
+
+
+AccAndMagHandler::AccAndMagHandler()
+try
+: i2cDevice(LSM303D_ADDRESS)
+{
+	SetUpRegisters();
+}
+catch (std::runtime_error &e)
+{
+	Logger::Log(LogLevel::Error) << "AccAndMagHandler::AccAndMagHandler: " << e.what();
+}
+
 
 MeasurementPtr AccAndMagHandler::GetNextMeasurement() const
 {
@@ -56,12 +68,6 @@ bool AccAndMagHandler::HasAvailableMeasurements() const
 
 void AccAndMagHandler::Update()
 {
-	if (!i2cDevice.IsOpen())
-	{
-		Logger::Log(LogLevel::Info) << "Initializing i2c for acc and mag handler";
-		Init(LSM303D_ADDRESS);
-	}
-
 	// read status and measurement
 	int status = i2cDevice.ReadReg8(LSM303D_STATUS_A);
 	Logger::Log(LogLevel::Info) << "Status: " << (std::bitset<8>)status;
@@ -69,7 +75,7 @@ void AccAndMagHandler::Update()
 	F32 zAcc = 0;
 	F32 xAcc = i2cDevice.Read16BitToFloat(LSM303D_OUT_X_L_A, accelerometerScale);
 	F32 yAcc = i2cDevice.Read16BitToFloat(LSM303D_OUT_Y_L_A, accelerometerScale);
-	//F32 zAcc = i2cDevice.Read16BitToFloat(LSM303D_OUT_Z_L_A, accelerometerScale);
+	zAcc = i2cDevice.Read16BitToFloat(LSM303D_OUT_Z_L_A, accelerometerScale);
 
 	Logger::Log(LogLevel::Info) << "xAcc: " << xAcc;
 	Logger::Log(LogLevel::Info) << "yAcc: " << yAcc;
@@ -81,6 +87,9 @@ void AccAndMagHandler::Update()
 	// Read from device again
 	status = i2cDevice.ReadReg8(LSM303D_STATUS_A);
 	Logger::Log(LogLevel::Info) << "Status: " << (std::bitset<8>)status;
+	xAcc = i2cDevice.Read16BitToFloat(LSM303D_OUT_X_L_A, accelerometerScale);
+	yAcc = i2cDevice.Read16BitToFloat(LSM303D_OUT_Y_L_A, accelerometerScale);
+	zAcc = i2cDevice.Read16BitToFloat(LSM303D_OUT_Z_L_A, accelerometerScale);
 
 	Logger::Log(LogLevel::Info) << "xAcc: " << xAcc;
 	Logger::Log(LogLevel::Info) << "yAcc: " << yAcc;
@@ -91,13 +100,12 @@ void AccAndMagHandler::Update()
 }
 
 
-void AccAndMagHandler::Init(const U8 devId)
+void AccAndMagHandler::SetUpRegisters()
 {
-	i2cDevice.Init(devId);
-	if (int id = i2cDevice.ReadReg8(L3GD20H_WHO_AM_I) != LSM303D_ID)
+	Logger::Log(LogLevel::Info) << "Initializing i2c for acc and mag handler";
+	if (i2cDevice.ReadReg8(L3GD20H_WHO_AM_I) != LSM303D_ID)
 	{
-		Logger::Log(LogLevel::Error) << "Wrong id read. Expected: " << std::hex << static_cast<int>(LSM303D_ID) << ", read: " << std::hex << static_cast<int>(id);
-		throw std::runtime_error("AccAndMagHandler::Init: Wrong id read");
+		throw std::runtime_error("AccAndMagHandler::SetUpRegisters(): Wrong id read");
 	}
 
 	// Init ctrl1

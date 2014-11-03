@@ -7,10 +7,9 @@
 class I2CDevice
 {
 public:
-	I2CDevice() = default;
+	explicit I2CDevice(const U8 address);
 	~I2CDevice() = default;
 
-	void Init(const U8 address);
 	bool IsOpen() const;
 
 	U8 ReadReg8(const U8 reg) const;
