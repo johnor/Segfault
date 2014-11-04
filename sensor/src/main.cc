@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 	Logger::Log(LogLevel::Info) << "SensorApp initialized";
 
 	/* Create factory and IMU */
-	I2CHandlerFactoryPtr factory{new DefaultHandlerFactory{}};
+	SensorHandlerFactoryPtr factory{new DefaultHandlerFactory{}};
 	IMUPtr imu{new AltIMU{factory}};
 
 	MeasurementBatch measurementBatch{imu->GetNextMeasurementBatch()};

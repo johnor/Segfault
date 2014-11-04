@@ -9,7 +9,7 @@
 #include "../interfaces/sensor_handler_factory.h"
 #include "../interfaces/measurement.h"
 
-AltIMU::AltIMU(const I2CHandlerFactoryPtr& handlerFactory)
+AltIMU::AltIMU(const SensorHandlerFactoryPtr& handlerFactory)
 {
 	accAndMagHandler = handlerFactory->MakeAccAndMagHandler();
 	gyroscopeHandler = handlerFactory->MakeGyroscopeHandler();
@@ -41,7 +41,7 @@ MeasurementBatch AltIMU::GetNextMeasurementBatch() const
 }
 
 void AltIMU::GetAllAvailableMeasurementsFromHandler(MeasurementBatch& measurementBatch,
-	                                                const I2CHandlerPtr& handler) const
+	                                                const SensorHandlerPtr& handler) const
 {
 	while (handler->HasAvailableMeasurements())
 	{

@@ -12,7 +12,7 @@
 class AltIMU : public IMU
 {
 public:
-	explicit AltIMU(const I2CHandlerFactoryPtr& handlerFactory);
+	explicit AltIMU(const SensorHandlerFactoryPtr& handlerFactory);
 	virtual ~AltIMU() {}
 	virtual MeasurementBatch GetNextMeasurementBatch() const override;
 private:
@@ -20,10 +20,10 @@ private:
 	AltIMU& operator=(const AltIMU&) = delete;
 
 	void GetAllAvailableMeasurementsFromHandler(MeasurementBatch& measurementBatch,
-		                                        const I2CHandlerPtr& handler) const;
-	I2CHandlerPtr accAndMagHandler;
-	I2CHandlerPtr gyroscopeHandler;
-	I2CHandlerPtr barometerHandler;
+		                                        const SensorHandlerPtr& handler) const;
+	SensorHandlerPtr accAndMagHandler;
+	SensorHandlerPtr gyroscopeHandler;
+	SensorHandlerPtr barometerHandler;
 };
 
 #endif

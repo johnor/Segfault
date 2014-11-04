@@ -13,9 +13,9 @@ class SensorHandlerFactory
 {
 public:
 	virtual ~SensorHandlerFactory() {}
-	virtual I2CHandlerPtr MakeAccAndMagHandler() const = 0;
-	virtual I2CHandlerPtr MakeGyroscopeHandler() const = 0;
-	virtual I2CHandlerPtr MakeBarometerHandler() const = 0;
+	virtual SensorHandlerPtr MakeAccAndMagHandler() const = 0;
+	virtual SensorHandlerPtr MakeGyroscopeHandler() const = 0;
+	virtual SensorHandlerPtr MakeBarometerHandler() const = 0;
 };
 
 #endif
