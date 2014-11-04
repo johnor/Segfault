@@ -9,10 +9,10 @@
 
 #include "../headers/smart_pointer_typedefs.h"
 
-class I2CHandler
+class SensorHandler
 {
 public:
-	virtual ~I2CHandler() {}
+	virtual ~SensorHandler() {}
  	virtual void Update() = 0;
 	virtual MeasurementPtr GetNextMeasurement() const = 0;
 	virtual bool HasAvailableMeasurements() const = 0;

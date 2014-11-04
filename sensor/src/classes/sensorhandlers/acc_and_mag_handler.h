@@ -7,10 +7,10 @@
 #define ACC_AND_MAG_HANDLER_H_
 
 #include "../../headers/smart_pointer_typedefs.h"
-#include "../../interfaces/i2chandler.h"
+#include "../../interfaces/sensorhandler.h"
 #include "classes/i2cdevice.h"
 
-class AccAndMagHandler : public I2CHandler
+class AccAndMagHandler : public SensorHandler
 {
 public:
 	AccAndMagHandler() = default;

@@ -4,7 +4,7 @@
 
 #include "interfaces\imu.h"
 #include "interfaces\measurement.h"
-#include "classes\i2chandlers\default_handler_factory.h"
+#include "classes\sensorhandlers\default_handler_factory.h"
 #include "classes\alt_imu.h"
 #include "classes/Logger.h"
 

@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include "alt_imu.h"
 #include "classes/logger.h"
-#include "../interfaces/i2c_handler_factory.h"
+#include "../interfaces/sensor_handler_factory.h"
 #include "../interfaces/measurement.h"
 
 AltIMU::AltIMU(const I2CHandlerFactoryPtr& handlerFactory)

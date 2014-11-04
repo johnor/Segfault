@@ -11,15 +11,15 @@
 
 class Measurement;
 class MeasurementVisitor;
-class I2CHandler;
-class I2CHandlerFactory;
+class SensorHandler;
+class SensorHandlerFactory;
 class IMU;
 class Model;
 
 typedef std::unique_ptr<const Measurement> MeasurementPtr;
 typedef std::unique_ptr<MeasurementVisitor> MeasurementVisitorPtr;
-typedef std::unique_ptr<I2CHandler> I2CHandlerPtr;
-typedef std::unique_ptr<const I2CHandlerFactory> I2CHandlerFactoryPtr;
+typedef std::unique_ptr<SensorHandler> I2CHandlerPtr;
+typedef std::unique_ptr<const SensorHandlerFactory> I2CHandlerFactoryPtr;
 typedef std::unique_ptr<const IMU> IMUPtr;
 typedef std::unique_ptr<Model> ModelPtr;
 

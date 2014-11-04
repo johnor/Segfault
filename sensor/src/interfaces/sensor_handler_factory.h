@@ -9,10 +9,10 @@
 
 #include "../headers/smart_pointer_typedefs.h"
 
-class I2CHandlerFactory
+class SensorHandlerFactory
 {
 public:
-	virtual ~I2CHandlerFactory() {}
+	virtual ~SensorHandlerFactory() {}
 	virtual I2CHandlerPtr MakeAccAndMagHandler() const = 0;
 	virtual I2CHandlerPtr MakeGyroscopeHandler() const = 0;
 	virtual I2CHandlerPtr MakeBarometerHandler() const = 0;

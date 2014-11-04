@@ -7,9 +7,9 @@
 #define BAROMETER_HANDLER_H_
 
 #include "../../headers/smart_pointer_typedefs.h"
-#include "../../interfaces/i2chandler.h"
+#include "../../interfaces/sensorhandler.h"
 
-class BarometerHandler : public I2CHandler
+class BarometerHandler : public SensorHandler
 {
 public:
 	BarometerHandler() = default;
