@@ -23,6 +23,6 @@ typedef std::unique_ptr<const SensorHandlerFactory> SensorHandlerFactoryPtr;
 typedef std::unique_ptr<const IMU> IMUPtr;
 typedef std::unique_ptr<Model> ModelPtr;
 
-typedef std::vector<std::unique_ptr<const Measurement>> MeasurementBatch;
+typedef std::vector<MeasurementPtr> MeasurementBatch;
 
 #endif

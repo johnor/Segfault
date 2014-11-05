@@ -30,14 +30,17 @@ MeasurementBatch AltIMU::GetNextMeasurementBatch() const
 	/* For testing purposes only */
 	if (accAndMagHandler)
 	{
-		measurementBatch.push_back(accAndMagHandler->GetNextMeasurement());
-		measurementBatch.push_back(accAndMagHandler->GetNextMeasurement());
+		MeasurementBatch accMeasurements = accAndMagHandler->GetMeasurements();
+		std::move(accMeasurements.begin(), accMeasurements.end(), std::inserter(measurementBatch, measurementBatch.end()));
 		accAndMagHandler->Update();
 	}
 	
-	measurementBatch.push_back(gyroscopeHandler->GetNextMeasurement());
-	measurementBatch.push_back(barometerHandler->GetNextMeasurement());
-	measurementBatch.push_back(barometerHandler->GetNextMeasurement());
+	MeasurementBatch gyroMeasurements = gyroscopeHandler->GetMeasurements();
+	std::move(gyroMeasurements.begin(), gyroMeasurements.end(), std::inserter(measurementBatch, measurementBatch.end()));
+
+	MeasurementBatch barometerMeasurements = barometerHandler->GetMeasurements();
+	std::move(barometerMeasurements.begin(), barometerMeasurements.end(), std::inserter(measurementBatch, measurementBatch.end()));
+
 
 	return measurementBatch;
 }
@@ -45,8 +48,4 @@ MeasurementBatch AltIMU::GetNextMeasurementBatch() const
 void AltIMU::GetAllAvailableMeasurementsFromHandler(MeasurementBatch& measurementBatch,
 	                                                const SensorHandlerPtr& handler) const
 {
-	while (handler->HasAvailableMeasurements())
-	{
-		measurementBatch.push_back(handler->GetNextMeasurement());
-	}
 }

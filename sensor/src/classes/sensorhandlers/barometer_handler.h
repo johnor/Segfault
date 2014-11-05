@@ -14,7 +14,7 @@ class BarometerHandler : public SensorHandler
 public:
 	BarometerHandler() = default;
 	virtual ~BarometerHandler() {}
-	virtual MeasurementPtr GetNextMeasurement() const override;
+	virtual MeasurementBatch GetMeasurements() const override;
 	virtual bool HasAvailableMeasurements() const override;
 
 	virtual void Update() override;

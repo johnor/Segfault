@@ -16,7 +16,7 @@ public:
 	AccAndMagHandler();
 	virtual ~AccAndMagHandler() {}
     virtual void Update() override;
-	virtual MeasurementPtr GetNextMeasurement() const override;
+	virtual MeasurementBatch GetMeasurements() const override;
 	virtual bool HasAvailableMeasurements() const override;
 private:
 	AccAndMagHandler(const AccAndMagHandler&) = delete;

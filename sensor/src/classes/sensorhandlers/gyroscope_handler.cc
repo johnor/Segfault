@@ -6,10 +6,12 @@
 #include "gyroscope_handler.h"
 #include "../measurements.h"
 
-MeasurementPtr GyroscopeHandler::GetNextMeasurement() const
+MeasurementBatch GyroscopeHandler::GetMeasurements() const
 {
-	/* For testing purposes only */
-	return MeasurementPtr{new GyroscopeMeasurement{1.f, 2.f, 3.f}};
+	MeasurementBatch measurements;
+	measurements.push_back(MeasurementPtr{ new GyroscopeMeasurement{ 1.f, 2.f, 3.f } });
+
+	return measurements;
 }
 
 bool GyroscopeHandler::HasAvailableMeasurements() const

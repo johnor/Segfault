@@ -44,20 +44,22 @@ catch (std::runtime_error &e)
 }
 
 
-MeasurementPtr AccAndMagHandler::GetNextMeasurement() const
+MeasurementBatch AccAndMagHandler::GetMeasurements() const
 {
+	MeasurementBatch measurements;
 	/* For testing purposes only */
 	static bool returnAcc{true};
 	if (returnAcc)
 	{
 		returnAcc = false;
-		return MeasurementPtr{new AccelerometerMeasurement{1.f, 2.f, 3.f}};
+		measurements.push_back(MeasurementPtr{ new AccelerometerMeasurement{ 1.f, 2.f, 3.f } });
 	}
 	else
 	{
 		returnAcc = true;
-		return MeasurementPtr{new CompassMeasurement{1.f, 2.f, 3.f}};
+		measurements.push_back(MeasurementPtr{ new CompassMeasurement{ 1.f, 2.f, 3.f } });
 	}
+	return measurements;
 }
 
 bool AccAndMagHandler::HasAvailableMeasurements() const

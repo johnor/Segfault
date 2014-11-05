@@ -6,20 +6,22 @@
 #include "barometer_handler.h"
 #include "../measurements.h"
 
-MeasurementPtr BarometerHandler::GetNextMeasurement() const
+MeasurementBatch BarometerHandler::GetMeasurements() const
 {
+	MeasurementBatch measurements;
+
 	/* For testing purposes only */
 	static bool returnPressure{true};
 	if (returnPressure)
 	{
-		returnPressure = false;
-		return MeasurementPtr{new PressureMeasurement{1.f}};
+		measurements.push_back(MeasurementPtr{ new PressureMeasurement{ 1.f } });
 	}
 	else
 	{
 		returnPressure = true;
-		return MeasurementPtr{new TemperatureMeasurement{1.f}};
+		measurements.push_back(MeasurementPtr{ new TemperatureMeasurement{ 1.f } });
 	}
+	return measurements;
 }
 
 bool BarometerHandler::HasAvailableMeasurements() const

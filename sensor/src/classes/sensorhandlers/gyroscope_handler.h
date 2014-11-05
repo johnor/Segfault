@@ -15,7 +15,7 @@ public:
 	GyroscopeHandler() = default;
 	virtual ~GyroscopeHandler() {}
 	virtual void Update() override;
-	virtual MeasurementPtr GetNextMeasurement() const override;
+	virtual MeasurementBatch GetMeasurements() const override;
 	virtual bool HasAvailableMeasurements() const override;
 private:
 	GyroscopeHandler(const GyroscopeHandler&) = delete;
