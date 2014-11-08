@@ -11,6 +11,7 @@
 #include "../measurements.h"
 #include "classes/logger.h"
 #include "../../headers/exceptions.h"
+#include "classes/clock.h"
 
 
 const U8 LSM303D_ADDRESS        = 0x1d;
@@ -159,7 +160,7 @@ MeasurementPtr AccAndMagHandler::GetNextAccelerometerMeasurement() const
     const F32 sum = sqrt(xAcc*xAcc + yAcc*yAcc + zAcc*zAcc);
     Logger::Log(LogLevel::Debug) << "Sum: " << sum;
 
-    return MeasurementPtr{ new AccelerometerMeasurement{ 0, xAcc, yAcc, zAcc } };
+    return MeasurementPtr{ new AccelerometerMeasurement{ Clock::GetTimeStampInMicroSecs(), xAcc, yAcc, zAcc } };
 }
 
 MeasurementPtr AccAndMagHandler::GetNextMagnetometerMeasurement() const
@@ -173,5 +174,5 @@ MeasurementPtr AccAndMagHandler::GetNextMagnetometerMeasurement() const
     Logger::Log(LogLevel::Debug) << "yComp: " << yComp;
     Logger::Log(LogLevel::Debug) << "zComp: " << zComp;
 
-    return MeasurementPtr{ new CompassMeasurement{ 0, xComp, yComp, zComp } };
+    return MeasurementPtr{ new CompassMeasurement{ Clock::GetTimeStampInMicroSecs(), xComp, yComp, zComp } };
 }

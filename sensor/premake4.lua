@@ -44,7 +44,7 @@ solution "Sensor"
    debugdir "." 
    
    -- prevent "warning LNK4098: defaultlib 'MSVCRTD' conflicts with use of other libs; use /NODEFAULTLIB:library"
-   configuration { "Debug", "vs*" }
+   configuration { "vs*" }
       buildoptions { "/MDd" }
    
    project "SensorApp"
