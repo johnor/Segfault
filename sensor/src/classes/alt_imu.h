@@ -7,13 +7,13 @@
 #define ALT_IMU_H_
 
 #include "../interfaces/imu.h"
-#include "../interfaces/SensorHandler.h"
+#include "../interfaces/sensorhandler.h"
 
 class AltIMU : public IMU
 {
 public:
 	explicit AltIMU(const SensorHandlerFactoryPtr& handlerFactory);
-	virtual ~AltIMU() {}
+	virtual ~AltIMU() {};
 	virtual MeasurementBatch GetNextMeasurementBatch() const override;
 private:
 	AltIMU(const AltIMU&) = delete;

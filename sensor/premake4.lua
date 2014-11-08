@@ -37,7 +37,7 @@ end
 
 solution "Sensor"
    configurations { "Debug", "Release" }
-   platforms {"rpi", "native"}
+   platforms { "rpi", "native" }
    location "build"
    
    -- prevent "warning LNK4098: defaultlib 'MSVCRTD' conflicts with use of other libs; use /NODEFAULTLIB:library"
@@ -64,7 +64,10 @@ solution "Sensor"
    
       -- compiler flags
       configuration { "gmake" }
-         buildoptions { "-std=c++0x -mcpu=arm1176jzf-s -mthumb -mtune=arm1176jzf-s -mfpu=vfp -marm -march=armv6k -mfloat-abi=hard" }
+        buildoptions { "-std=c++0x" }
+
+      configuration { "gmake" , "rpi"}
+         buildoptions { "-mcpu=arm1176jzf-s -mthumb -mtune=arm1176jzf-s -mfpu=vfp -marm -march=armv6k -mfloat-abi=hard" }
       
       -- Link wiringPi
       configuration { "not rpi" } 

@@ -1,12 +1,12 @@
 /* This file contains the entry point for the OrientationFilter application */
 
-#include "headers\smart_pointer_typedefs.h"
+#include "headers/smart_pointer_typedefs.h"
 
-#include "interfaces\imu.h"
-#include "interfaces\measurement.h"
-#include "classes\sensorhandlers\default_handler_factory.h"
-#include "classes\alt_imu.h"
-#include "classes/Logger.h"
+#include "interfaces/imu.h"
+#include "interfaces/measurement.h"
+#include "classes/sensorhandlers/default_handler_factory.h"
+#include "classes/alt_imu.h"
+#include "classes/logger.h"
 
 #include <iostream>
 

@@ -14,7 +14,7 @@ class DefaultHandlerFactory : public SensorHandlerFactory
 {
 public:
 	DefaultHandlerFactory() = default;
-	virtual ~DefaultHandlerFactory() {}
+	virtual ~DefaultHandlerFactory() {};
 	virtual SensorHandlerPtr MakeAccAndMagHandler() const override;
 	virtual SensorHandlerPtr MakeGyroscopeHandler() const override;
 	virtual SensorHandlerPtr MakeBarometerHandler() const override;
