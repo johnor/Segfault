@@ -32,7 +32,6 @@ MeasurementBatch AltIMU::GetNextMeasurementBatch() const
 	{
 		MeasurementBatch accMeasurements = accAndMagHandler->GetMeasurements();
 		std::move(accMeasurements.begin(), accMeasurements.end(), std::inserter(measurementBatch, measurementBatch.end()));
-		accAndMagHandler->Update();
 	}
 	
 	MeasurementBatch gyroMeasurements = gyroscopeHandler->GetMeasurements();

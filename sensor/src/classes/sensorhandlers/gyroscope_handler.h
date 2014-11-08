@@ -14,7 +14,6 @@ class GyroscopeHandler : public SensorHandler
 public:
 	GyroscopeHandler() = default;
 	virtual ~GyroscopeHandler() {}
-	virtual void Update() override;
 	virtual MeasurementBatch GetMeasurements() const override;
 	virtual bool HasAvailableMeasurements() const override;
 private:

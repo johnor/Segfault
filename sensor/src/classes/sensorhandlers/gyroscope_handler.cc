@@ -19,8 +19,3 @@ bool GyroscopeHandler::HasAvailableMeasurements() const
 	/* For testing purposes only */
 	return true;
 }
-
-void GyroscopeHandler::Update()
-{
-
-}

@@ -13,7 +13,6 @@ class SensorHandler
 {
 public:
 	virtual ~SensorHandler() {}
- 	virtual void Update() = 0;
 	virtual MeasurementBatch GetMeasurements() const = 0;
 	virtual bool HasAvailableMeasurements() const = 0;
 };

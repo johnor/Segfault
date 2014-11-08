@@ -15,13 +15,15 @@ class AccAndMagHandler : public SensorHandler
 public:
 	AccAndMagHandler();
 	virtual ~AccAndMagHandler() {}
-    virtual void Update() override;
 	virtual MeasurementBatch GetMeasurements() const override;
 	virtual bool HasAvailableMeasurements() const override;
 private:
 	AccAndMagHandler(const AccAndMagHandler&) = delete;
 	AccAndMagHandler& operator=(const AccAndMagHandler&) = delete;
+
 	void SetUpRegisters();
+	bool HasNewAccelerometerMeasurement() const;
+	MeasurementPtr GetNextAccelerometerMeasurement() const;
 
 	I2CDevice i2cDevice;
 	F32 accelerometerScale{ 0.f };
