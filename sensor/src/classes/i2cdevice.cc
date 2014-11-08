@@ -1,6 +1,6 @@
 #include <stdexcept>
 #include "i2cdevice.h"
-#include "wiringPi/headers/wiringPiI2C.h"
+#include "wiringPi/wiringPiI2C.h"
 #include "logger.h"
 
 I2CDevice::I2CDevice(const U8 address)

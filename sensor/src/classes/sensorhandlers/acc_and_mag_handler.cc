@@ -8,7 +8,6 @@
 #include <bitset>
 #include "acc_and_mag_handler.h"
 #include "../measurements.h"
-#include "wiringPi/headers/wiringPiI2C.h"
 #include "classes/logger.h"
 
 

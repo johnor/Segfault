@@ -25,6 +25,7 @@ newplatform {
     gcc = {
         cc = "arm-linux-gnueabihf-gcc",
         cxx = "arm-linux-gnueabihf-g++",
+        ar = "arm-linux-gnueabihf-ar",
         cppflags = "-MMD"
     }
 }
@@ -70,20 +71,16 @@ solution "Sensor"
          links { "wiringPi-x86" }
 
       configuration { "rpi" }
-         includedirs { "lib/wiringPi/headers" }
          libdirs { "lib/wiringPi/lib-rpi" }
          links { "wiringPi" }
    
    -- wiringRpi for x86
-   if _OPTIONS["platform"] ~= "rpi"
-   then
-      project "wiringPi-x86"
-         kind "StaticLib"
-         language "C"
-         targetdir "build/libs"
-         
-         includedirs { "lib/wiringPi/headers" }
-         files { "lib/wiringPi/headers/**.h", "lib/wiringPi/src-x86/**.c"}
-         vpaths { ["*"] = "lib/wiringPi" }
-   end   
+   project "wiringPi-x86"
+      kind "StaticLib"
+      language "C"
+      targetdir "build/libs"
+      
+      includedirs { "lib" }
+      files { "lib/wiringPi/**.h", "lib/wiringPi/src-x86/**.c"}
+      vpaths { ["*"] = "lib/wiringPi" }
 

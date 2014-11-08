@@ -1,6 +1,5 @@
-#include "wiringPi.h"
-#include "wiringPiI2C.h"
-#include <stdio.h>
+#include "wiringPi/wiringPi.h"
+#include "wiringPi/wiringPiI2C.h"
 
 int wiringPiI2CRead (int fd)
 {
