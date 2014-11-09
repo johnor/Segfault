@@ -5,6 +5,7 @@
 #include "interfaces/imu.h"
 #include "interfaces/measurement.h"
 #include "classes/sensorhandlers/default_handler_factory.h"
+#include "classes/sensorhandlers/log_reader_handler_factory.h"
 #include "classes/alt_imu.h"
 #include "classes/logger.h"
 
@@ -17,7 +18,11 @@ int main(int argc, char* argv[])
 	Logger::Log(LogLevel::Info) << "SensorApp initialized";
 
 	/* Create factory and IMU */
-	SensorHandlerFactoryPtr factory{new DefaultHandlerFactory{}};
+#ifdef _MSC_VER
+	SensorHandlerFactoryPtr factory{ new LogReaderHandlerFactory{} };
+#else
+    SensorHandlerFactoryPtr factory{ new DefaultHandlerFactory{} };
+#endif
 	IMUPtr imu{new AltIMU{factory}};
 
 	MeasurementBatch measurementBatch{imu->GetNextMeasurementBatch()};

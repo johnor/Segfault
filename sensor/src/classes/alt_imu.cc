@@ -27,19 +27,23 @@ MeasurementBatch AltIMU::GetNextMeasurementBatch() const
 {
 	MeasurementBatch measurementBatch{};
 
-	/* For testing purposes only */
 	if (accAndMagHandler)
 	{
 		MeasurementBatch accMeasurements = accAndMagHandler->GetMeasurements();
 		std::move(accMeasurements.begin(), accMeasurements.end(), std::inserter(measurementBatch, measurementBatch.end()));
 	}
 	
-	MeasurementBatch gyroMeasurements = gyroscopeHandler->GetMeasurements();
-	std::move(gyroMeasurements.begin(), gyroMeasurements.end(), std::inserter(measurementBatch, measurementBatch.end()));
-
-	MeasurementBatch barometerMeasurements = barometerHandler->GetMeasurements();
-	std::move(barometerMeasurements.begin(), barometerMeasurements.end(), std::inserter(measurementBatch, measurementBatch.end()));
-
+    if (gyroscopeHandler)
+    {
+        MeasurementBatch gyroMeasurements = gyroscopeHandler->GetMeasurements();
+        std::move(gyroMeasurements.begin(), gyroMeasurements.end(), std::inserter(measurementBatch, measurementBatch.end()));
+    }
+	
+    if (barometerHandler)
+    {
+        MeasurementBatch barometerMeasurements = barometerHandler->GetMeasurements();
+        std::move(barometerMeasurements.begin(), barometerMeasurements.end(), std::inserter(measurementBatch, measurementBatch.end()));
+    }
 
 	return measurementBatch;
 }
