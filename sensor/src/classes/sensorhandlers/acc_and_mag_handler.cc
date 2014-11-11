@@ -49,7 +49,7 @@ MeasurementBatch AccAndMagHandler::GetMeasurements() const
 	MeasurementBatch measurements;
 
 	// For testing
-	measurements.emplace_back(new CompassMeasurement{ 1.f, 2.f, 3.f });
+	measurements.emplace_back(new CompassMeasurement{ 0, 1.f, 2.f, 3.f });
 
 	if (HasNewAccelerometerMeasurement())
 	{
@@ -109,5 +109,5 @@ MeasurementPtr AccAndMagHandler::GetNextAccelerometerMeasurement() const
 	F32 sum = sqrt(xAcc*xAcc + yAcc*yAcc + zAcc*zAcc);
 	Logger::Log(LogLevel::Debug) << "Sum: " << sum;
 
-	return MeasurementPtr{ new AccelerometerMeasurement{ xAcc, yAcc, zAcc } };
+	return MeasurementPtr{ new AccelerometerMeasurement{ 0, xAcc, yAcc, zAcc } };
 }

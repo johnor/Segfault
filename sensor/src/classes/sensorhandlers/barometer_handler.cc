@@ -14,12 +14,12 @@ MeasurementBatch BarometerHandler::GetMeasurements() const
 	static bool returnPressure{true};
 	if (returnPressure)
 	{
-		measurements.push_back(MeasurementPtr{ new PressureMeasurement{ 1.f } });
+		measurements.push_back(MeasurementPtr{ new PressureMeasurement{ 0, 1.f } });
 	}
 	else
 	{
 		returnPressure = true;
-		measurements.push_back(MeasurementPtr{ new TemperatureMeasurement{ 1.f } });
+		measurements.push_back(MeasurementPtr{ new TemperatureMeasurement{ 0, 1.f } });
 	}
 	return measurements;
 }
