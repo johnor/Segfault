@@ -8,9 +8,20 @@
 #include <sstream>
 #include <iomanip>
 
+/* Measurement base */
+MeasurementBase::MeasurementBase(const U32 timeStamp_)
+: timeStamp{ timeStamp_ }
+{
+}
+
+U32 MeasurementBase::GetTimeStamp() const
+{
+    return timeStamp;
+}
+
 /* Scalar measurement */
-ScalarMeasurement::ScalarMeasurement(const F32 value)
-	: value{value}
+ScalarMeasurement::ScalarMeasurement(const U32 timeStamp, const F32 value)
+: MeasurementBase{ timeStamp }, value{ value }
 {
 }
 
@@ -20,6 +31,7 @@ std::string ScalarMeasurement::ToString(const std::string& header, const std::st
 
 	os << std::fixed << std::setprecision(2);
 	os << header << '\n';
+    os << "Ts: " << GetTimeStamp() << ' ';
 	os << "Value: " << value << ' ' << unit;
 	os << '\n';
 
@@ -32,8 +44,8 @@ F32 ScalarMeasurement::GetValue() const
 }
 
 /* Vectorial measurement */
-VectorialMeasurement::VectorialMeasurement(const F32 xValue, const F32 yValue, const F32 zValue)
-	: xValue{xValue}, yValue{yValue}, zValue{zValue}
+VectorialMeasurement::VectorialMeasurement(const U32 timeStamp, const F32 xValue, const F32 yValue, const F32 zValue)
+: MeasurementBase{ timeStamp }, xValue{ xValue }, yValue{ yValue }, zValue{ zValue }
 {
 }
 
@@ -43,6 +55,7 @@ std::string VectorialMeasurement::ToString(const std::string& header, const std:
 
 	os << std::fixed << std::setprecision(2);
 	os << header << '\n';
+    os << "Ts: " << GetTimeStamp() << ' ';
 	os << "X: " << xValue << ' ';
 	os << "Y: " << yValue << ' ';
 	os << "Z: " << zValue << ' ' << unit;
@@ -67,8 +80,8 @@ F32 VectorialMeasurement::GetZValue() const
 }
 
 /* Accelerometer measurement */
-AccelerometerMeasurement::AccelerometerMeasurement(const F32 xValue, const F32 yValue, const F32 zValue)
-	: VectorialMeasurement{xValue, yValue, zValue}
+AccelerometerMeasurement::AccelerometerMeasurement(const U32 timeStamp, const F32 xValue, const F32 yValue, const F32 zValue)
+	: VectorialMeasurement{timeStamp, xValue, yValue, zValue}
 {
 }
 
@@ -83,8 +96,8 @@ void AccelerometerMeasurement::Accept(const MeasurementVisitorPtr& visitor) cons
 }
 
 /* Gyroscope measurement */
-GyroscopeMeasurement::GyroscopeMeasurement(const F32 xValue, const F32 yValue, const F32 zValue)
-	: VectorialMeasurement{xValue, yValue, zValue}
+GyroscopeMeasurement::GyroscopeMeasurement(const U32 timeStamp, const F32 xValue, const F32 yValue, const F32 zValue)
+	: VectorialMeasurement{timeStamp, xValue, yValue, zValue}
 {
 }
 
@@ -99,8 +112,8 @@ void GyroscopeMeasurement::Accept(const MeasurementVisitorPtr& visitor) const
 }
 
 /* Compass measurement */
-CompassMeasurement::CompassMeasurement(const F32 xValue, const F32 yValue, const F32 zValue)
-	: VectorialMeasurement{xValue, yValue, zValue}
+CompassMeasurement::CompassMeasurement(const U32 timeStamp, const F32 xValue, const F32 yValue, const F32 zValue)
+	: VectorialMeasurement{timeStamp, xValue, yValue, zValue}
 {
 }
 
@@ -115,8 +128,8 @@ void CompassMeasurement::Accept(const MeasurementVisitorPtr& visitor) const
 }
 
 /* Pressure measurement */
-PressureMeasurement::PressureMeasurement(const F32 value)
-	: ScalarMeasurement{value}
+PressureMeasurement::PressureMeasurement(const U32 timeStamp, const F32 value)
+	: ScalarMeasurement{timeStamp, value}
 {
 }
 
@@ -131,8 +144,8 @@ void PressureMeasurement::Accept(const MeasurementVisitorPtr& visitor) const
 }
 
 /* Temperature measurement */
-TemperatureMeasurement::TemperatureMeasurement(const F32 value)
-	: ScalarMeasurement{value}
+TemperatureMeasurement::TemperatureMeasurement(const U32 timeStamp, const F32 value)
+	: ScalarMeasurement{timeStamp, value}
 {
 }
 

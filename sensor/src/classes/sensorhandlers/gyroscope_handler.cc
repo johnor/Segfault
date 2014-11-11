@@ -9,7 +9,7 @@
 MeasurementBatch GyroscopeHandler::GetMeasurements() const
 {
 	MeasurementBatch measurements;
-	measurements.push_back(MeasurementPtr{ new GyroscopeMeasurement{ 1.f, 2.f, 3.f } });
+	measurements.push_back(MeasurementPtr{ new GyroscopeMeasurement{ 0, 1.f, 2.f, 3.f } });
 
 	return measurements;
 }
