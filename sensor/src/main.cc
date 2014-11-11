@@ -5,7 +5,7 @@
 #include "interfaces/imu.h"
 #include "interfaces/measurement.h"
 #include "classes/sensorhandlers/default_handler_factory.h"
-#include "classes/sensorhandlers/log_reader_handler_factory.h"
+#include "classes/sensorhandlers/log_reader_factory.h"
 #include "classes/alt_imu.h"
 #include "classes/logger.h"
 
@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
 
 	/* Create factory and IMU */
 #ifdef _MSC_VER
-	SensorHandlerFactoryPtr factory{ new LogReaderHandlerFactory{} };
+	SensorHandlerFactoryPtr factory{ new LogReaderFactory{} };
 #else
     SensorHandlerFactoryPtr factory{ new DefaultHandlerFactory{} };
 #endif

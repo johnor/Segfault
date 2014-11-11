@@ -1,4 +1,5 @@
 #include "log_reader_handler.h"
+#include <stdexcept>
 
 
 MeasurementBatch LogReader::GetMeasurements() const
