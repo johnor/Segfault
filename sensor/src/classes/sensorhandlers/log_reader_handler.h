@@ -11,6 +11,9 @@ public:
 
     virtual MeasurementBatch GetMeasurements() const override;
     virtual bool HasAvailableMeasurements() const override;
+private:
+    LogReader(const LogReader&) = delete;
+    LogReader& operator=(const LogReader&) = delete;
 };
 
 #endif

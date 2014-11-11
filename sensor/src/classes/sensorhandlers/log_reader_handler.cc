@@ -1,13 +1,17 @@
 #include "log_reader_handler.h"
-#include <stdexcept>
-
+#include "classes/logger.h"
+#include "../measurements.h"
 
 MeasurementBatch LogReader::GetMeasurements() const
 {
-    throw std::logic_error("The method or operation is not implemented.");
+    Logger::Log(LogLevel::Info) << "LogReader::GetMeasurements()";
+
+    MeasurementBatch measurements{};
+    return measurements;
 }
 
 bool LogReader::HasAvailableMeasurements() const
 {
-    throw std::logic_error("The method or operation is not implemented.");
+    Logger::Log(LogLevel::Info) << "LogReader::HasAvailableMeasurements()";
+    return false;
 }
