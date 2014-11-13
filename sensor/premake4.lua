@@ -75,7 +75,7 @@ solution "Sensor"
 
       configuration { "rpi" }
          libdirs { "lib/wiringPi/lib-rpi" }
-         links { "wiringPi" }
+         links { "pthread", "wiringPi" }
    
    -- wiringRpi for x86
    project "wiringPi-x86"
