@@ -20,7 +20,7 @@ class Logger;
 class LogStream : public std::ostringstream
 {
 public:
-	LogStream(Logger& oLogger, LogLevel level);
+	LogStream(Logger& logger, const LogLevel level);
 	LogStream(const LogStream& ls);
 	~LogStream();
 
@@ -32,24 +32,29 @@ private:
 class Logger
 {
 public:
+    friend class LogStream;
 	~Logger() = default;
 
-	static void Log(const std::string &message);
-	static void Log(const LogLevel level, const std::string &message);
+    Logger(const std::string &filename);
+    LogStream operator()();
+    LogStream operator()(const LogLevel level);
 
+    static void SetRootLoggerFilename(const std::string &filename);
 	static LogStream Log();
-	static LogStream Log(LogLevel level);
-
+	static LogStream Log(const LogLevel level);
 private:
 	Logger();
 	Logger(const Logger&) = delete;
 	Logger& operator=(const Logger&) = delete;
 
-	static std::shared_ptr<Logger>& GetInstance();
-	static std::string getStringFromLogLevel(const LogLevel level);
+    void WriteMessageToFile(const std::string &message);
+    void FormatMessageAndLog(const LogLevel level, const std::string &message);
 
-	std::string filename = "log.txt";
-	std::ofstream fs;
+	static std::shared_ptr<Logger>& GetRootInstance();
+    static std::string GetStringFromLogLevel(const LogLevel level);
+
+    static std::string rootLoggerFilename;
+	std::ofstream fileStream;
 };
 
 
