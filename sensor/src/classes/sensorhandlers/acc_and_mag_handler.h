@@ -23,10 +23,14 @@ private:
 
 	void SetUpRegisters();
 	bool HasNewAccelerometerMeasurement() const;
-	MeasurementPtr GetNextAccelerometerMeasurement() const;
+    bool HasNewMagnetometerMeasurement() const;
 
+	MeasurementPtr GetNextAccelerometerMeasurement() const;
+    MeasurementPtr GetNextMagnetometerMeasurement() const;
+    
 	I2CDevice i2cDevice;
 	F32 accelerometerScale{ 0.f };
+    F32 compassScale { 0.f };
 };
 
 #endif
