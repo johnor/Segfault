@@ -15,7 +15,6 @@ void PrintMeasurements(const MeasurementBatch& measurementBatch);
 
 int main(int argc, char* argv[])
 {
-    Logger::SetRootLoggerFilename("log.txt");
 	Logger::Log(LogLevel::Info) << "SensorApp initialized";
 
 	/* Create factory and IMU */

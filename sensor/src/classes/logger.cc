@@ -1,114 +1,115 @@
 #include "logger.h"
 #include <iostream>
 
+std::string GetLogLevelString(const LogLevel level)
+{
+    switch (level)
+    {
+    case LogLevel::Debug:
+        return "Debug";
+    case LogLevel::Info:
+        return "Info";
+    case LogLevel::Warning:
+        return "Warning";
+    case LogLevel::Error:
+        return "Error";
+    default:
+        return "";
+    }
+}
+
+LogStreamPtr Logger::Log(const LogLevel level)
+{
+    LogStreamPtr streamPtr{new FileAndConsoleLogStream{level}};
+    return streamPtr;
+}
+
+void Logger::Log(const std::string& message, const LogLevel level)
+{
+    std::string formattedMessage{FormatMessage(message, level)};
+    WriteMessageToFile(formattedMessage);
+    WriteMessageToConsole(formattedMessage);
+}
+
+LogStreamPtr Logger::LogToFile(const LogLevel level)
+{
+    LogStreamPtr streamPtr{new FileLogStream{level}};
+    return streamPtr;
+}
+
+void Logger::LogToFile(const std::string& message, const LogLevel level)
+{
+    WriteMessageToFile(FormatMessage(message, level));
+}
+
+LogStreamPtr Logger::LogToConsole(const LogLevel level)
+{
+    LogStreamPtr streamPtr{new ConsoleLogStream{level}};
+    return streamPtr;
+}
+
+void Logger::LogToConsole(const std::string& message, const LogLevel level)
+{
+    WriteMessageToConsole(FormatMessage(message, level));
+}
+
+void Logger::SetLogFile(const std::string& fileName)
+{
+    fileStream.close();
+    fileStream.open(fileName);
+}
+
+std::string Logger::FormatMessage(const std::string& message, const LogLevel level)
+{
+    std::ostringstream stream;
+    stream << '[' << GetLogLevelString(level) << "]: " << message << '\n';
+    return stream.str();
+}
+
+void Logger::WriteMessageToConsole(const std::string& message)
+{
+    std::cout << message;
+}
+
+void Logger::WriteMessageToFile(const std::string& message)
+{
+    fileStream << message;
+}
+
+std::ofstream Logger::fileStream{"log.txt"};
+
 /* Log stream */
-LogStream::LogStream(Logger& logger_, const LogLevel level_) :
-std::ostringstream{}, logger(logger_), level(level_)
+LogStream::LogStream(const LogLevel level)
+    : logLevel{level}
 {
 }
 
-LogStream::LogStream(const LogStream& ls) :
-std::basic_ios<char>{}, std::ostringstream{}, logger(ls.logger), level(ls.level)
+ConsoleLogStream::ConsoleLogStream(const LogLevel level)
+    : LogStream{level}
 {
 }
 
-LogStream::~LogStream()
+ConsoleLogStream::~ConsoleLogStream()
 {
-    logger.FormatMessageAndLog(level, str());
+    Logger::LogToConsole(str(), logLevel);
 }
 
-/* Logger implementation */
-std::string Logger::rootLoggerFilename = "log.txt";
-
-Logger::Logger(const std::string &filename)
+FileLogStream::FileLogStream(const LogLevel level)
+    : LogStream{level}
 {
-    fileStream.open(filename);
-    fileStream << "Logger created!" << std::endl;
 }
 
-void Logger::SetRootLoggerFilename(const std::string &filename)
+FileLogStream::~FileLogStream()
 {
-    rootLoggerFilename = filename;
+    Logger::LogToFile(str(), logLevel);
 }
 
-LogStream Logger::Log()
+FileAndConsoleLogStream::FileAndConsoleLogStream(const LogLevel level)
+    : LogStream{level}
 {
-	auto logger = Logger::GetRootInstance();
-	return LogStream(*logger, LogLevel::Info);
 }
 
-LogStream Logger::Log(const LogLevel level)
+FileAndConsoleLogStream::~FileAndConsoleLogStream()
 {
-	auto logger = Logger::GetRootInstance();
-	return LogStream(*logger, level);
+    Logger::Log(str(), logLevel);
 }
-
-
-LogStream Logger::operator()()
-{
-    return LogStream(*this, LogLevel::Info);
-}
-
-LogStream Logger::operator()(const LogLevel level)
-{
-    return LogStream(*this, level);
-}
-
-
-/* Logger private function implementations */
-Logger::Logger()
-{
-	fileStream.open(rootLoggerFilename);
-	fileStream << "Logger created!" << std::endl;
-}
-
-void Logger::WriteMessageToFile(const std::string &message)
-{
-    fileStream << message << std::endl;
-    std::cout << message << std::endl;
-}
-
-void Logger::FormatMessageAndLog(const LogLevel level, const std::string &message)
-{
-    std::stringstream fullMessage;
-    fullMessage << "[" << GetStringFromLogLevel(level) << "] ";
-    fullMessage << message;
-
-    WriteMessageToFile(fullMessage.str());
-}
-
-std::shared_ptr<Logger>& Logger::GetRootInstance()
-{
-	static std::shared_ptr<Logger> instance = nullptr;
-
-	if (instance == nullptr)
-	{
-		instance = std::shared_ptr<Logger>{new Logger};
-	}
-	return instance;
-}
-
-std::string Logger::GetStringFromLogLevel(const LogLevel level)
-{
-	std::string res;
-
-	switch (level)
-	{
-	case LogLevel::Debug:
-		res = "Debug";
-		break;
-	case LogLevel::Error:
-		res = "Error";
-		break;
-	case LogLevel::Info:
-		res = "Info";
-		break;
-	case LogLevel::Warning:
-		res = "Warning";
-		break;
-	default:
-		return "";
-	}
-	return res;
-}
-
