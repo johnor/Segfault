@@ -8,25 +8,41 @@ LoggerVisitor::LoggerVisitor(const std::string& accLogFile, const std::string& g
 
 void LoggerVisitor::Visit(const AccelerometerMeasurement& accMeas)
 {
-	accAngMagLogStream << "ACC, " << accMeas.GetXValue() << ", " << accMeas.GetYValue() << ", " << accMeas.GetZValue() << std::endl;
+	accAngMagLogStream  << '[' << accMeas .GetTimeStamp() << ']' << " ACC, "
+                        << accMeas.GetXValue() << ", "
+                        << accMeas.GetYValue() << ", "
+                        << accMeas.GetZValue()
+                        << std::endl;
 }
 
 void LoggerVisitor::Visit(const GyroscopeMeasurement& gyroMeas)
 {
-	gyroscopeLogStream << "GYRO, " << gyroMeas.GetXValue() << ", " << gyroMeas.GetYValue() << ", " << gyroMeas.GetZValue() << std::endl;
+	gyroscopeLogStream << '[' << gyroMeas.GetTimeStamp() << ']'
+                       << " GYRO, " << gyroMeas.GetXValue() << ", "
+                       << gyroMeas.GetYValue() << ", "
+                       << gyroMeas.GetZValue()
+                       << std::endl;
 }
 
 void LoggerVisitor::Visit(const CompassMeasurement& compassMeas)
 {
-	accAngMagLogStream << "MAG, " << compassMeas.GetXValue() << ", " << compassMeas.GetYValue() << ", " << compassMeas.GetZValue() << std::endl;
+	accAngMagLogStream << '[' << compassMeas.GetTimeStamp() << ']'
+                       << " MAG, " << compassMeas.GetXValue() << ", "
+                       << compassMeas.GetYValue() << ", "
+                       << compassMeas.GetZValue()
+                       << std::endl;
 }
 
 void LoggerVisitor::Visit(const PressureMeasurement& pressureMeas)
 {
-	barometerLogStream << "BARO, " << pressureMeas.GetValue() << std::endl;
+	barometerLogStream << '[' << pressureMeas.GetTimeStamp() << ']'
+                       << " BARO, " << pressureMeas.GetValue()
+                       << std::endl;
 }
 
 void LoggerVisitor::Visit(const TemperatureMeasurement& tempMeas)
 {
-	barometerLogStream << "TEMP, " << tempMeas.GetValue() << std::endl;
+	barometerLogStream << '[' << tempMeas.GetTimeStamp() << ']'
+                       << " TEMP, " << tempMeas.GetValue()
+                       << std::endl;
 }
