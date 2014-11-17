@@ -14,14 +14,14 @@
 class Measurement
 {
 public:
-	Measurement() = default;
-	virtual ~Measurement() {};
+    Measurement() = default;
+    virtual ~Measurement() {};
 
-	virtual void Accept(const MeasurementVisitorPtr& visitor) const = 0;
-	virtual std::string ToString() const = 0;
+    virtual void Accept(const MeasurementVisitorPtr& visitor) const = 0;
+    virtual std::string ToString() const = 0;
 private:
-	Measurement(const Measurement&) = delete;
-	Measurement& operator=(const Measurement&) = delete;
+    Measurement(const Measurement&) = delete;
+    Measurement& operator=(const Measurement&) = delete;
 };
 
 #endif

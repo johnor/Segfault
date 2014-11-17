@@ -8,24 +8,24 @@
 
 MeasurementBatch BarometerHandler::GetMeasurements() const
 {
-	MeasurementBatch measurements;
+    MeasurementBatch measurements;
 
-	/* For testing purposes only */
-	static bool returnPressure{true};
-	if (returnPressure)
-	{
-		measurements.push_back(MeasurementPtr{ new PressureMeasurement{ 0, 1.f } });
-	}
-	else
-	{
-		returnPressure = true;
-		measurements.push_back(MeasurementPtr{ new TemperatureMeasurement{ 0, 1.f } });
-	}
-	return measurements;
+    /* For testing purposes only */
+    static bool returnPressure{true};
+    if (returnPressure)
+    {
+        measurements.push_back(MeasurementPtr{ new PressureMeasurement{ 0, 1.f } });
+    }
+    else
+    {
+        returnPressure = true;
+        measurements.push_back(MeasurementPtr{ new TemperatureMeasurement{ 0, 1.f } });
+    }
+    return measurements;
 }
 
 bool BarometerHandler::HasAvailableMeasurements() const
 {
-	/* For testing purposes only */
-	return true;
+    /* For testing purposes only */
+    return true;
 }

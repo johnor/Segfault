@@ -13,14 +13,14 @@
 class DefaultHandlerFactory : public SensorHandlerFactory
 {
 public:
-	DefaultHandlerFactory() = default;
-	virtual ~DefaultHandlerFactory() {};
-	virtual SensorHandlerPtr MakeAccAndMagHandler() const override;
-	virtual SensorHandlerPtr MakeGyroscopeHandler() const override;
-	virtual SensorHandlerPtr MakeBarometerHandler() const override;
+    DefaultHandlerFactory() = default;
+    virtual ~DefaultHandlerFactory() {};
+    virtual SensorHandlerPtr MakeAccAndMagHandler() const override;
+    virtual SensorHandlerPtr MakeGyroscopeHandler() const override;
+    virtual SensorHandlerPtr MakeBarometerHandler() const override;
 private:
-	DefaultHandlerFactory(const DefaultHandlerFactory&) = delete;
-	DefaultHandlerFactory& operator=(const DefaultHandlerFactory&) = delete;
+    DefaultHandlerFactory(const DefaultHandlerFactory&) = delete;
+    DefaultHandlerFactory& operator=(const DefaultHandlerFactory&) = delete;
 };
 
 #endif

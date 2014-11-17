@@ -12,8 +12,8 @@
 class IMU
 {
 public:
-	virtual ~IMU() {}
-	virtual MeasurementBatch GetNextMeasurementBatch() const = 0;
+    virtual ~IMU() {}
+    virtual MeasurementBatch GetNextMeasurementBatch() const = 0;
 };
 
 #endif

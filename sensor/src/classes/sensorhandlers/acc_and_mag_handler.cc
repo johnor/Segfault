@@ -15,13 +15,13 @@
 
 const U8 LSM303D_ADDRESS        = 0x1d;
 const U8 LSM303D_ID             = 0x49;
-const U8 L3GD20H_WHO_AM_I		= 0x0f;
+const U8 L3GD20H_WHO_AM_I        = 0x0f;
 
 /* accelerometer defines */
-const U8 LSM303D_CTRL1			= 0x20;
-const U8 LSM303D_CTRL2			= 0x21;
-const U8 LSM303D_STATUS_A		= 0x27;
-const U8 LSM303D_STATUS_ZYXADA	= (1u << 3);
+const U8 LSM303D_CTRL1            = 0x20;
+const U8 LSM303D_CTRL2            = 0x21;
+const U8 LSM303D_STATUS_A        = 0x27;
+const U8 LSM303D_STATUS_ZYXADA    = (1u << 3);
 
 const U8 LSM303D_OUT_X_L_A = 0x28;
 const U8 LSM303D_OUT_X_H_A = 0x29;
@@ -56,17 +56,17 @@ AccAndMagHandler::AccAndMagHandler()
 try
 : i2cDevice(LSM303D_ADDRESS)
 {
-	SetUpRegisters();
+    SetUpRegisters();
 }
 catch (std::runtime_error &e)
 {
-	Logger::Log(LogLevel::Error) << "AccAndMagHandler::AccAndMagHandler: " << e.what();
+    Logger::Log(LogLevel::Error) << "AccAndMagHandler::AccAndMagHandler: " << e.what();
 }
 
 
 MeasurementBatch AccAndMagHandler::GetMeasurements() const
 {
-	MeasurementBatch measurements;
+    MeasurementBatch measurements;
 
     /*if (HasNewAccelerometerMeasurement())
     {
@@ -90,36 +90,36 @@ MeasurementBatch AccAndMagHandler::GetMeasurements() const
     }
 
 
-	return measurements;
+    return measurements;
 }
 
 bool AccAndMagHandler::HasAvailableMeasurements() const
 {
-	/* For testing purposes only */
-	return true;
+    /* For testing purposes only */
+    return true;
 }
 
 
 void AccAndMagHandler::SetUpRegisters()
 {
-	Logger::Log(LogLevel::Info) << "Initializing i2c for acc and mag handler";
-	if (i2cDevice.Read8BitReg(L3GD20H_WHO_AM_I) != LSM303D_ID)
-	{
-		throw I2CException("AccAndMagHandler::SetUpRegisters(): Wrong id read");
-	}
+    Logger::Log(LogLevel::Info) << "Initializing i2c for acc and mag handler";
+    if (i2cDevice.Read8BitReg(L3GD20H_WHO_AM_I) != LSM303D_ID)
+    {
+        throw I2CException("AccAndMagHandler::SetUpRegisters(): Wrong id read");
+    }
 
     /* accelerometer registers */
-	// Init ctrl1
-	U8 ctrl1{ 0 };
-	ctrl1 = LSM303D_ACCEL_SAMPLERATE_50 << 4; // Set data rate
-	ctrl1 |= 0x07; //Enable z, x and y axes
-	i2cDevice.WriteReg8(LSM303D_CTRL1, ctrl1);
+    // Init ctrl1
+    U8 ctrl1{ 0 };
+    ctrl1 = LSM303D_ACCEL_SAMPLERATE_50 << 4; // Set data rate
+    ctrl1 |= 0x07; //Enable z, x and y axes
+    i2cDevice.WriteReg8(LSM303D_CTRL1, ctrl1);
 
-	// Init ctrl2
-	U8 ctrl2{ 0 };
-	accelerometerScale = 0.000244f;  // g/LSB from table 3, page 10 in data sheet
-	ctrl2 = LSM303D_ACCEL_LPF_50 << 6; // Set anti-alias filter bandwidth
-	ctrl2 |= LSM303D_ACCEL_FSR_8 << 3; // Select full scale
+    // Init ctrl2
+    U8 ctrl2{ 0 };
+    accelerometerScale = 0.000244f;  // g/LSB from table 3, page 10 in data sheet
+    ctrl2 = LSM303D_ACCEL_LPF_50 << 6; // Set anti-alias filter bandwidth
+    ctrl2 |= LSM303D_ACCEL_FSR_8 << 3; // Select full scale
     i2cDevice.WriteReg8(LSM303D_CTRL2, ctrl2);
 
 
@@ -143,11 +143,11 @@ void AccAndMagHandler::SetUpRegisters()
 
 bool AccAndMagHandler::HasNewAccelerometerMeasurement() const
 {
-	// read status
-	const U8 status = i2cDevice.Read8BitReg(LSM303D_STATUS_A);
-	Logger::Log(LogLevel::Debug) << "Status: " << (std::bitset<8>)status;
+    // read status
+    const U8 status = i2cDevice.Read8BitReg(LSM303D_STATUS_A);
+    Logger::Log(LogLevel::Debug) << "Status: " << (std::bitset<8>)status;
 
-	return status & LSM303D_STATUS_ZYXADA ? true : false;
+    return status & LSM303D_STATUS_ZYXADA ? true : false;
 }
 
 bool AccAndMagHandler::HasNewMagnetometerMeasurement() const
@@ -161,15 +161,15 @@ bool AccAndMagHandler::HasNewMagnetometerMeasurement() const
 
 MeasurementPtr AccAndMagHandler::GetNextAccelerometerMeasurement() const
 {
-	Logger::Log(LogLevel::Debug) << "Reading measurement from accelerometer";
+    Logger::Log(LogLevel::Debug) << "Reading measurement from accelerometer";
     const F32 xAcc = i2cDevice.ReadTwo8BitRegsToFloat(LSM303D_OUT_X_L_A, accelerometerScale);
     const F32 yAcc = i2cDevice.ReadTwo8BitRegsToFloat(LSM303D_OUT_Y_L_A, accelerometerScale);
     const F32 zAcc = i2cDevice.ReadTwo8BitRegsToFloat(LSM303D_OUT_Z_L_A, accelerometerScale);
 
     const F32 sum = sqrt(xAcc*xAcc + yAcc*yAcc + zAcc*zAcc);
-	Logger::Log(LogLevel::Debug) << "Sum: " << sum;
+    Logger::Log(LogLevel::Debug) << "Sum: " << sum;
 
-	return MeasurementPtr{ new AccelerometerMeasurement{ 0, xAcc, yAcc, zAcc } };
+    return MeasurementPtr{ new AccelerometerMeasurement{ 0, xAcc, yAcc, zAcc } };
 }
 
 MeasurementPtr AccAndMagHandler::GetNextMagnetometerMeasurement() const

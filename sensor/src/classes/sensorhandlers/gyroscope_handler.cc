@@ -8,14 +8,14 @@
 
 MeasurementBatch GyroscopeHandler::GetMeasurements() const
 {
-	MeasurementBatch measurements;
-	measurements.push_back(MeasurementPtr{ new GyroscopeMeasurement{ 0, 1.f, 2.f, 3.f } });
+    MeasurementBatch measurements;
+    measurements.push_back(MeasurementPtr{ new GyroscopeMeasurement{ 0, 1.f, 2.f, 3.f } });
 
-	return measurements;
+    return measurements;
 }
 
 bool GyroscopeHandler::HasAvailableMeasurements() const
 {
-	/* For testing purposes only */
-	return true;
+    /* For testing purposes only */
+    return true;
 }

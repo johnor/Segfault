@@ -9,10 +9,10 @@
 
 enum class LogLevel
 {
-	Debug = 0,
-	Info,
-	Warning,
-	Error
+    Debug = 0,
+    Info,
+    Warning,
+    Error
 };
 
 std::string GetLogLevelString(const LogLevel level);

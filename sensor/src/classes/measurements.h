@@ -23,13 +23,13 @@ private:
 class ScalarMeasurement : public MeasurementBase
 {
 public:
-	virtual ~ScalarMeasurement() {}
-	F32 GetValue() const;
+    virtual ~ScalarMeasurement() {}
+    F32 GetValue() const;
 protected:
     explicit ScalarMeasurement(const U32 timeStamp, const F32 value);
-	std::string ToString(const std::string& header, const std::string& unit) const;
+    std::string ToString(const std::string& header, const std::string& unit) const;
 private:
-	const F32 value;
+    const F32 value;
 };
 
 /*
@@ -38,17 +38,17 @@ private:
 class VectorialMeasurement : public MeasurementBase
 {
 public:
-	virtual ~VectorialMeasurement() {}
-	F32 GetXValue() const;
-	F32 GetYValue() const;
-	F32 GetZValue() const;
+    virtual ~VectorialMeasurement() {}
+    F32 GetXValue() const;
+    F32 GetYValue() const;
+    F32 GetZValue() const;
 protected:
-	VectorialMeasurement(const U32 timeStamp, const F32 xValue, const F32 yValue, const F32 zValue);
-	std::string ToString(const std::string& header, const std::string& unit) const;
+    VectorialMeasurement(const U32 timeStamp, const F32 xValue, const F32 yValue, const F32 zValue);
+    std::string ToString(const std::string& header, const std::string& unit) const;
 private:
-	const F32 xValue;
-	const F32 yValue;
-	const F32 zValue;
+    const F32 xValue;
+    const F32 yValue;
+    const F32 zValue;
 };
 
 /*
@@ -60,12 +60,12 @@ class AccelerometerMeasurement : public VectorialMeasurement
 {
 public:
     AccelerometerMeasurement(const U32 timeStamp, const F32 xValue, const F32 yValue, const F32 zValue);
-	virtual ~AccelerometerMeasurement() {}
-	virtual std::string ToString() const override;
-	virtual void Accept(const MeasurementVisitorPtr& visitor) const override;
+    virtual ~AccelerometerMeasurement() {}
+    virtual std::string ToString() const override;
+    virtual void Accept(const MeasurementVisitorPtr& visitor) const override;
 private:
-	AccelerometerMeasurement(const AccelerometerMeasurement&) = delete;
-	AccelerometerMeasurement& operator=(const AccelerometerMeasurement&) = delete;
+    AccelerometerMeasurement(const AccelerometerMeasurement&) = delete;
+    AccelerometerMeasurement& operator=(const AccelerometerMeasurement&) = delete;
 };
 
 /*
@@ -77,12 +77,12 @@ class GyroscopeMeasurement : public VectorialMeasurement
 {
 public:
     GyroscopeMeasurement(const U32 timeStamp, const F32 xValue, const F32 yValue, const F32 zValue);
-	virtual ~GyroscopeMeasurement() {}
-	virtual std::string ToString() const override;
-	virtual void Accept(const MeasurementVisitorPtr& visitor) const override;
+    virtual ~GyroscopeMeasurement() {}
+    virtual std::string ToString() const override;
+    virtual void Accept(const MeasurementVisitorPtr& visitor) const override;
 private:
-	GyroscopeMeasurement(const GyroscopeMeasurement&) = delete;
-	GyroscopeMeasurement& operator=(const GyroscopeMeasurement&) = delete;
+    GyroscopeMeasurement(const GyroscopeMeasurement&) = delete;
+    GyroscopeMeasurement& operator=(const GyroscopeMeasurement&) = delete;
 };
 
 /*
@@ -94,12 +94,12 @@ class CompassMeasurement : public VectorialMeasurement
 {
 public:
     CompassMeasurement(const U32 timeStamp, const F32 xValue, const F32 yValue, const F32 zValue);
-	virtual ~CompassMeasurement() {}
-	virtual std::string ToString() const override;
-	virtual void Accept(const MeasurementVisitorPtr& visitor) const override;
+    virtual ~CompassMeasurement() {}
+    virtual std::string ToString() const override;
+    virtual void Accept(const MeasurementVisitorPtr& visitor) const override;
 private:
-	CompassMeasurement(const CompassMeasurement&) = delete;
-	CompassMeasurement& operator=(const CompassMeasurement&) = delete;
+    CompassMeasurement(const CompassMeasurement&) = delete;
+    CompassMeasurement& operator=(const CompassMeasurement&) = delete;
 };
 
 /*
@@ -110,12 +110,12 @@ class PressureMeasurement : public ScalarMeasurement
 {
 public:
     explicit PressureMeasurement(const U32 timeStamp, const F32 value);
-	virtual ~PressureMeasurement() {}
-	virtual std::string ToString() const override;
-	virtual void Accept(const MeasurementVisitorPtr& visitor) const override;
+    virtual ~PressureMeasurement() {}
+    virtual std::string ToString() const override;
+    virtual void Accept(const MeasurementVisitorPtr& visitor) const override;
 private:
-	PressureMeasurement(const PressureMeasurement&) = delete;
-	PressureMeasurement& operator=(const PressureMeasurement&) = delete;
+    PressureMeasurement(const PressureMeasurement&) = delete;
+    PressureMeasurement& operator=(const PressureMeasurement&) = delete;
 };
 
 /*
@@ -126,12 +126,12 @@ class TemperatureMeasurement : public ScalarMeasurement
 {
 public:
     explicit TemperatureMeasurement(const U32 timeStamp, const F32 value);
-	virtual ~TemperatureMeasurement() {}
-	virtual std::string ToString() const override;
-	virtual void Accept(const MeasurementVisitorPtr& visitor) const override;
+    virtual ~TemperatureMeasurement() {}
+    virtual std::string ToString() const override;
+    virtual void Accept(const MeasurementVisitorPtr& visitor) const override;
 private:
-	TemperatureMeasurement(const TemperatureMeasurement&) = delete;
-	TemperatureMeasurement& operator=(const TemperatureMeasurement&) = delete;
+    TemperatureMeasurement(const TemperatureMeasurement&) = delete;
+    TemperatureMeasurement& operator=(const TemperatureMeasurement&) = delete;
 };
 
 #endif

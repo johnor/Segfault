@@ -12,13 +12,13 @@
 class GyroscopeHandler : public SensorHandler
 {
 public:
-	GyroscopeHandler() = default;
-	virtual ~GyroscopeHandler() {}
-	virtual MeasurementBatch GetMeasurements() const override;
-	virtual bool HasAvailableMeasurements() const override;
+    GyroscopeHandler() = default;
+    virtual ~GyroscopeHandler() {}
+    virtual MeasurementBatch GetMeasurements() const override;
+    virtual bool HasAvailableMeasurements() const override;
 private:
-	GyroscopeHandler(const GyroscopeHandler&) = delete;
-	GyroscopeHandler& operator=(const GyroscopeHandler&) = delete;
+    GyroscopeHandler(const GyroscopeHandler&) = delete;
+    GyroscopeHandler& operator=(const GyroscopeHandler&) = delete;
 };
 
 #endif

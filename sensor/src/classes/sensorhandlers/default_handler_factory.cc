@@ -13,17 +13,17 @@
 SensorHandlerPtr DefaultHandlerFactory::MakeAccAndMagHandler() const
 {
     Logger::Log(LogLevel::Info) << "DefaultHandlerFactory creating AccAndMagHandler";
-	return SensorHandlerPtr{new AccAndMagHandler{}};
+    return SensorHandlerPtr{new AccAndMagHandler{}};
 }
 
 SensorHandlerPtr DefaultHandlerFactory::MakeGyroscopeHandler() const
 {
     Logger::Log(LogLevel::Info) << "DefaultHandlerFactory creating GyroscopeHandler";
-	return SensorHandlerPtr{new GyroscopeHandler{}};
+    return SensorHandlerPtr{new GyroscopeHandler{}};
 }
 
 SensorHandlerPtr DefaultHandlerFactory::MakeBarometerHandler() const
 {
     Logger::Log(LogLevel::Info) << "DefaultHandlerFactory creating BarometerHandler";
-	return SensorHandlerPtr{new BarometerHandler{}};
+    return SensorHandlerPtr{new BarometerHandler{}};
 }

@@ -13,23 +13,23 @@
 class AccAndMagHandler : public SensorHandler
 {
 public:
-	AccAndMagHandler();
-	virtual ~AccAndMagHandler() {}
-	virtual MeasurementBatch GetMeasurements() const override;
-	virtual bool HasAvailableMeasurements() const override;
+    AccAndMagHandler();
+    virtual ~AccAndMagHandler() {}
+    virtual MeasurementBatch GetMeasurements() const override;
+    virtual bool HasAvailableMeasurements() const override;
 private:
-	AccAndMagHandler(const AccAndMagHandler&) = delete;
-	AccAndMagHandler& operator=(const AccAndMagHandler&) = delete;
+    AccAndMagHandler(const AccAndMagHandler&) = delete;
+    AccAndMagHandler& operator=(const AccAndMagHandler&) = delete;
 
-	void SetUpRegisters();
-	bool HasNewAccelerometerMeasurement() const;
+    void SetUpRegisters();
+    bool HasNewAccelerometerMeasurement() const;
     bool HasNewMagnetometerMeasurement() const;
 
-	MeasurementPtr GetNextAccelerometerMeasurement() const;
+    MeasurementPtr GetNextAccelerometerMeasurement() const;
     MeasurementPtr GetNextMagnetometerMeasurement() const;
     
-	I2CDevice i2cDevice;
-	F32 accelerometerScale{ 0.f };
+    I2CDevice i2cDevice;
+    F32 accelerometerScale{ 0.f };
     F32 compassScale { 0.f };
 };
 

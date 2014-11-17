@@ -11,44 +11,44 @@
 
 AltIMU::AltIMU(const SensorHandlerFactoryPtr& handlerFactory)
 {
-	try
-	{
-		accAndMagHandler = handlerFactory->MakeAccAndMagHandler();
-	}
-	catch (std::runtime_error &e)
-	{
-		Logger::Log(LogLevel::Error) << "Exception in AltIMU::AltIMU: " << e.what();
-	}
-	gyroscopeHandler = handlerFactory->MakeGyroscopeHandler();
-	barometerHandler = handlerFactory->MakeBarometerHandler();
+    try
+    {
+        accAndMagHandler = handlerFactory->MakeAccAndMagHandler();
+    }
+    catch (std::runtime_error &e)
+    {
+        Logger::Log(LogLevel::Error) << "Exception in AltIMU::AltIMU: " << e.what();
+    }
+    gyroscopeHandler = handlerFactory->MakeGyroscopeHandler();
+    barometerHandler = handlerFactory->MakeBarometerHandler();
 }
 
 MeasurementBatch AltIMU::GetNextMeasurementBatch() const
 {
-	MeasurementBatch measurementBatch{};
+    MeasurementBatch measurementBatch{};
 
-	if (accAndMagHandler)
-	{
-		MeasurementBatch accMeasurements = accAndMagHandler->GetMeasurements();
-		std::move(accMeasurements.begin(), accMeasurements.end(), std::inserter(measurementBatch, measurementBatch.end()));
-	}
-	
+    if (accAndMagHandler)
+    {
+        MeasurementBatch accMeasurements = accAndMagHandler->GetMeasurements();
+        std::move(accMeasurements.begin(), accMeasurements.end(), std::inserter(measurementBatch, measurementBatch.end()));
+    }
+
     if (gyroscopeHandler)
     {
         MeasurementBatch gyroMeasurements = gyroscopeHandler->GetMeasurements();
         std::move(gyroMeasurements.begin(), gyroMeasurements.end(), std::inserter(measurementBatch, measurementBatch.end()));
     }
-	
+
     if (barometerHandler)
     {
         MeasurementBatch barometerMeasurements = barometerHandler->GetMeasurements();
         std::move(barometerMeasurements.begin(), barometerMeasurements.end(), std::inserter(measurementBatch, measurementBatch.end()));
     }
 
-	return measurementBatch;
+    return measurementBatch;
 }
 
 void AltIMU::GetAllAvailableMeasurementsFromHandler(MeasurementBatch& measurementBatch,
-	                                                const SensorHandlerPtr& handler) const
+                                                    const SensorHandlerPtr& handler) const
 {
 }

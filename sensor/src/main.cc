@@ -15,30 +15,30 @@ void PrintMeasurements(const MeasurementBatch& measurementBatch);
 
 int main(int argc, char* argv[])
 {
-	Logger::Log(LogLevel::Info) << "SensorApp initialized";
+    Logger::Log(LogLevel::Info) << "SensorApp initialized";
 
-	/* Create factory and IMU */
+    /* Create factory and IMU */
 #ifdef _MSC_VER
-	SensorHandlerFactoryPtr factory{ new LogReaderFactory{} };
+    SensorHandlerFactoryPtr factory{ new LogReaderFactory{} };
 #else
     SensorHandlerFactoryPtr factory{ new DefaultHandlerFactory{} };
 #endif
-	IMUPtr imu{new AltIMU{factory}};
+    IMUPtr imu{new AltIMU{factory}};
 
-	MeasurementBatch measurementBatch{imu->GetNextMeasurementBatch()};
-	PrintMeasurements(measurementBatch);
+    MeasurementBatch measurementBatch{imu->GetNextMeasurementBatch()};
+    PrintMeasurements(measurementBatch);
 
-	/* Do not close console immediately */
-	std::cout << "Press any key to exit the application." << std::endl;
-	std::cin.get();
+    /* Do not close console immediately */
+    std::cout << "Press any key to exit the application." << std::endl;
+    std::cin.get();
 
-	return 0;
+    return 0;
 }
 
 void PrintMeasurements(const MeasurementBatch& measurementBatch)
 {
-	for (const auto& measurement : measurementBatch)
-	{
-		Logger::Log(LogLevel::Debug) << measurement->ToString();
-	}
+    for (const auto& measurement : measurementBatch)
+    {
+        Logger::Log(LogLevel::Debug) << measurement->ToString();
+    }
 }

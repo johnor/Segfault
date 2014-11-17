@@ -12,13 +12,13 @@
 class BarometerHandler : public SensorHandler
 {
 public:
-	BarometerHandler() = default;
-	virtual ~BarometerHandler() {}
-	virtual MeasurementBatch GetMeasurements() const override;
-	virtual bool HasAvailableMeasurements() const override;
+    BarometerHandler() = default;
+    virtual ~BarometerHandler() {}
+    virtual MeasurementBatch GetMeasurements() const override;
+    virtual bool HasAvailableMeasurements() const override;
 private:
-	BarometerHandler(const BarometerHandler&) = delete;
-	BarometerHandler& operator=(const BarometerHandler&) = delete;
+    BarometerHandler(const BarometerHandler&) = delete;
+    BarometerHandler& operator=(const BarometerHandler&) = delete;
 };
 
 #endif
