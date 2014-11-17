@@ -5,10 +5,10 @@
 */
 
 #include "default_handler_factory.h"
-#include "acc_and_mag_handler.h"
-#include "gyroscope_handler.h"
-#include "barometer_handler.h"
-#include "classes/logger.h"
+#include "../acc_and_mag_handler.h"
+#include "../gyroscope_handler.h"
+#include "../barometer_handler.h"
+#include "../../logger.h"
 
 SensorHandlerPtr DefaultHandlerFactory::MakeAccAndMagHandler() const
 {

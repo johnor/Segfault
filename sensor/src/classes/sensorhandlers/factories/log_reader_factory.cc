@@ -1,9 +1,9 @@
 #include "log_reader_factory.h"
-#include "acc_and_mag_handler.h"
-#include "gyroscope_handler.h"
-#include "barometer_handler.h"
-#include "log_reader_handler.h"
-#include "classes/logger.h"
+#include "../acc_and_mag_handler.h"
+#include "../gyroscope_handler.h"
+#include "../barometer_handler.h"
+#include "../log_reader_handler.h"
+#include "../../logger.h"
 
 SensorHandlerPtr LogReaderFactory::MakeAccAndMagHandler() const
 {

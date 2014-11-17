@@ -5,8 +5,8 @@
 
 #include "interfaces/imu.h"
 #include "interfaces/measurement.h"
-#include "classes/sensorhandlers/default_handler_factory.h"
-#include "classes/sensorhandlers/log_reader_factory.h"
+#include "classes/sensorhandlers/factories/default_handler_factory.h"
+#include "classes/sensorhandlers/factories/log_reader_factory.h"
 #include "classes/alt_imu.h"
 #include "classes/logger.h"
 
