@@ -3,29 +3,22 @@
 * the project. It uses an I2CHandler factory to initialize its I2CHandlers.
 */
 
-#include <stdexcept>
 #include "alt_imu.h"
-#include "classes/logger.h"
+
 #include "../interfaces/sensor_handler_factory.h"
 #include "../interfaces/measurement.h"
+#include "logger.h"
 
 AltIMU::AltIMU(const SensorHandlerFactoryPtr& handlerFactory)
 {
-    try
-    {
-        accAndMagHandler = handlerFactory->MakeAccAndMagHandler();
-    }
-    catch (std::runtime_error &e)
-    {
-        Logger::Log(LogLevel::Error) << "Exception in AltIMU::AltIMU: " << e.what();
-    }
+    accAndMagHandler = handlerFactory->MakeAccAndMagHandler();
     gyroscopeHandler = handlerFactory->MakeGyroscopeHandler();
     barometerHandler = handlerFactory->MakeBarometerHandler();
 }
 
 MeasurementBatch AltIMU::GetNextMeasurementBatch() const
 {
-    MeasurementBatch measurementBatch{};
+    MeasurementBatch measurementBatch;
 
     if (accAndMagHandler)
     {
@@ -46,9 +39,4 @@ MeasurementBatch AltIMU::GetNextMeasurementBatch() const
     }
 
     return measurementBatch;
-}
-
-void AltIMU::GetAllAvailableMeasurementsFromHandler(MeasurementBatch& measurementBatch,
-                                                    const SensorHandlerPtr& handler) const
-{
 }

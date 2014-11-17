@@ -19,8 +19,6 @@ private:
     AltIMU(const AltIMU&) = delete;
     AltIMU& operator=(const AltIMU&) = delete;
 
-    void GetAllAvailableMeasurementsFromHandler(MeasurementBatch& measurementBatch,
-                                                const SensorHandlerPtr& handler) const;
     SensorHandlerPtr accAndMagHandler;
     SensorHandlerPtr gyroscopeHandler;
     SensorHandlerPtr barometerHandler;
