@@ -38,6 +38,13 @@ private:
     static std::ofstream fileStream;
 };
 
+/*
+* LogStreams allow using the << operator inherited from std::ostringstream
+* to perform output operations. The << operator can be chained and the output
+* will be performed in the LogStream destructor which is virtual and allows for
+* polymorphic behaviour. The memory deallocation and destructor call is handled
+* via std::unique_ptr.
+*/
 class LogStream : public std::ostringstream
 {
 public:
@@ -80,6 +87,7 @@ private:
     FileAndConsoleLogStream& operator=(const FileAndConsoleLogStream&) = delete;
 };
 
+/* Helper function to allow using the << operator on a LogStreamPtr */
 template<typename T>
 const LogStreamPtr& operator<<(const LogStreamPtr& lhs, const T& rhs)
 {

@@ -8,18 +8,18 @@
 #include "../headers/numeric_typedefs.h"
 #include "../interfaces/measurement.h"
 
-/*
-* Abstract base class for scalar measurements
-*/
 class MeasurementBase : public Measurement
 {
 public:
     explicit MeasurementBase(const U32 timeStamp);
     U32 GetTimeStamp() const;
 private:
-    U32 timeStamp;
+    const U32 timeStamp;
 };
 
+/* 
+* Abstract base class for scalar measurements
+*/
 class ScalarMeasurement : public MeasurementBase
 {
 public:

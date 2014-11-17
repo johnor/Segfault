@@ -18,6 +18,8 @@ std::string GetLogLevelString(const LogLevel level)
     }
 }
 
+/* ------------------- LOGGER ------------------- */
+
 LogStreamPtr Logger::Log(const LogLevel level)
 {
     LogStreamPtr streamPtr{new FileAndConsoleLogStream{level}};
@@ -78,7 +80,8 @@ void Logger::WriteMessageToFile(const std::string& message)
 
 std::ofstream Logger::fileStream{"log.txt"};
 
-/* Log stream */
+/* ------------------- LOG STREAM ------------------- */
+
 LogStream::LogStream(const LogLevel level)
     : logLevel{level}
 {

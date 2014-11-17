@@ -1,57 +1,96 @@
-#include <stdexcept>
 #include "i2cdevice.h"
-#include "wiringPi/wiringPiI2C.h"
+#include "../headers/exceptions.h"
 #include "logger.h"
+
+#include "wiringPi/wiringPiI2C.h"
+
+#include <sstream>
 
 I2CDevice::I2CDevice(const U8 address)
 {
-	Logger::Log(LogLevel::Debug) << "Opening i2c device at address: " << std::hex << static_cast<int>(address);
-	fd = wiringPiI2CSetup(address);
+    Logger::Log() << "Opening i2c device at address: " << Convert8BitValueToHexString(address);
 
-	if (fd == deviceNotOpen)
-	{
-		throw std::runtime_error("I2CDevice(): Could not open i2c device");
-	}
+    /* Try to connect to i2c-device using the wiring pi library. */
+    fileDescriptor = wiringPiI2CSetup(address);
+
+    if (fileDescriptor < 0)
+    {
+        std::ostringstream stream;
+        stream << "I2CDevice(): Could not initialize connection to address: " << Convert8BitValueToHexString(address);
+        throw I2CException(stream.str());
+    }
 }
 
-bool I2CDevice::IsOpen() const
+U8 I2CDevice::Read8BitReg(const U8 reg) const
 {
-	return fd != deviceNotOpen;
+    const int result{wiringPiI2CReadReg8(fileDescriptor, reg)};
+
+    if (result < 0)
+    {
+        const std::string message{"Could not read from device at address "};
+        throw I2CException(message + Convert8BitValueToHexString(reg));
+    }
+
+    return static_cast<U8>(result);
 }
-
-U8 I2CDevice::ReadReg8(const U8 reg) const
-{
-	//Logger::Log(LogLevel::Debug) << "ReadReg8: Reading data from register: " << std::hex << static_cast<int>(reg);
-	int result = wiringPiI2CReadReg8(fd, reg);
-	if (result < 0)
-	{
-		throw std::runtime_error("Could not read from device");
-	}
-	//Logger::Log(LogLevel::Debug) << "Read data: " << std::hex << static_cast<int>(result);
-	return static_cast<U8>(result);
-}
-
-
-F32 I2CDevice::Read16BitToFloat(const U8 reg, const F32 scaling) const
-{
-	//Logger::Log(LogLevel::Debug) << "Read16BitToFloat: Reading data from register: " << std::hex << static_cast<int>(reg);
-	int low = ReadReg8(reg);
-	int high = ReadReg8(reg + 1);
-
-	//Logger::Log(LogLevel::Info) << "Read low byte: " << std::hex << low;
-	//Logger::Log(LogLevel::Info) << "Read high byte: " << std::hex << high;
-
-	S16 reg16 = (S16)(((U16)high << 8) | (U16)low);
-	return static_cast<F32>(reg16) * scaling;
-}
-
 
 void I2CDevice::WriteReg8(const U8 reg, const U8 data) const
 {
-	//Logger::Log(LogLevel::Debug) << "WriteReg8: Writing: " << std::hex << static_cast<int>(data) << " to register: " << std::hex << static_cast<int>(reg);
-	int result = wiringPiI2CWriteReg8(fd, reg, data);
-	if (result < 0)
-	{
-		throw std::runtime_error("Could not write to device");
-	}
+    const int result{wiringPiI2CWriteReg8(fileDescriptor, reg, data)};
+    if (result < 0)
+    {
+        std::ostringstream stream;
+        stream << "Could not write data: " << Convert8BitValueToHexString(data) << " to register: " << Convert8BitValueToHexString(reg);
+        throw I2CException(stream.str());
+    }
+}
+
+U16 I2CDevice::Read16BitReg(const U8 reg) const
+{
+    const int result{wiringPiI2CReadReg16(fileDescriptor, reg)};
+
+    if (result < 0)
+    {
+        const std::string message{"Could not read from device at address "};
+        throw I2CException(message + Convert8BitValueToHexString(reg));
+    }
+
+    return static_cast<U16>(result);
+}
+
+void I2CDevice::WriteReg16(const U8 reg, const U16 data) const
+{
+    const int result{wiringPiI2CWriteReg8(fileDescriptor, reg, data)};
+    if (result < 0)
+    {
+        std::ostringstream stream;
+        stream << "Could not write data: " << Convert16BitValueToHexString(data) << " to register: " << Convert8BitValueToHexString(reg);
+        throw I2CException(stream.str());
+    }
+}
+
+F32 I2CDevice::ReadTwo8BitRegsToFloat(const U8 lowReg, const F32 scaling) const
+{
+    const U8 highReg{static_cast<U8>(lowReg + 1)};
+
+    const U8 lowByte{Read8BitReg(lowReg)};
+    const U8 highByte{Read8BitReg(highReg)};
+
+    const S16 sixteenBitTwosComplement{static_cast<S16>((highByte << 8) | lowByte)};
+
+    return sixteenBitTwosComplement * scaling;
+}
+
+std::string I2CDevice::Convert8BitValueToHexString(const U8 value)
+{
+    std::ostringstream stream;
+    stream << std::hex << std::showbase << static_cast<S32>(value);
+    return stream.str();
+}
+
+std::string I2CDevice::Convert16BitValueToHexString(const U16 value)
+{
+    std::ostringstream stream;
+    stream << std::hex << std::showbase << static_cast<S32>(value);
+    return stream.str();
 }

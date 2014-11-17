@@ -2,13 +2,15 @@
 * This file defines the AccAndMagHandler class which handles
 * I2C-communication with the accelerometer and magnetometer on the IMU-chip.
 */
-#include <stdexcept>
+#include "acc_and_mag_handler.h"
+
 #include <iostream>
 #include <math.h>
 #include <bitset>
-#include "acc_and_mag_handler.h"
+
 #include "../measurements.h"
 #include "classes/logger.h"
+#include "../../headers/exceptions.h"
 
 
 const U8 LSM303D_ADDRESS        = 0x1d;
@@ -101,9 +103,9 @@ bool AccAndMagHandler::HasAvailableMeasurements() const
 void AccAndMagHandler::SetUpRegisters()
 {
 	Logger::Log(LogLevel::Info) << "Initializing i2c for acc and mag handler";
-	if (i2cDevice.ReadReg8(L3GD20H_WHO_AM_I) != LSM303D_ID)
+	if (i2cDevice.Read8BitReg(L3GD20H_WHO_AM_I) != LSM303D_ID)
 	{
-		throw std::runtime_error("AccAndMagHandler::SetUpRegisters(): Wrong id read");
+		throw I2CException("AccAndMagHandler::SetUpRegisters(): Wrong id read");
 	}
 
     /* accelerometer registers */
@@ -142,7 +144,7 @@ void AccAndMagHandler::SetUpRegisters()
 bool AccAndMagHandler::HasNewAccelerometerMeasurement() const
 {
 	// read status
-	const U8 status = i2cDevice.ReadReg8(LSM303D_STATUS_A);
+	const U8 status = i2cDevice.Read8BitReg(LSM303D_STATUS_A);
 	Logger::Log(LogLevel::Debug) << "Status: " << (std::bitset<8>)status;
 
 	return status & LSM303D_STATUS_ZYXADA ? true : false;
@@ -151,7 +153,7 @@ bool AccAndMagHandler::HasNewAccelerometerMeasurement() const
 bool AccAndMagHandler::HasNewMagnetometerMeasurement() const
 {
     // read status
-    const U8 status = i2cDevice.ReadReg8(LSM303D_STATUS_M);
+    const U8 status = i2cDevice.Read8BitReg(LSM303D_STATUS_M);
     Logger::Log(LogLevel::Debug) << "Status: " << (std::bitset<8>)status;
 
     return status & LSM303D_STATUS_ZYXMDA ? true : false;
@@ -160,9 +162,9 @@ bool AccAndMagHandler::HasNewMagnetometerMeasurement() const
 MeasurementPtr AccAndMagHandler::GetNextAccelerometerMeasurement() const
 {
 	Logger::Log(LogLevel::Debug) << "Reading measurement from accelerometer";
-    const F32 xAcc = i2cDevice.Read16BitToFloat(LSM303D_OUT_X_L_A, accelerometerScale);
-    const F32 yAcc = i2cDevice.Read16BitToFloat(LSM303D_OUT_Y_L_A, accelerometerScale);
-    const F32 zAcc = i2cDevice.Read16BitToFloat(LSM303D_OUT_Z_L_A, accelerometerScale);
+    const F32 xAcc = i2cDevice.ReadTwo8BitRegsToFloat(LSM303D_OUT_X_L_A, accelerometerScale);
+    const F32 yAcc = i2cDevice.ReadTwo8BitRegsToFloat(LSM303D_OUT_Y_L_A, accelerometerScale);
+    const F32 zAcc = i2cDevice.ReadTwo8BitRegsToFloat(LSM303D_OUT_Z_L_A, accelerometerScale);
 
     const F32 sum = sqrt(xAcc*xAcc + yAcc*yAcc + zAcc*zAcc);
 	Logger::Log(LogLevel::Debug) << "Sum: " << sum;
@@ -173,9 +175,9 @@ MeasurementPtr AccAndMagHandler::GetNextAccelerometerMeasurement() const
 MeasurementPtr AccAndMagHandler::GetNextMagnetometerMeasurement() const
 {
     Logger::Log(LogLevel::Debug) << "Reading measurement from magnetometer";
-    const F32 xComp = i2cDevice.Read16BitToFloat(LSM303D_OUT_X_L_M, compassScale);
-    const F32 yComp = i2cDevice.Read16BitToFloat(LSM303D_OUT_Y_L_M, compassScale);
-    const F32 zComp = i2cDevice.Read16BitToFloat(LSM303D_OUT_Z_L_M, compassScale);
+    const F32 xComp = i2cDevice.ReadTwo8BitRegsToFloat(LSM303D_OUT_X_L_M, compassScale);
+    const F32 yComp = i2cDevice.ReadTwo8BitRegsToFloat(LSM303D_OUT_Y_L_M, compassScale);
+    const F32 zComp = i2cDevice.ReadTwo8BitRegsToFloat(LSM303D_OUT_Z_L_M, compassScale);
 
     Logger::Log(LogLevel::Debug) << "xComp: " << xComp;
     Logger::Log(LogLevel::Debug) << "yComp: " << yComp;
