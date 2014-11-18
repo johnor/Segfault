@@ -68,27 +68,17 @@ MeasurementBatch AccAndMagHandler::GetMeasurements() const
 {
     MeasurementBatch measurements;
 
-    /*if (HasNewAccelerometerMeasurement())
+    if (HasNewAccelerometerMeasurement())
     {
-    Logger::Log(LogLevel::Info) << "New accelerometer measurement available";
-
-    measurements.push_back(GetNextAccelerometerMeasurement());
-    }*/
-
-    if (HasNewMagnetometerMeasurement())
-    {
-        Logger::Log(LogLevel::Info) << "New magnetometer measurement available";
-
-        measurements.push_back(GetNextMagnetometerMeasurement());
+        Logger::Log(LogLevel::Info) << "New accelerometer measurement available";
+        measurements.push_back(GetNextAccelerometerMeasurement());
     }
 
     if (HasNewMagnetometerMeasurement())
     {
         Logger::Log(LogLevel::Info) << "New magnetometer measurement available";
-
         measurements.push_back(GetNextMagnetometerMeasurement());
     }
-
 
     return measurements;
 }
