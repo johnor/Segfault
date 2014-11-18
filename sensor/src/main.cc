@@ -7,12 +7,14 @@
 #include "interfaces/measurement.h"
 #include "classes/sensorhandlers/factories/default_handler_factory.h"
 #include "classes/sensorhandlers/factories/log_reader_factory.h"
+#include "classes/visitors/logger_visitor.h"
 #include "classes/alt_imu.h"
 #include "classes/logger.h"
 
 #include <iostream>
 
-void PrintMeasurements(const MeasurementBatch& measurementBatch);
+
+void PrintAndLogMeasurements(const MeasurementBatch& measurementBatch);
 
 int main(int argc, char* argv[])
 {
@@ -29,7 +31,7 @@ int main(int argc, char* argv[])
     {
         IMUPtr imu{new AltIMU{factory}};
         MeasurementBatch measurementBatch{imu->GetNextMeasurementBatch()};
-        PrintMeasurements(measurementBatch);
+        PrintAndLogMeasurements(measurementBatch);
 
         /* Do not close console immediately */
         Logger::LogToConsole(LogLevel::Info) << "Press any key to exit the application.";
@@ -53,10 +55,13 @@ int main(int argc, char* argv[])
     return 0;
 }
 
-void PrintMeasurements(const MeasurementBatch& measurementBatch)
+void PrintAndLogMeasurements(const MeasurementBatch& measurementBatch)
 {
+    LoggerVisitor loggerVisitor{ "log_acc.txt", "log_gyro.txt", "log_baro.txt" };
+
     for (const auto& measurement : measurementBatch)
     {
+        measurement->Accept(loggerVisitor);
         Logger::Log(LogLevel::Debug) << measurement->ToString();
     }
 }

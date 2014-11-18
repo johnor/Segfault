@@ -40,6 +40,9 @@ solution "Sensor"
    platforms { "rpi", "native" }
    location "build"
    
+   -- set working directory for visual studio projects
+   debugdir "." 
+   
    -- prevent "warning LNK4098: defaultlib 'MSVCRTD' conflicts with use of other libs; use /NODEFAULTLIB:library"
    configuration { "Debug", "vs*" }
       buildoptions { "/MDd" }

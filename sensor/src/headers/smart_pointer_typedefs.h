@@ -10,7 +10,6 @@
 #include <vector>
 
 class Measurement;
-class MeasurementVisitor;
 class SensorHandler;
 class SensorHandlerFactory;
 class IMU;
@@ -18,7 +17,6 @@ class Model;
 class LogStream;
 
 typedef std::unique_ptr<const Measurement> MeasurementPtr;
-typedef std::unique_ptr<MeasurementVisitor> MeasurementVisitorPtr;
 typedef std::unique_ptr<SensorHandler> SensorHandlerPtr;
 typedef std::unique_ptr<const SensorHandlerFactory> SensorHandlerFactoryPtr;
 typedef std::unique_ptr<const IMU> IMUPtr;

@@ -62,7 +62,7 @@ public:
     AccelerometerMeasurement(const U32 timeStamp, const F32 xValue, const F32 yValue, const F32 zValue);
     virtual ~AccelerometerMeasurement() {}
     virtual std::string ToString() const override;
-    virtual void Accept(const MeasurementVisitorPtr& visitor) const override;
+    virtual void Accept(MeasurementVisitor& visitor) const override;
 private:
     AccelerometerMeasurement(const AccelerometerMeasurement&) = delete;
     AccelerometerMeasurement& operator=(const AccelerometerMeasurement&) = delete;
@@ -79,7 +79,7 @@ public:
     GyroscopeMeasurement(const U32 timeStamp, const F32 xValue, const F32 yValue, const F32 zValue);
     virtual ~GyroscopeMeasurement() {}
     virtual std::string ToString() const override;
-    virtual void Accept(const MeasurementVisitorPtr& visitor) const override;
+    virtual void Accept(MeasurementVisitor& visitor) const override;
 private:
     GyroscopeMeasurement(const GyroscopeMeasurement&) = delete;
     GyroscopeMeasurement& operator=(const GyroscopeMeasurement&) = delete;
@@ -96,7 +96,7 @@ public:
     CompassMeasurement(const U32 timeStamp, const F32 xValue, const F32 yValue, const F32 zValue);
     virtual ~CompassMeasurement() {}
     virtual std::string ToString() const override;
-    virtual void Accept(const MeasurementVisitorPtr& visitor) const override;
+    virtual void Accept(MeasurementVisitor& visitor) const override;
 private:
     CompassMeasurement(const CompassMeasurement&) = delete;
     CompassMeasurement& operator=(const CompassMeasurement&) = delete;
@@ -112,7 +112,7 @@ public:
     explicit PressureMeasurement(const U32 timeStamp, const F32 value);
     virtual ~PressureMeasurement() {}
     virtual std::string ToString() const override;
-    virtual void Accept(const MeasurementVisitorPtr& visitor) const override;
+    virtual void Accept(MeasurementVisitor& visitor) const override;
 private:
     PressureMeasurement(const PressureMeasurement&) = delete;
     PressureMeasurement& operator=(const PressureMeasurement&) = delete;
@@ -128,7 +128,7 @@ public:
     explicit TemperatureMeasurement(const U32 timeStamp, const F32 value);
     virtual ~TemperatureMeasurement() {}
     virtual std::string ToString() const override;
-    virtual void Accept(const MeasurementVisitorPtr& visitor) const override;
+    virtual void Accept(MeasurementVisitor& visitor) const override;
 private:
     TemperatureMeasurement(const TemperatureMeasurement&) = delete;
     TemperatureMeasurement& operator=(const TemperatureMeasurement&) = delete;
