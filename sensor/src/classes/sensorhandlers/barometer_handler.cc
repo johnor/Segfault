@@ -57,7 +57,7 @@ MeasurementBatch BarometerHandler::GetMeasurements() const
         const U32 timeStamp{Clock::GetTimeStampInMicroSecs()};
 
         measurements.push_back(MeasurementPtr{new PressureMeasurement{timeStamp, pressureMeasurement}});
-        measurements.push_back(MeasurementPtr{new PressureMeasurement{timeStamp, tempMeasurement}});
+        measurements.push_back(MeasurementPtr{new TemperatureMeasurement{timeStamp, tempMeasurement}});
     }
 
     return measurements;
@@ -65,9 +65,9 @@ MeasurementBatch BarometerHandler::GetMeasurements() const
 
 bool BarometerHandler::HasAvailableMeasurements() const
 {
-    const U8 statusReg{i2cDevice.Read8BitReg(STATUS_ADDRESS)};
-    const bool pressureDataAvailable{static_cast<bool>(statusReg & PRESS_NDA_MASK)};
-    const bool tempDataAvailable{static_cast<bool>(statusReg & TEMP_NDA_MASK)};
+    const U8 statusReg{ i2cDevice.Read8BitReg(STATUS_ADDRESS) };
+    const bool pressureDataAvailable{ statusReg & PRESS_NDA_MASK ? true : false };
+    const bool tempDataAvailable{ statusReg & TEMP_NDA_MASK ? true : false };
 
     return (pressureDataAvailable && tempDataAvailable);
 }

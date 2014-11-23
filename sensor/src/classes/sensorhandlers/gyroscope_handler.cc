@@ -22,7 +22,6 @@
 #include "../../headers/exceptions.h"
 #include "../clock.h"
 
-#include <cstdint>
 
 const U8 I2C_ADDRESS_SA0_HIGH = 0x6b;
 
@@ -72,7 +71,7 @@ MeasurementBatch GyroscopeHandler::GetMeasurements() const
 bool GyroscopeHandler::HasAvailableMeasurements() const
 {
     const U8 statusReg{i2cDevice.Read8BitReg(STATUS_ADDRESS)};
-    const bool newDataAvailable{static_cast<bool>(statusReg & NDA_BITMASK)};
+    const bool newDataAvailable{ statusReg & NDA_BITMASK ? true : false };
 
     return newDataAvailable;
 }
