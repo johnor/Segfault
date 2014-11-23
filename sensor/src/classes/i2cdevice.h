@@ -20,6 +20,7 @@ public:
     void WriteReg16(const U8 reg, const U16 data) const;
 
     F32 ReadTwo8BitRegsToFloat(const U8 lowReg, const F32 scaling) const;
+    F32 ReadThree8BitRegsToFloat(const U8 lowReg, const F32 scaling) const;
 private:
     I2CDevice(const I2CDevice&) = delete;
     I2CDevice& operator=(const I2CDevice&) = delete;

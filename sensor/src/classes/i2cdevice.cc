@@ -81,6 +81,20 @@ F32 I2CDevice::ReadTwo8BitRegsToFloat(const U8 lowReg, const F32 scaling) const
     return sixteenBitTwosComplement * scaling;
 }
 
+F32 I2CDevice::ReadThree8BitRegsToFloat(const U8 lowReg, const F32 scaling) const
+{
+    const U8 middleReg{static_cast<U8>(lowReg + 1)};
+    const U8 highReg{static_cast<U8>(lowReg + 2)};
+
+    const U8 lowByte{Read8BitReg(lowReg)};
+    const U8 middleByte{Read8BitReg(middleReg)};
+    const U8 highByte{Read8BitReg(highReg)};
+
+    const S32 twentyFourBitTwosComplement{static_cast<S32>((highByte << 16) | (middleByte << 8) | lowByte)};
+
+    return twentyFourBitTwosComplement * scaling;
+}
+
 std::string I2CDevice::Convert8BitValueToHexString(const U8 value)
 {
     std::ostringstream stream;
