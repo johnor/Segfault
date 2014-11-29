@@ -6,7 +6,7 @@
 class LoggerVisitor : public MeasurementVisitor
 {
 public:
-    LoggerVisitor(const std::string& accLogFile, const std::string& gyroLogFile, const std::string& baroLogFile);
+    LoggerVisitor(const std::string& logFile);
     virtual ~LoggerVisitor() {}
 
     virtual void Visit(const AccelerometerMeasurement& accMeas) override;
@@ -18,7 +18,5 @@ private:
     LoggerVisitor(const LoggerVisitor&) = delete;
     LoggerVisitor& operator=(const LoggerVisitor&) = delete;
 
-    std::ofstream accAngMagLogStream;
-    std::ofstream gyroscopeLogStream;
-    std::ofstream barometerLogStream;
+    std::ofstream logStream;
 };

@@ -7,18 +7,18 @@
 
 SensorHandlerPtr LogReaderFactory::MakeAccAndMagHandler() const
 {
-    Logger::Log(LogLevel::Info) << "LogReaderHandlerFactory creating AccAndMagHandler";
-    return SensorHandlerPtr{ new LogReader };
+    Logger::Log(LogLevel::Info) << "LogReaderHandlerFactory creating LogReader as AccAndMagHandler";
+    return SensorHandlerPtr{ new LogReader{ "measurementslog.txt" } };
 }
 
 SensorHandlerPtr LogReaderFactory::MakeGyroscopeHandler() const
 {
-    Logger::Log(LogLevel::Info) << "LogReaderHandlerFactory creating GyroscopeHandler";
-    return SensorHandlerPtr{ new LogReader };
+    Logger::Log(LogLevel::Info) << "LogReaderHandlerFactory creating no GyroscopeHandler";
+    return SensorHandlerPtr{ nullptr };
 }
 
 SensorHandlerPtr LogReaderFactory::MakeBarometerHandler() const
 {
-    Logger::Log(LogLevel::Info) << "LogReaderHandlerFactory creating BarometerHandler";
-    return SensorHandlerPtr{ new LogReader };
+    Logger::Log(LogLevel::Info) << "LogReaderHandlerFactory creating no BarometerHandler";
+    return SensorHandlerPtr{ nullptr };
 }

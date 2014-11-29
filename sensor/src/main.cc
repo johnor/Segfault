@@ -45,9 +45,16 @@ int main(int argc, char* argv[])
         Logger::Log(LogLevel::Info) << "Exiting application due to unrecoverable error.";
         return EXIT_FAILURE;
     }
+    catch (const std::exception &e)
+    {
+        Logger::Log(LogLevel::Error) << "An unknown exception occurred.";
+        Logger::Log(LogLevel::Error) << e.what();
+        Logger::Log(LogLevel::Info) << "Exiting application due to unrecoverable error.";
+        return EXIT_FAILURE;
+    }
     catch (...)
     {
-        Logger::Log(LogLevel::Error) << "An unknown exception occured.";
+        Logger::Log(LogLevel::Error) << "An unknown exception occurred.";
         Logger::Log(LogLevel::Info) << "Exiting application due to unrecoverable error.";
         return EXIT_FAILURE;
     }
@@ -57,11 +64,16 @@ int main(int argc, char* argv[])
 
 void PrintAndLogMeasurements(const MeasurementBatch& measurementBatch)
 {
-    LoggerVisitor loggerVisitor{ "log_acc.txt", "log_gyro.txt", "log_baro.txt" };
+    #ifndef _MSC_VER
+        LoggerVisitor loggerVisitor{ "measurementslog.txt"};
+        for (const auto& measurement : measurementBatch)
+        {
+            measurement->Accept(loggerVisitor);
+        }
+    #endif
 
     for (const auto& measurement : measurementBatch)
     {
-        measurement->Accept(loggerVisitor);
         Logger::Log(LogLevel::Debug) << measurement->ToString();
     }
 }
