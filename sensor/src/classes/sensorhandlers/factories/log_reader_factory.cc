@@ -5,10 +5,16 @@
 #include "../log_reader_handler.h"
 #include "../../logger.h"
 
+
+LogReaderFactory::LogReaderFactory(SoftwareClock &clock_) : clock(clock_)
+{
+
+}
+
 SensorHandlerPtr LogReaderFactory::MakeAccAndMagHandler() const
 {
     Logger::Log(LogLevel::Info) << "LogReaderHandlerFactory creating LogReader as AccAndMagHandler";
-    return SensorHandlerPtr{ new LogReader{ "measurementslog.txt" } };
+    return SensorHandlerPtr{ new LogReader{ clock, "measurementslog.txt" } };
 }
 
 SensorHandlerPtr LogReaderFactory::MakeGyroscopeHandler() const

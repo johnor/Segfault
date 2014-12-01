@@ -10,6 +10,8 @@
 #include "classes/visitors/logger_visitor.h"
 #include "classes/alt_imu.h"
 #include "classes/logger.h"
+#include "classes/hardwareclock.h"
+#include "classes/softwareclock.h"
 
 #include <iostream>
 
@@ -22,14 +24,19 @@ int main(int argc, char* argv[])
 
     /* Create factory and IMU */
     #ifdef _MSC_VER
-        SensorHandlerFactoryPtr factory{ new LogReaderFactory{} };
+        SoftwareClock clock;
+        SensorHandlerFactoryPtr factory{ new LogReaderFactory{ clock } };
     #else
-        SensorHandlerFactoryPtr factory{ new DefaultHandlerFactory{} };
+        HardwareClock clock;
+        SensorHandlerFactoryPtr factory{ new DefaultHandlerFactory{ clock } };
     #endif
 
     try
     {
         IMUPtr imu{new AltIMU{factory}};
+        #ifdef _MSC_VER
+            clock.IncreaseTimeStamp(1/20.f);
+        #endif
         MeasurementBatch measurementBatch{imu->GetNextMeasurementBatch()};
         PrintAndLogMeasurements(measurementBatch);
 

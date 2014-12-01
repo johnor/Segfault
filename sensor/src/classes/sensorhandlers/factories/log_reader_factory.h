@@ -3,11 +3,12 @@
 
 #include "../../../headers/smart_pointer_typedefs.h"
 #include "../../../interfaces/sensor_handler_factory.h"
+#include "../../softwareclock.h"
 
 class LogReaderFactory : public SensorHandlerFactory
 {
 public:
-    LogReaderFactory() = default;
+    LogReaderFactory(SoftwareClock &clock_);
     virtual ~LogReaderFactory() {};
 
     virtual SensorHandlerPtr MakeAccAndMagHandler() const override;
@@ -16,6 +17,8 @@ public:
 private:
     LogReaderFactory(const LogReaderFactory&) = delete;
     LogReaderFactory& operator=(const LogReaderFactory&) = delete;
+
+    SoftwareClock &clock;
 };
 
 #endif

@@ -11,7 +11,6 @@
 #include "../measurements.h"
 #include "classes/logger.h"
 #include "../../headers/exceptions.h"
-#include "classes/clock.h"
 
 
 const U8 LSM303D_ADDRESS        = 0x1d;
@@ -53,9 +52,9 @@ const U8 LSM303D_COMPASS_SAMPLERATE_50 = 4u;
 const U8 LSM303D_COMPASS_FSR_2         = 0u;
 
 
-AccAndMagHandler::AccAndMagHandler()
+AccAndMagHandler::AccAndMagHandler(Clock &clock_)
 try
-: i2cDevice(LSM303D_ADDRESS)
+: i2cDevice(LSM303D_ADDRESS), clock(clock_)
 {
     SetUpRegisters();
 }
@@ -160,7 +159,7 @@ MeasurementPtr AccAndMagHandler::GetNextAccelerometerMeasurement() const
     const F32 sum = sqrt(xAcc*xAcc + yAcc*yAcc + zAcc*zAcc);
     Logger::Log(LogLevel::Debug) << "Sum: " << sum;
 
-    return MeasurementPtr{ new AccelerometerMeasurement{ Clock::GetTimeStampInMicroSecs(), xAcc, yAcc, zAcc } };
+    return MeasurementPtr{ new AccelerometerMeasurement{ clock.GetTimeStampInMicroSecs(), xAcc, yAcc, zAcc } };
 }
 
 MeasurementPtr AccAndMagHandler::GetNextMagnetometerMeasurement() const
@@ -174,5 +173,5 @@ MeasurementPtr AccAndMagHandler::GetNextMagnetometerMeasurement() const
     Logger::Log(LogLevel::Debug) << "yComp: " << yComp;
     Logger::Log(LogLevel::Debug) << "zComp: " << zComp;
 
-    return MeasurementPtr{ new CompassMeasurement{ Clock::GetTimeStampInMicroSecs(), xComp, yComp, zComp } };
+    return MeasurementPtr{ new CompassMeasurement{ clock.GetTimeStampInMicroSecs(), xComp, yComp, zComp } };
 }

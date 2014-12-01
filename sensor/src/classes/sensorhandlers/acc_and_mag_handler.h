@@ -8,12 +8,13 @@
 
 #include "../../headers/smart_pointer_typedefs.h"
 #include "../../interfaces/sensorhandler.h"
+#include "../../interfaces/clock.h"
 #include "classes/i2cdevice.h"
 
 class AccAndMagHandler : public SensorHandler
 {
 public:
-    AccAndMagHandler();
+    AccAndMagHandler(Clock &clock_);
     virtual ~AccAndMagHandler() {}
     virtual MeasurementBatch GetMeasurements() const override;
     virtual bool HasAvailableMeasurements() const override;
@@ -31,6 +32,8 @@ private:
     I2CDevice i2cDevice;
     F32 accelerometerScale{ 0.f };
     F32 compassScale { 0.f };
+
+    Clock &clock;
 };
 
 #endif

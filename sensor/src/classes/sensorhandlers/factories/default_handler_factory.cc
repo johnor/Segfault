@@ -10,20 +10,24 @@
 #include "../barometer_handler.h"
 #include "../../logger.h"
 
+DefaultHandlerFactory::DefaultHandlerFactory(Clock &clock_) : clock( clock_ )
+{
+}
+
 SensorHandlerPtr DefaultHandlerFactory::MakeAccAndMagHandler() const
 {
     Logger::Log(LogLevel::Info) << "DefaultHandlerFactory creating AccAndMagHandler";
-    return SensorHandlerPtr{new AccAndMagHandler{}};
+    return SensorHandlerPtr{ new AccAndMagHandler{ clock } };
 }
 
 SensorHandlerPtr DefaultHandlerFactory::MakeGyroscopeHandler() const
 {
     Logger::Log(LogLevel::Info) << "DefaultHandlerFactory creating GyroscopeHandler";
-    return SensorHandlerPtr{new GyroscopeHandler{}};
+    return SensorHandlerPtr{ new GyroscopeHandler{ clock } };
 }
 
 SensorHandlerPtr DefaultHandlerFactory::MakeBarometerHandler() const
 {
     Logger::Log(LogLevel::Info) << "DefaultHandlerFactory creating BarometerHandler";
-    return SensorHandlerPtr{new BarometerHandler{}};
+    return SensorHandlerPtr{ new BarometerHandler{ clock } };
 }

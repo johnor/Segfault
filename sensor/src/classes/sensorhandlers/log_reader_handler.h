@@ -4,11 +4,12 @@
 #include <string>
 #include <fstream>
 #include "../../interfaces/sensorhandler.h"
+#include "../softwareclock.h"
 
 class LogReader : public SensorHandler
 {
 public:
-    LogReader(const std::string& logFile_);
+    LogReader(const SoftwareClock &clock_, const std::string& logFile_);
     virtual ~LogReader() {}
 
     virtual MeasurementBatch GetMeasurements() const override;
@@ -20,6 +21,7 @@ private:
     MeasurementPtr CreateMeasurement(const std::string &inputLine) const;
 
     mutable std::ifstream logStream;
+    const SoftwareClock &clock;
 };
 
 #endif

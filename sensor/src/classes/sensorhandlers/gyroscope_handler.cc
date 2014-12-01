@@ -20,7 +20,6 @@
 #include "gyroscope_handler.h"
 #include "../measurements.h"
 #include "../../headers/exceptions.h"
-#include "../clock.h"
 
 
 const U8 I2C_ADDRESS_SA0_HIGH = 0x6b;
@@ -45,8 +44,8 @@ const F32 PI = 3.14159265358979323846f;
 const F32 scaleToDegreesPerSecond = 245.f / INT16_MAX;
 const F32 scaleToRadiansPerSecond = scaleToDegreesPerSecond * (PI / 180.f);
 
-GyroscopeHandler::GyroscopeHandler()
-    : i2cDevice{I2C_ADDRESS_SA0_HIGH}
+GyroscopeHandler::GyroscopeHandler(Clock &clock_)
+: i2cDevice{ I2C_ADDRESS_SA0_HIGH }, clock(clock_)
 {
     SetupRegisters();
 }
@@ -60,7 +59,7 @@ MeasurementBatch GyroscopeHandler::GetMeasurements() const
         const F32 xValue{i2cDevice.ReadTwo8BitRegsToFloat(X_OUT_LOW_ADDRESS, scaleToRadiansPerSecond)};
         const F32 yValue{i2cDevice.ReadTwo8BitRegsToFloat(Y_OUT_LOW_ADDRESS, scaleToRadiansPerSecond)};
         const F32 zValue{i2cDevice.ReadTwo8BitRegsToFloat(Z_OUT_LOW_ADDRESS, scaleToRadiansPerSecond)};
-        const U32 timeStamp{Clock::GetTimeStampInMicroSecs()};
+        const U32 timeStamp{ clock.GetTimeStampInMicroSecs() };
 
         measurements.push_back(MeasurementPtr{new GyroscopeMeasurement{timeStamp, xValue, yValue, zValue}});
     }
