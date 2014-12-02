@@ -1,6 +1,6 @@
 #include "softwareclock.h"
 
-U32 SoftwareClock::GetTimeStampInMicroSecs()
+U32 SoftwareClock::GetTimeStampInMicroSecs() const
 {
     return currentTimeStamp;
 }

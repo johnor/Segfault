@@ -10,7 +10,7 @@ public:
     SoftwareClock() = default;
     virtual ~SoftwareClock() {};
 
-    virtual U32 GetTimeStampInMicroSecs() override;
+    virtual U32 GetTimeStampInMicroSecs() const override;
 
     void SetCurrentTimeStamp(const U32 currentTimeStamp_);
     void IncreaseTimeStamp(const F32 seconds);

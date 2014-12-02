@@ -11,7 +11,7 @@ public:
     HardwareClock() = default;
     virtual ~HardwareClock() {};
 
-    virtual U32 GetTimeStampInMicroSecs() override;
+    virtual U32 GetTimeStampInMicroSecs() const override;
 private:
     HardwareClock(const HardwareClock&) = delete;
     HardwareClock& operator=(const HardwareClock&) = delete;

@@ -22,15 +22,9 @@ static std::vector<std::string> SplitString(const std::string &input, char delim
     return elems;
 }
 
-LogReader::LogReader(const SoftwareClock &clock_, const std::string& logFile) : clock(clock_), logStream{ logFile }
+LogReader::LogReader(const SoftwareClock &clock_, const std::string& logFile) : clock(clock_)
 {
-}
-
-MeasurementBatch LogReader::GetMeasurements() const
-{
-    Logger::Log(LogLevel::Info) << "LogReader::GetMeasurements()";
-    MeasurementBatch measurements;
-
+    std::ifstream logStream{ logFile };
     std::string inputLine;
 
     while (std::getline(logStream, inputLine))
@@ -39,7 +33,7 @@ MeasurementBatch LogReader::GetMeasurements() const
 
         try
         {
-            measurements.push_back(CreateMeasurement(inputLine));
+            measurementList.push_back(CreateMeasurement(inputLine));
         }
         catch (std::exception &e)
         {
@@ -47,8 +41,30 @@ MeasurementBatch LogReader::GetMeasurements() const
             Logger::Log(LogLevel::Warning) << e.what();
         }
     }
-    
-    return measurements;
+}
+
+MeasurementBatch LogReader::GetMeasurements() const
+{
+    Logger::Log(LogLevel::Info) << "LogReader::GetMeasurements()";
+    MeasurementBatch measurementsThisFrame;
+
+    const U32 currentTimeStamp = clock.GetTimeStampInMicroSecs();
+    Logger::Log(LogLevel::Info) << "Reading until: " << currentTimeStamp;
+
+    while (!measurementList.empty())
+    {
+        if (measurementList.front()->GetTimeStamp() < currentTimeStamp)
+        {
+            measurementsThisFrame.push_back(std::move(measurementList.front()));
+            measurementList.erase(measurementList.begin());
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    return measurementsThisFrame;
 }
 
 bool LogReader::HasAvailableMeasurements() const

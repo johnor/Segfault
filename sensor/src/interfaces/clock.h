@@ -7,7 +7,7 @@ class Clock
 {
 public:
     virtual ~Clock() {}
-    virtual U32 GetTimeStampInMicroSecs() = 0;
+    virtual U32 GetTimeStampInMicroSecs() const = 0;
 };
 
 #endif

@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include "../../interfaces/sensorhandler.h"
+#include "interfaces/measurement.h"
 #include "../softwareclock.h"
 
 class LogReader : public SensorHandler
@@ -20,8 +21,9 @@ private:
 
     MeasurementPtr CreateMeasurement(const std::string &inputLine) const;
 
-    mutable std::ifstream logStream;
     const SoftwareClock &clock;
+
+    mutable MeasurementBatch measurementList;
 };
 
 #endif

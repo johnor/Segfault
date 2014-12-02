@@ -40,6 +40,12 @@ int main(int argc, char* argv[])
         MeasurementBatch measurementBatch{imu->GetNextMeasurementBatch()};
         PrintAndLogMeasurements(measurementBatch);
 
+        #ifdef _MSC_VER
+                clock.IncreaseTimeStamp(1 / 20.f);
+        #endif
+        measurementBatch = imu->GetNextMeasurementBatch();
+        PrintAndLogMeasurements(measurementBatch);
+
         /* Do not close console immediately */
         Logger::LogToConsole(LogLevel::Info) << "Press any key to exit the application.";
         std::cin.get();
