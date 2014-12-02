@@ -3,6 +3,7 @@
 #include "../measurements.h"
 #include <string>
 #include <vector>
+#include <stdexcept>
 
 static std::vector<std::string> SplitString(const std::string &input, char delim)
 {
