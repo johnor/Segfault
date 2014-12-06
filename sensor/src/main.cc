@@ -10,8 +10,8 @@
 #include "classes/visitors/logger_visitor.h"
 #include "classes/alt_imu.h"
 #include "classes/logger.h"
-#include "classes/hardwareclock.h"
-#include "classes/softwareclock.h"
+#include "classes/clock/hardwareclock.h"
+#include "classes/clock/softwareclock.h"
 
 #include <iostream>
 

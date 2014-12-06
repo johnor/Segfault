@@ -5,7 +5,7 @@
 #include <fstream>
 #include "../../interfaces/sensorhandler.h"
 #include "interfaces/measurement.h"
-#include "../softwareclock.h"
+#include "../clock/softwareclock.h"
 
 class LogReader : public SensorHandler
 {

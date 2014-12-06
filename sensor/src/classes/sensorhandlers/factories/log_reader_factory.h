@@ -3,7 +3,7 @@
 
 #include "../../../headers/smart_pointer_typedefs.h"
 #include "../../../interfaces/sensor_handler_factory.h"
-#include "../../softwareclock.h"
+#include "../../clock/softwareclock.h"
 
 class LogReaderFactory : public SensorHandlerFactory
 {
