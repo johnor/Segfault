@@ -25,8 +25,12 @@ static std::vector<std::string> SplitString(const std::string &input, char delim
 LogReader::LogReader(const SoftwareClock &clock_, const std::string& logFile) : clock(clock_)
 {
     std::ifstream logStream{ logFile };
-    std::string inputLine;
+    if (!logStream.is_open())
+    {
+        throw std::runtime_error("Could not open log file: " + logFile);
+    }
 
+    std::string inputLine;
     while (std::getline(logStream, inputLine))
     {
         Logger::Log(LogLevel::Debug) << inputLine;

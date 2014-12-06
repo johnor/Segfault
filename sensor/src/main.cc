@@ -24,8 +24,13 @@ int main(int argc, char* argv[])
 
     /* Create factory and IMU */
     #ifdef _MSC_VER
+        std::string logFileName = "measurementlog.txt";
+        if (argc > 1)
+        {
+            logFileName = argv[1];
+        }
         SoftwareClock clock;
-        SensorHandlerFactoryPtr factory{ new LogReaderFactory{ clock } };
+        SensorHandlerFactoryPtr factory{ new LogReaderFactory{ clock, logFileName } };
     #else
         HardwareClock clock;
         SensorHandlerFactoryPtr factory{ new DefaultHandlerFactory{ clock } };

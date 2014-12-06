@@ -6,7 +6,7 @@
 #include "../../logger.h"
 
 
-LogReaderFactory::LogReaderFactory(SoftwareClock &clock_) : clock(clock_)
+LogReaderFactory::LogReaderFactory(SoftwareClock &clock_, const std::string &logFileName_) : clock(clock_), logFileName(logFileName_)
 {
 
 }
@@ -14,7 +14,7 @@ LogReaderFactory::LogReaderFactory(SoftwareClock &clock_) : clock(clock_)
 SensorHandlerPtr LogReaderFactory::MakeAccAndMagHandler() const
 {
     Logger::Log(LogLevel::Info) << "LogReaderHandlerFactory creating LogReader as AccAndMagHandler";
-    return SensorHandlerPtr{ new LogReader{ clock, "measurementslog.txt" } };
+    return SensorHandlerPtr{ new LogReader{ clock, logFileName } };
 }
 
 SensorHandlerPtr LogReaderFactory::MakeGyroscopeHandler() const
