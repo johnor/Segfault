@@ -20,7 +20,7 @@
 #include "gyroscope_handler.h"
 #include "../measurements.h"
 #include "../../headers/exceptions.h"
-
+#include "../../interfaces/clock.h"
 
 const U8 I2C_ADDRESS_SA0_HIGH = 0x6b;
 
@@ -44,8 +44,8 @@ const F32 PI = 3.14159265358979323846f;
 const F32 scaleToDegreesPerSecond = 245.f / INT16_MAX;
 const F32 scaleToRadiansPerSecond = scaleToDegreesPerSecond * (PI / 180.f);
 
-GyroscopeHandler::GyroscopeHandler(Clock &clock_)
-: i2cDevice{ I2C_ADDRESS_SA0_HIGH }, clock(clock_)
+GyroscopeHandler::GyroscopeHandler(const Clock& clock)
+    : i2cDevice{I2C_ADDRESS_SA0_HIGH}, clock(clock)
 {
     SetupRegisters();
 }

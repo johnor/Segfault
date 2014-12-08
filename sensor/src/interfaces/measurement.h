@@ -16,15 +16,10 @@
 class Measurement
 {
 public:
-    Measurement() = default;
     virtual ~Measurement() {};
-
     virtual void Accept(MeasurementVisitor& visitor) const = 0;
     virtual std::string ToString() const = 0;
     virtual U32 GetTimeStamp() const = 0;
-private:
-    Measurement(const Measurement&) = delete;
-    Measurement& operator=(const Measurement&) = delete;
 };
 
 #endif

@@ -9,12 +9,13 @@
 #include "../../headers/smart_pointer_typedefs.h"
 #include "../../interfaces/sensorhandler.h"
 #include "../i2cdevice.h"
-#include "../../interfaces/clock.h"
+
+class Clock;
 
 class GyroscopeHandler : public SensorHandler
 {
 public:
-    GyroscopeHandler(Clock &clock_);
+    explicit GyroscopeHandler(const Clock& clock);
     virtual ~GyroscopeHandler() {}
     virtual MeasurementBatch GetMeasurements() const override;
     virtual bool HasAvailableMeasurements() const override;
@@ -24,7 +25,7 @@ private:
     void SetupRegisters();
 
     I2CDevice i2cDevice;
-    Clock &clock;
+    const Clock& clock;
 };
 
 #endif

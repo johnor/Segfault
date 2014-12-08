@@ -14,4 +14,3 @@ void SoftwareClock::IncreaseTimeStamp(const F32 seconds)
 {
     currentTimeStamp += static_cast<U32>(seconds * 1e6);
 }
-

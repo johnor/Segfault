@@ -2,27 +2,25 @@
 #define LOGREADER_H_
 
 #include <string>
-#include <fstream>
 #include "../../interfaces/sensorhandler.h"
 #include "interfaces/measurement.h"
-#include "../clock/softwareclock.h"
+
+class SoftwareClock;
 
 class LogReader : public SensorHandler
 {
 public:
-    LogReader(const SoftwareClock &clock_, const std::string& logFile_);
+    LogReader(const SoftwareClock& clock, const std::string& logFile);
     virtual ~LogReader() {}
-
     virtual MeasurementBatch GetMeasurements() const override;
     virtual bool HasAvailableMeasurements() const override;
 private:
     LogReader(const LogReader&) = delete;
     LogReader& operator=(const LogReader&) = delete;
 
-    MeasurementPtr CreateMeasurement(const std::string &inputLine) const;
+    MeasurementPtr CreateMeasurement(const std::string& inputLine) const;
 
-    const SoftwareClock &clock;
-
+    const SoftwareClock& clock;
     mutable MeasurementBatch measurementList;
 };
 

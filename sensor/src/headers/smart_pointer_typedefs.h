@@ -16,10 +16,10 @@ class IMU;
 class Model;
 class LogStream;
 
-typedef std::unique_ptr<const Measurement> MeasurementPtr;
+typedef std::unique_ptr<Measurement> MeasurementPtr;
 typedef std::unique_ptr<SensorHandler> SensorHandlerPtr;
-typedef std::unique_ptr<const SensorHandlerFactory> SensorHandlerFactoryPtr;
-typedef std::unique_ptr<const IMU> IMUPtr;
+typedef std::unique_ptr<SensorHandlerFactory> SensorHandlerFactoryPtr;
+typedef std::unique_ptr<IMU> IMUPtr;
 typedef std::unique_ptr<Model> ModelPtr;
 typedef std::unique_ptr<LogStream> LogStreamPtr;
 

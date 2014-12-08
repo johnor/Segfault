@@ -15,7 +15,6 @@
 
 #include <iostream>
 
-
 void PrintAndLogMeasurements(const MeasurementBatch& measurementBatch);
 
 int main(int argc, char* argv[])

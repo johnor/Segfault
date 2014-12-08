@@ -1,9 +1,7 @@
-#include <chrono>
-
 #include "hardwareclock.h"
 #include "classes/logger.h"
 
-std::chrono::system_clock::time_point HardwareClock::applicationStartTime{ HardwareClock::GetCurrentTime() };
+const std::chrono::system_clock::time_point HardwareClock::applicationStartTime{ HardwareClock::GetCurrentTime() };
 
 U32 HardwareClock::GetTimeStampInMicroSecs() const
 {

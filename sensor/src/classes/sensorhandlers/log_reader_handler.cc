@@ -1,7 +1,8 @@
 #include "log_reader_handler.h"
 #include "classes/logger.h"
 #include "../measurements.h"
-#include <string>
+#include "../clock/softwareclock.h"
+
 #include <vector>
 #include <stdexcept>
 

@@ -3,12 +3,11 @@
 #include "../gyroscope_handler.h"
 #include "../barometer_handler.h"
 #include "../log_reader_handler.h"
+#include "../../clock/softwareclock.h"
 #include "../../logger.h"
 
-
-LogReaderFactory::LogReaderFactory(SoftwareClock &clock_, const std::string &logFileName_) : clock(clock_), logFileName(logFileName_)
+LogReaderFactory::LogReaderFactory(SoftwareClock& clock, const std::string& logFileName) : clock(clock), logFileName(logFileName)
 {
-
 }
 
 SensorHandlerPtr LogReaderFactory::MakeAccAndMagHandler() const

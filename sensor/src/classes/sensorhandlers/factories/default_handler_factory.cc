@@ -5,12 +5,13 @@
 */
 
 #include "default_handler_factory.h"
+#include "../../../interfaces/clock.h"
 #include "../acc_and_mag_handler.h"
 #include "../gyroscope_handler.h"
 #include "../barometer_handler.h"
 #include "../../logger.h"
 
-DefaultHandlerFactory::DefaultHandlerFactory(Clock &clock_) : clock( clock_ )
+DefaultHandlerFactory::DefaultHandlerFactory(const Clock& clock) : clock(clock)
 {
 }
 

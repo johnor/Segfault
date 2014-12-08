@@ -12,7 +12,6 @@ class MeasurementBase : public Measurement
 {
 public:
     explicit MeasurementBase(const U32 timeStamp);
-
     virtual U32 GetTimeStamp() const override;
 private:
     const U32 timeStamp;

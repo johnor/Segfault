@@ -18,6 +18,7 @@
 #include "barometer_handler.h"
 #include "../measurements.h"
 #include "../../headers/exceptions.h"
+#include "../../interfaces/clock.h"
 
 const U8 I2C_ADDRESS_SA0_HIGH = 0x5d;
 
@@ -39,8 +40,8 @@ const F32 scaleToHectoPascals = 1.f / 4096.f;
 const F32 tempScaleFactor = 1.f / 480.f;
 const F32 tempOffsetFactor = 42.5f;
 
-BarometerHandler::BarometerHandler(Clock &clock_)
-: i2cDevice{ I2C_ADDRESS_SA0_HIGH }, clock(clock_)
+BarometerHandler::BarometerHandler(const Clock& clock)
+: i2cDevice{ I2C_ADDRESS_SA0_HIGH }, clock(clock)
 {
     SetupRegisters();
 }
