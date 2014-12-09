@@ -23,7 +23,7 @@ static std::vector<std::string> SplitString(const std::string &input, char delim
     return elems;
 }
 
-LogReader::LogReader(const SoftwareClock &clock_, const std::string& logFile) : clock(clock_)
+LogReader::LogReader(const Clock &clock_, const std::string& logFile) : clock(clock_)
 {
     std::ifstream logStream{ logFile };
     if (!logStream.is_open())

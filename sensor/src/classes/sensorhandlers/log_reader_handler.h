@@ -5,12 +5,12 @@
 #include "../../interfaces/sensorhandler.h"
 #include "interfaces/measurement.h"
 
-class SoftwareClock;
+class Clock;
 
 class LogReader : public SensorHandler
 {
 public:
-    LogReader(const SoftwareClock& clock, const std::string& logFile);
+    LogReader(const Clock& clock, const std::string& logFile);
     virtual ~LogReader() {}
     virtual MeasurementBatch GetMeasurements() const override;
     virtual bool HasAvailableMeasurements() const override;
@@ -20,7 +20,7 @@ private:
 
     MeasurementPtr CreateMeasurement(const std::string& inputLine) const;
 
-    const SoftwareClock& clock;
+    const Clock& clock;
     mutable MeasurementBatch measurementList;
 };
 

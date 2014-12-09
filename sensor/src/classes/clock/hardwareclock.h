@@ -10,6 +10,7 @@ class HardwareClock : public Clock
 public:
     HardwareClock() = default;
     virtual ~HardwareClock() {};
+
     virtual U32 GetTimeStampInMicroSecs() const override;
 private:
     HardwareClock(const HardwareClock&) = delete;

@@ -5,12 +5,12 @@
 #include "../../../interfaces/sensor_handler_factory.h"
 #include <string>
 
-class SoftwareClock;
+class Clock;
 
 class LogReaderFactory : public SensorHandlerFactory
 {
 public:
-    LogReaderFactory(SoftwareClock& clock, const std::string& logFileName);
+    LogReaderFactory(Clock& clock, const std::string& logFileName);
     virtual ~LogReaderFactory() {};
 
     virtual SensorHandlerPtr MakeAccAndMagHandler() const override;
@@ -20,7 +20,7 @@ private:
     LogReaderFactory(const LogReaderFactory&) = delete;
     LogReaderFactory& operator=(const LogReaderFactory&) = delete;
 
-    SoftwareClock& clock;
+    Clock& clock;
     std::string logFileName;
 };
 

@@ -6,7 +6,7 @@
 #include "../../clock/softwareclock.h"
 #include "../../logger.h"
 
-LogReaderFactory::LogReaderFactory(SoftwareClock& clock, const std::string& logFileName) : clock(clock), logFileName(logFileName)
+LogReaderFactory::LogReaderFactory(Clock& clock, const std::string& logFileName) : clock(clock), logFileName(logFileName)
 {
 }
 
