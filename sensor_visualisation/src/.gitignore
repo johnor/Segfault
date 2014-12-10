@@ -1,0 +1,6 @@
+Run
+Makefile
+qrc_*
+moc_*
+*.o
+*.user
