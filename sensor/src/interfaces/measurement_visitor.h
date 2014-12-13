@@ -16,12 +16,12 @@ class TemperatureMeasurement;
 class MeasurementVisitor
 {
 public:
-	virtual ~MeasurementVisitor() {}
-	virtual void Visit(const AccelerometerMeasurement& accMeas) = 0;
-	virtual void Visit(const GyroscopeMeasurement& gyroMeas) = 0;
-	virtual void Visit(const CompassMeasurement& compassMeas) = 0;
-	virtual void Visit(const PressureMeasurement& pressureMeas) = 0;
-	virtual void Visit(const TemperatureMeasurement& tempMeas) = 0;
+    virtual ~MeasurementVisitor() {}
+    virtual void Visit(const AccelerometerMeasurement& accMeas) = 0;
+    virtual void Visit(const GyroscopeMeasurement& gyroMeas) = 0;
+    virtual void Visit(const CompassMeasurement& compassMeas) = 0;
+    virtual void Visit(const PressureMeasurement& pressureMeas) = 0;
+    virtual void Visit(const TemperatureMeasurement& tempMeas) = 0;
 };
 
 #endif

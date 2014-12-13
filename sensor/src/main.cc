@@ -1,44 +1,96 @@
 /* This file contains the entry point for the OrientationFilter application */
 
 #include "headers/smart_pointer_typedefs.h"
+#include "headers/exceptions.h"
 
 #include "interfaces/imu.h"
 #include "interfaces/measurement.h"
-#include "classes/sensorhandlers/default_handler_factory.h"
-#include "classes/sensorhandlers/log_reader_handler_factory.h"
+#include "classes/sensorhandlers/factories/default_handler_factory.h"
+#include "classes/sensorhandlers/factories/log_reader_factory.h"
+#include "classes/visitors/logger_visitor.h"
 #include "classes/alt_imu.h"
 #include "classes/logger.h"
+#include "classes/clock/hardwareclock.h"
+#include "classes/clock/softwareclock.h"
 
 #include <iostream>
 
-void PrintMeasurements(const MeasurementBatch& measurementBatch);
+void PrintAndLogMeasurements(const MeasurementBatch& measurementBatch);
 
 int main(int argc, char* argv[])
 {
-	Logger::Log(LogLevel::Info) << "SensorApp initialized";
+    Logger::Log(LogLevel::Info) << "SensorApp initialized";
 
-	/* Create factory and IMU */
-#ifdef _MSC_VER
-	SensorHandlerFactoryPtr factory{ new LogReaderHandlerFactory{} };
-#else
-    SensorHandlerFactoryPtr factory{ new DefaultHandlerFactory{} };
-#endif
-	IMUPtr imu{new AltIMU{factory}};
+    /* Create factory and IMU */
+    #ifdef _MSC_VER
+        std::string logFileName = "measurementlog.txt";
+        if (argc > 1)
+        {
+            logFileName = argv[1];
+        }
+        SoftwareClock clock;
+        SensorHandlerFactoryPtr factory{ new LogReaderFactory{ clock, logFileName } };
+    #else
+        HardwareClock clock;
+        SensorHandlerFactoryPtr factory{ new DefaultHandlerFactory{ clock } };
+    #endif
 
-	MeasurementBatch measurementBatch{imu->GetNextMeasurementBatch()};
-	PrintMeasurements(measurementBatch);
+    try
+    {
+        IMUPtr imu{new AltIMU{factory}};
+        #ifdef _MSC_VER
+            clock.IncreaseTimeStamp(1/20.f);
+        #endif
+        MeasurementBatch measurementBatch{imu->GetNextMeasurementBatch()};
+        PrintAndLogMeasurements(measurementBatch);
 
-	/* Do not close console immediately */
-	std::cout << "Press any key to exit the application." << std::endl;
-	std::cin.get();
+        #ifdef _MSC_VER
+                clock.IncreaseTimeStamp(1 / 20.f);
+        #endif
+        measurementBatch = imu->GetNextMeasurementBatch();
+        PrintAndLogMeasurements(measurementBatch);
 
-	return 0;
+        /* Do not close console immediately */
+        Logger::LogToConsole(LogLevel::Info) << "Press any key to exit the application.";
+        std::cin.get();
+        Logger::LogToFile(LogLevel::Info) << "SensorApp exiting...";
+    }
+    catch (const I2CException& e)
+    {
+        Logger::Log(LogLevel::Error) << "Could not instantiate IMU due to I2C problems.";
+        Logger::Log(LogLevel::Error) << e.what();
+        Logger::Log(LogLevel::Info) << "Exiting application due to unrecoverable error.";
+        return EXIT_FAILURE;
+    }
+    catch (const std::exception &e)
+    {
+        Logger::Log(LogLevel::Error) << "An unknown exception occurred.";
+        Logger::Log(LogLevel::Error) << e.what();
+        Logger::Log(LogLevel::Info) << "Exiting application due to unrecoverable error.";
+        return EXIT_FAILURE;
+    }
+    catch (...)
+    {
+        Logger::Log(LogLevel::Error) << "An unknown exception occurred.";
+        Logger::Log(LogLevel::Info) << "Exiting application due to unrecoverable error.";
+        return EXIT_FAILURE;
+    }
+
+    return 0;
 }
 
-void PrintMeasurements(const MeasurementBatch& measurementBatch)
+void PrintAndLogMeasurements(const MeasurementBatch& measurementBatch)
 {
-	for (const auto& measurement : measurementBatch)
-	{
-		Logger::Log(LogLevel::Debug, measurement->ToString());
-	}
+    #ifndef _MSC_VER
+        LoggerVisitor loggerVisitor{ "measurementslog.txt"};
+        for (const auto& measurement : measurementBatch)
+        {
+            measurement->Accept(loggerVisitor);
+        }
+    #endif
+
+    for (const auto& measurement : measurementBatch)
+    {
+        Logger::Log(LogLevel::Debug) << measurement->ToString();
+    }
 }

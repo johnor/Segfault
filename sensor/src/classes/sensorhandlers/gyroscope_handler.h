@@ -8,17 +8,24 @@
 
 #include "../../headers/smart_pointer_typedefs.h"
 #include "../../interfaces/sensorhandler.h"
+#include "../i2cdevice.h"
+
+class Clock;
 
 class GyroscopeHandler : public SensorHandler
 {
 public:
-	GyroscopeHandler() = default;
-	virtual ~GyroscopeHandler() {}
-	virtual MeasurementBatch GetMeasurements() const override;
-	virtual bool HasAvailableMeasurements() const override;
+    explicit GyroscopeHandler(const Clock& clock);
+    virtual ~GyroscopeHandler() {}
+    virtual MeasurementBatch GetMeasurements() const override;
+    virtual bool HasAvailableMeasurements() const override;
 private:
-	GyroscopeHandler(const GyroscopeHandler&) = delete;
-	GyroscopeHandler& operator=(const GyroscopeHandler&) = delete;
+    GyroscopeHandler(const GyroscopeHandler&) = delete;
+    GyroscopeHandler& operator=(const GyroscopeHandler&) = delete;
+    void SetupRegisters();
+
+    I2CDevice i2cDevice;
+    const Clock& clock;
 };
 
 #endif

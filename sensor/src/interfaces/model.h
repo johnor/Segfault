@@ -1,24 +1,21 @@
 /*
 * Interface for general Kalman filter models.
-* A model can perform a time- and measurement update.
-* A model can also return a string representation of its
-* internal state.
 */
 
 #ifndef MODEL_H_
 #define MODEL_H_
 
-#include "../headers/smart_pointer_typedefs.h"
 #include "../headers/numeric_typedefs.h"
-#include <string>
+#include <eigen/Eigen>
 
 class Model
 {
 public:
-	virtual ~Model() {}
-	virtual void TimeUpdate(const U32 dtInMilliseconds) = 0;
-	virtual void MeasurementUpdate(const MeasurementBatch& measurementBatch) = 0;
-	virtual std::string CurrentStateToString() const = 0;
+    virtual ~Model() {}
+    virtual Eigen::MatrixXf GetF() const = 0;
+    virtual Eigen::MatrixXf GetH() const = 0;
+    virtual Eigen::MatrixXf GetQ() const = 0;
+    virtual Eigen::MatrixXf GetR() const = 0;
 };
 
 #endif

@@ -4,3 +4,4 @@ bin
 *.sln
 *.suo
 Makefile
+*.txt

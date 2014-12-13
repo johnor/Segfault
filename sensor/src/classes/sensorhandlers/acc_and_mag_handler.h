@@ -10,23 +10,28 @@
 #include "../../interfaces/sensorhandler.h"
 #include "classes/i2cdevice.h"
 
+class Clock;
+
 class AccAndMagHandler : public SensorHandler
 {
 public:
-	AccAndMagHandler();
-	virtual ~AccAndMagHandler() {}
-	virtual MeasurementBatch GetMeasurements() const override;
-	virtual bool HasAvailableMeasurements() const override;
+    explicit AccAndMagHandler(const Clock& clock);
+    virtual ~AccAndMagHandler() {}
+    virtual MeasurementBatch GetMeasurements() const override;
+    virtual bool HasAvailableMeasurements() const override;
 private:
-	AccAndMagHandler(const AccAndMagHandler&) = delete;
-	AccAndMagHandler& operator=(const AccAndMagHandler&) = delete;
+    AccAndMagHandler(const AccAndMagHandler&) = delete;
+    AccAndMagHandler& operator=(const AccAndMagHandler&) = delete;
 
-	void SetUpRegisters();
-	bool HasNewAccelerometerMeasurement() const;
-	MeasurementPtr GetNextAccelerometerMeasurement() const;
+    void SetUpRegisters();
+    bool HasNewAccelerometerMeasurement() const;
+    bool HasNewMagnetometerMeasurement() const;
 
-	I2CDevice i2cDevice;
-	F32 accelerometerScale{ 0.f };
+    MeasurementPtr GetNextAccelerometerMeasurement() const;
+    MeasurementPtr GetNextMagnetometerMeasurement() const;
+
+    I2CDevice i2cDevice;
+    const Clock& clock;
 };
 
 #endif

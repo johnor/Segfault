@@ -12,9 +12,9 @@
 class SensorHandler
 {
 public:
-	virtual ~SensorHandler() {}
-	virtual MeasurementBatch GetMeasurements() const = 0;
-	virtual bool HasAvailableMeasurements() const = 0;
+    virtual ~SensorHandler() {}
+    virtual MeasurementBatch GetMeasurements() const = 0;
+    virtual bool HasAvailableMeasurements() const = 0;
 };
 
 #endif

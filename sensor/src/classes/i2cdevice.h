@@ -1,29 +1,33 @@
-
 #ifndef I2CDEVICE_H_
 #define I2CDEVICE_H_
 
 #include "headers/numeric_typedefs.h"
+#include <string>
 
+/*
+* Wrapper class around the WiringPi lib handling
+* I2C communication with various devices.
+*/
 class I2CDevice
 {
 public:
-	explicit I2CDevice(const U8 address);
-	~I2CDevice() = default;
+    explicit I2CDevice(const U8 address);
 
-	bool IsOpen() const;
+    U8 Read8BitReg(const U8 reg) const;
+    void WriteReg8(const U8 reg, const U8 data) const;
 
-	U8 ReadReg8(const U8 reg) const;
-	F32 Read16BitToFloat(const U8 reg, const F32 scaling) const;
-	void WriteReg8(const U8 reg, const U8 data) const;
+    U16 Read16BitReg(const U8 reg) const;
+    void WriteReg16(const U8 reg, const U16 data) const;
 
+    F32 ReadTwo8BitRegsToFloat(const U8 lowReg, const F32 scaling) const;
+    F32 ReadThree8BitRegsToFloat(const U8 lowReg, const F32 scaling) const;
 private:
-	static const int deviceNotOpen = -1;
+    I2CDevice(const I2CDevice&) = delete;
+    I2CDevice& operator=(const I2CDevice&) = delete;
+    static std::string Convert8BitValueToHexString(const U8 value);
+    static std::string Convert16BitValueToHexString(const U16 value);
 
-	I2CDevice(const I2CDevice&) = delete;
-	I2CDevice& operator=(const I2CDevice&) = delete;
-
-	int fd{ deviceNotOpen };
+    int fileDescriptor;
 };
 
 #endif
-
