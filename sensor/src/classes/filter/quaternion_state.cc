@@ -8,10 +8,10 @@ Eigen::Quaternionf QuaternionState::GetQuaternion() const
 
 Eigen::Vector3f QuaternionState::GetEulerAngles() const
 {
-    throw std::logic_error("The method or operation is not implemented.");
+    return{ 0.f, 0.f, 0.f };
 }
 
 Eigen::Matrix3f QuaternionState::GetRotationMatrix() const
 {
-    throw std::logic_error("The method or operation is not implemented.");
+    return Eigen::Matrix3f::Identity();
 }

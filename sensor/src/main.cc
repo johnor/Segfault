@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
 
     /* Create factory and IMU */
     #ifdef _MSC_VER
-        std::string logFileName = "measurementlog.txt";
+        std::string logFileName = "logs/measurementslog_D2014-12-09_T18-47_holding_still_components_up.txt";
         if (argc > 1)
         {
             logFileName = argv[1];

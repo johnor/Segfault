@@ -34,8 +34,6 @@ LogReader::LogReader(const Clock &clock_, const std::string& logFile) : clock(cl
     std::string inputLine;
     while (std::getline(logStream, inputLine))
     {
-        Logger::Log(LogLevel::Debug) << inputLine;
-
         try
         {
             measurementList.push_back(CreateMeasurement(inputLine));
