@@ -4,7 +4,7 @@
 */
 
 #ifndef SMART_POINTER_TYPEDEFS_H_
-#define SMART_POINTER_TYPEDESFS_H_
+#define SMART_POINTER_TYPEDEFS_H_
 
 #include <memory>
 #include <vector>
@@ -17,6 +17,7 @@ class Model;
 class State;
 class KalmanFilter;
 class LogStream;
+class KalmanModel;
 
 typedef std::unique_ptr<Measurement> MeasurementPtr;
 typedef std::unique_ptr<SensorHandler> SensorHandlerPtr;
@@ -26,6 +27,7 @@ typedef std::unique_ptr<Model> ModelPtr;
 typedef std::unique_ptr<State> StatePtr;
 typedef std::unique_ptr<KalmanFilter> KalmanFilterPtr;
 typedef std::unique_ptr<LogStream> LogStreamPtr;
+typedef std::unique_ptr<KalmanModel> KalmanModelPtr;
 
 typedef std::vector<MeasurementPtr> MeasurementBatch;
 

@@ -15,3 +15,28 @@ Eigen::Matrix3f QuaternionState::GetRotationMatrix() const
 {
     return Eigen::Matrix3f::Identity();
 }
+
+const Eigen::VectorXf& QuaternionState::GetX() const
+{
+    return state;
+}
+
+Eigen::VectorXf& QuaternionState::GetX()
+{
+    return state;
+}
+
+const Eigen::MatrixXf& QuaternionState::GetP() const
+{
+    return P;
+}
+
+Eigen::MatrixXf& QuaternionState::GetP()
+{
+    return P;
+}
+
+U32 QuaternionState::GetCurrentTimeStamp() const
+{
+    throw std::logic_error("The method or operation is not implemented.");
+}

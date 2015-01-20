@@ -4,14 +4,14 @@
 #include "headers/numeric_typedefs.h"
 #include "headers/smart_pointer_typedefs.h"
 
-class ImuModel;
-
 class EkfFilter
 {
 public:
-    void TimeUpdate(const ImuModel& model, const MeasurementBatch& measurements, const F32 dt);
+    void Update(KalmanModelPtr& model, const MeasurementBatch& measurements);
 
 private:
+    EkfFilter(const EkfFilter&) = delete;
+    EkfFilter& operator=(const EkfFilter&) = delete;
 
 };
 

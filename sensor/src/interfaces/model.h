@@ -12,6 +12,13 @@ class Model
 {
 public:
     virtual ~Model() {}
+
+    virtual State& GetState() = 0;
+
+    virtual Eigen::VectorXf GetPredictedState() const = 0;
+
+    virtual Eigen::VectorXf GetInnovation() const = 0;
+
     virtual Eigen::MatrixXf GetF() const = 0;
     virtual Eigen::MatrixXf GetH() const = 0;
     virtual Eigen::MatrixXf GetQ() const = 0;

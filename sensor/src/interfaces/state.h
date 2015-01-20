@@ -4,12 +4,18 @@
 */
 
 #include <eigen/Eigen>
+#include "headers/numeric_typedefs.h"
 
 class State
 {
 public:
     virtual ~State() {}
-    virtual Eigen::Quaternionf GetQuaternion() const = 0;
-    virtual Eigen::Vector3f GetEulerAngles() const = 0;
-    virtual Eigen::Matrix3f GetRotationMatrix() const = 0;
+
+    virtual const Eigen::VectorXf& GetX() const = 0;
+    virtual Eigen::VectorXf& GetX() = 0;
+
+    virtual const Eigen::MatrixXf& GetP() const = 0;
+    virtual Eigen::MatrixXf& GetP() = 0;
+
+    virtual U32 GetCurrentTimeStamp() const = 0;
 };
