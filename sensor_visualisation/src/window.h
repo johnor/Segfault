@@ -8,6 +8,7 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLVertexArrayObject>
 #include <QMatrix4x4>
+#include <QQuaternion>
 #include <QKeyEvent>
 #include <QTimer>
 #include <QScreen>
@@ -134,7 +135,7 @@ private slots:
     }
 
 public slots:
-    inline void renderNow(const QMatrix4x4 modelMatrix)
+    inline void renderNow(const QQuaternion quaternion)
     {
         if (!isExposed())
             return;
@@ -148,6 +149,10 @@ public slots:
         glEnable(GL_CULL_FACE);
 
         glEnable(GL_DEPTH_TEST);
+
+        QMatrix4x4 modelMatrix;
+        modelMatrix.setToIdentity();
+        modelMatrix.rotate(quaternion);
 
         m_cube.render(m_camera.getViewMatrix(), m_projectionMatrix, modelMatrix, m_camera.getPosition());
 

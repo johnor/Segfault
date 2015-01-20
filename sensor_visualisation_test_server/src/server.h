@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QtNetwork>
-#include <QMatrix4x4>
 
 #include "client.h"
 
@@ -18,13 +17,12 @@ public:
 public slots:
     void newConnection();
     void clientDisconnected(Client*);
-    void sendMatrix();
+    void sendQuaternion();
 
 private:
     QTcpServer *m_tcpServer;
     QList<Client*> m_clients;
     static const quint16 m_port = 55555;
-    QMatrix4x4 m_matrix;
     QTimer m_timer;
 };
 

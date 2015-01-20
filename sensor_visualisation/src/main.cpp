@@ -2,6 +2,7 @@
 #include "client.h"
 
 #include <QGuiApplication>
+#include <QQuaternion>
 
 int main(int argc, char **argv)
 {
@@ -9,8 +10,8 @@ int main(int argc, char **argv)
 
     Client client;
     OpenGLWindow window;
-    QObject::connect(&client, SIGNAL(recivedMatrix(QMatrix4x4)), &window, SLOT(renderNow(QMatrix4x4)));
-    client.connect();
+    QObject::connect(&client, SIGNAL(recivedQuaternion(QQuaternion)), &window, SLOT(renderNow(QQuaternion)));
+    client.tryToConnect();
 
     return app.exec();
 }

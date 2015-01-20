@@ -2,17 +2,24 @@
 #define CLIENT_H
 
 #include <QtNetwork>
-#include <QMatrix4x4>
+#include <QMatrix4x4>//TODO: remove
+#include <QQuaternion>
 #include <QWindow>
 
 class Client : public QObject
 {
     Q_OBJECT
 public:
-    Client()
+    Client():
+        m_host("localhost"),
+        m_port(55555)
     {
+        QObject::connect(&m_tcpSocket, SIGNAL(connected()), this, SLOT(connected()));
         QObject::connect(&m_tcpSocket, SIGNAL(disconnected()), this, SLOT(disconnected()));
-        QObject::connect(&m_tcpSocket, SIGNAL(readyRead()), this, SLOT(reciveMatrix()));
+        QObject::connect(&m_tcpSocket, SIGNAL(readyRead()), this, SLOT(reciveQuaternion()));
+        QObject::connect(&m_tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(reciveSocketError(QAbstractSocket::SocketError)));
+
+        QObject::connect(&m_reconnectTimer, SIGNAL(timeout()), this, SLOT(tryToConnect()));
     }
 
     ~Client()
@@ -20,36 +27,65 @@ public:
         m_tcpSocket.abort();
     }
 
-    void connect()
-    {
-        m_tcpSocket.abort();
-        m_tcpSocket.connectToHost("localhost", 55555);
-    }
-
 public slots:
-    void reciveMatrix()
+    void tryToConnect()
     {
-        const int matrixSize = 4 * 4 * sizeof(float);
+        m_reconnectTimer.stop();
 
-        if (m_tcpSocket.bytesAvailable() < matrixSize)
-            return;
-
-        float data[matrixSize];
-        m_tcpSocket.read((char*)data, matrixSize);
-        QMatrix4x4 modelMatrix(data);
-        emit recivedMatrix(modelMatrix);
+        m_tcpSocket.abort();
+        qDebug() << "Tring to connect to" << m_host << ":" << m_port;
+        m_tcpSocket.connectToHost(m_host, m_port);
     }
+
+    void connected()
+    {
+        qDebug() << "Connected to " << m_host << ":" << m_port;
+    }
+
     void disconnected()
     {
         qDebug() << "Server disconnected!";
+        reconnectLater();
+    }
+
+    void reciveSocketError(QAbstractSocket::SocketError e)
+    {
+        Q_UNUSED(e)
+        qDebug() << m_tcpSocket.errorString();
+        reconnectLater();
+    }
+
+    void reciveQuaternion()
+    {
+        float data[NUM_VALUES];
+        const int quaternionSize = sizeof(data);
+
+        if (m_tcpSocket.bytesAvailable() < quaternionSize)
+            return;
+
+        m_tcpSocket.read((char*)data, quaternionSize);
+
+        QQuaternion quaternion(data[SCALAR], data[X], data[Y], data[Z]);
+
+        emit recivedQuaternion(quaternion);
     }
 
 signals:
-    void recivedMatrix(const QMatrix4x4);
+    void recivedQuaternion(const QQuaternion);
 
 private:
+    void reconnectLater()
+    {
+        m_reconnectTimer.start(3000);
+    }
+
+private:
+    QString m_host;
+    int m_port;
+    QTimer m_reconnectTimer;
     QTcpSocket m_tcpSocket;
     QMatrix4x4 m_rotations;
+    enum QuaternionValue {SCALAR, X, Y, Z, NUM_VALUES};
 };
 
 #endif // CLIENT_H
