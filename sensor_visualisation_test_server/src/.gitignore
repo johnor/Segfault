@@ -4,3 +4,6 @@ qrc_*
 moc_*
 *.o
 *.user
+Run*
+debug
+release

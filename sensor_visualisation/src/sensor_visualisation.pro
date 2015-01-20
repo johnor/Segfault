@@ -16,7 +16,10 @@ HEADERS += \
 
 SOURCES += main.cpp \
     cube.cpp
-QMAKE_CXXFLAGS += -std=c++11
+    
+unix {
+   QMAKE_CXXFLAGS += -std=c++11
+}
 
 RESOURCES += \
     shaders.qrc
