@@ -1,6 +1,6 @@
 #include "gyro_input_model.h"
 #include "../measurements.h"
-
+#include <stdexcept>
 
 GyroInputModel::GyroInputModel(QuaternionState &state) : state(state)
 {

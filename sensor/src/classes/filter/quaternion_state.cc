@@ -1,5 +1,5 @@
 #include "quaternion_state.h"
-
+#include <stdexcept>
 
 Eigen::Quaternionf QuaternionState::GetQuaternion() const
 {
