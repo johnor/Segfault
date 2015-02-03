@@ -52,8 +52,10 @@ solution "Sensor"
       language "C++"
       
       files { "src/**.h", "src/**.cc"}
-      includedirs { "lib", "src" }
-      vpaths { ["*"] = "src" }
+      includedirs { "lib", "src" , "lib/asio" }
+      
+      -- defines for asio
+      defines { "ASIO_STANDALONE" }
 
       configuration "Debug"
          defines { "DEBUG" }
@@ -64,6 +66,16 @@ solution "Sensor"
          defines { "NDEBUG" }
          flags { "Optimize", "ExtraWarnings" }
          targetdir "bin/release" 
+         
+      configuration "vs*"
+         defines { "_WIN32_WINNT=0x0601" }
+         vpaths { ["*"] = "src" }
+         
+         buildoptions
+         {
+            --'GetVersionExA': was declared deprecated
+            "/wd4996"
+         }
    
       -- compiler flags
       configuration { "gmake" }

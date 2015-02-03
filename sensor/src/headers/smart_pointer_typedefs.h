@@ -19,6 +19,8 @@ class KalmanFilter;
 class LogStream;
 class KalmanModel;
 
+class Client;
+
 typedef std::unique_ptr<Measurement> MeasurementPtr;
 typedef std::unique_ptr<SensorHandler> SensorHandlerPtr;
 typedef std::unique_ptr<SensorHandlerFactory> SensorHandlerFactoryPtr;
@@ -30,5 +32,7 @@ typedef std::unique_ptr<LogStream> LogStreamPtr;
 typedef std::unique_ptr<KalmanModel> KalmanModelPtr;
 
 typedef std::vector<MeasurementPtr> MeasurementBatch;
+
+typedef std::shared_ptr<Client> ClientPtr;
 
 #endif

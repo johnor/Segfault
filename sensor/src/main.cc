@@ -13,9 +13,13 @@
 #include "classes/clock/hardwareclock.h"
 #include "classes/clock/softwareclock.h"
 
+#include "server/server.h"
+#include "server/job.h"
+
 #include <iostream>
 
 void PrintAndLogMeasurements(const MeasurementBatch& measurementBatch);
+void SendTest(ConnectionManager &connectionManager);
 
 int main(int argc, char* argv[])
 {
@@ -49,11 +53,6 @@ int main(int argc, char* argv[])
         #endif
         measurementBatch = imu->GetNextMeasurementBatch();
         PrintAndLogMeasurements(measurementBatch);
-
-        /* Do not close console immediately */
-        Logger::LogToConsole(LogLevel::Info) << "Press any key to exit the application.";
-        std::cin.get();
-        Logger::LogToFile(LogLevel::Info) << "SensorApp exiting...";
     }
     catch (const I2CException& e)
     {
@@ -76,7 +75,47 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
+    asio::io_service io_service;
+
+    tcp::endpoint endpoint(tcp::v4(), 5001);
+
+    Server server(io_service, endpoint);
+    ConnectionManager &connectionManager = server.GetConnectionManager();
+
+    std::function<void()> sendTestFunction = std::bind(SendTest, std::ref(connectionManager));
+    Job job{ io_service, sendTestFunction, std::chrono::milliseconds{ 1000 } };
+
+    io_service.run();
+
+    /* Do not close console immediately */
+    Logger::LogToConsole(LogLevel::Info) << "Press any key to exit the application.";
+    std::cin.get();
+    Logger::LogToFile(LogLevel::Info) << "SensorApp exiting...";
+
     return 0;
+}
+
+void SendTest(ConnectionManager &connectionManager)
+{
+    Logger::Log(LogLevel::Debug) << "SendTest";
+
+    Message msg;
+    msg.SetMsgType(1);
+    msg.SetBodyLength(3);
+    msg.EncodeHeader();
+    msg.WriteChar('H');
+    msg.WriteChar('e');
+    msg.WriteChar('j');
+    connectionManager.SendToAll(msg);
+
+    Message msg2;
+    msg2.SetMsgType(2);
+    msg2.SetBodyLength(sizeof(F32) * 3);
+    msg2.EncodeHeader();
+    msg2.WriteFloat(1.0f);
+    msg2.WriteFloat(10.0f);
+    msg2.WriteFloat(15.0f);
+    connectionManager.SendToAll(msg2);
 }
 
 void PrintAndLogMeasurements(const MeasurementBatch& measurementBatch)
