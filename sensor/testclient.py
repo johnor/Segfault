@@ -16,7 +16,7 @@ try:
    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
    s.connect((tcpip, tcpport))
 
-   data = struct.pack('!II50s',  socket.htonl(50), socket.htonl(0), b"Testing message")
+   data = struct.pack('II50s',  50, 0, b"Testing message")
    print(data)
    print("Sending")
    s.sendall(data)

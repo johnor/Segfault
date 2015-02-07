@@ -9,9 +9,13 @@ ClientSession::ClientSession(tcp::socket socket, ConnectionManager& room)
 void ClientSession::Start()
 {
     Logger::Log(LogLevel::Info) << "ClientSession::Start()";
-    connectionManager.Join(shared_from_this());
-
     ReadHeader();
+}
+
+void ClientSession::Stop()
+{
+    Logger::Log(LogLevel::Info) << "ClientSession::Stop()";
+    socket.close();
 }
 
 void ClientSession::Send(const Message& msg)

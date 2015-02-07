@@ -19,8 +19,9 @@ void Server::Accept()
     {
         if (!ec)
         {
-            std::make_shared<ClientSession>(std::move(socket), connectionManager)->Start();
             Logger::Log(LogLevel::Info) << "Server::Accept()";
+            ClientPtr connectedClient = std::make_shared<ClientSession>(std::move(socket), connectionManager);
+            connectionManager.Join(connectedClient);
         }
 
         Accept();

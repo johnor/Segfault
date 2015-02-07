@@ -3,7 +3,7 @@
 #include <iostream>
 
 Job::Job(asio::io_service &io_service, std::function<void()> callbackFunction, std::chrono::milliseconds timerDelay_)
-: callbackFunction{ callbackFunction }, timer{ io_service }, timerDelay{ timerDelay_ }
+: timer{ io_service }, timerDelay{ timerDelay_ }, callbackFunction{ callbackFunction }
 {
     Timeout();
 }
@@ -15,7 +15,6 @@ void Job::Timeout()
     {
         if (!ec)
         {
-            std::cout << "Timeout" << std::endl;
             callbackFunction();
         }
 

@@ -12,8 +12,8 @@ class ConnectionManager
 public:
     ConnectionManager() = default;
 
-    void Join(ClientPtr participant);
-    void Leave(ClientPtr participant);
+    void Join(ClientPtr client);
+    void Leave(ClientPtr client);
     void SendToAll(const Message& msg);
 
     void OnRecieveMessage(const Message& msg);

@@ -4,22 +4,24 @@
 
 #include "classes/logger.h"
 
-void ConnectionManager::Join(ClientPtr participant)
+void ConnectionManager::Join(ClientPtr client)
 {
     Logger::Log(LogLevel::Info) << "ConnectionManager::Join()";
-    connectedClients.insert(participant);
+    connectedClients.insert(client);
+    client->Start();
 }
 
-void ConnectionManager::Leave(ClientPtr participant)
+void ConnectionManager::Leave(ClientPtr client)
 {
     Logger::Log(LogLevel::Info) << "ConnectionManager::Leave()";
-    connectedClients.erase(participant);
+    connectedClients.erase(client);
+    client->Stop();
 }
 
 void ConnectionManager::SendToAll(const Message& msg)
 {
-    for (auto participant : connectedClients)
-        participant->Send(msg);
+    for (auto client : connectedClients)
+        client->Send(msg);
 }
 
 void ConnectionManager::OnRecieveMessage(const Message& msg)
@@ -37,6 +39,6 @@ void ConnectionManager::OnRecieveMessage(const Message& msg)
     returnMessage.WriteChar('L');
     returnMessage.WriteChar('Y');
 
-    for (auto participant : connectedClients)
-        participant->Send(returnMessage);
+    for (auto client : connectedClients)
+        client->Send(returnMessage);
 }

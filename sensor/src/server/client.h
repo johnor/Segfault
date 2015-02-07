@@ -12,7 +12,10 @@ class Client
 {
 public:
     virtual ~Client() {}
+
     virtual void Send(const Message& msg) = 0;
+    virtual void Start() = 0;
+    virtual void Stop() = 0;
 };
 
 
@@ -23,8 +26,9 @@ class ClientSession
 public:
     ClientSession(tcp::socket socket, ConnectionManager& room);
 
-    void Start();
-    void Send(const Message& msg);
+    virtual void Send(const Message& msg) override;
+    virtual void Start() override;
+    virtual void Stop() override;
 
 private:
     void ReadHeader();
