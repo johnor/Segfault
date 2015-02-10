@@ -12,11 +12,17 @@
 #include "classes/logger.h"
 #include "classes/clock/hardwareclock.h"
 #include "classes/clock/softwareclock.h"
+#include "classes/filter/quaternion_state.h"
+#include "classes/filter/ekf_filter.h"
+#include "classes/filter/gyro_input_model.h"
+#include "classes/measurements.h"
 
 #include "server/server.h"
 #include "server/job.h"
 
 #include <iostream>
+
+#include <windows.h>
 
 void PrintAndLogMeasurements(const MeasurementBatch& measurementBatch);
 void SendTest(ConnectionManager &connectionManager);
@@ -27,7 +33,7 @@ int main(int argc, char* argv[])
 
     /* Create factory and IMU */
     #ifdef _MSC_VER
-        std::string logFileName = "logs/measurementslog_D2014-12-09_T18-47_holding_still_components_up.txt";
+        std::string logFileName = "logs/measurementslog_D2014-12-09_T18-49_180_degrees_rotation_and_back.txt";
         if (argc > 1)
         {
             logFileName = argv[1];
@@ -42,17 +48,22 @@ int main(int argc, char* argv[])
     try
     {
         IMUPtr imu{new AltIMU{factory}};
+        QuaternionState state;
+        KalmanModelPtr model{new GyroInputModel{state}};
+        EkfFilter filter;
         #ifdef _MSC_VER
             clock.IncreaseTimeStamp(1/20.f);
         #endif
-        MeasurementBatch measurementBatch{imu->GetNextMeasurementBatch()};
-        PrintAndLogMeasurements(measurementBatch);
+            while (true)
+            {
+                MeasurementBatch measurementBatch{imu->GetNextMeasurementBatch()};
+                //PrintAndLogMeasurements(measurementBatch);
 
-        #ifdef _MSC_VER
+                filter.Update(model, measurementBatch);
+                std::cout << state.GetEulerAngles();
                 clock.IncreaseTimeStamp(1 / 20.f);
-        #endif
-        measurementBatch = imu->GetNextMeasurementBatch();
-        PrintAndLogMeasurements(measurementBatch);
+                Sleep(50);
+            }
     }
     catch (const I2CException& e)
     {

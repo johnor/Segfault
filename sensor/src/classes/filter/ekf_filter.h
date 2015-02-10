@@ -7,6 +7,7 @@
 class EkfFilter
 {
 public:
+    EkfFilter() = default;
     void Update(KalmanModelPtr& model, const MeasurementBatch& measurements);
 
 private:
@@ -14,7 +15,5 @@ private:
     EkfFilter& operator=(const EkfFilter&) = delete;
 
 };
-
-
 
 #endif

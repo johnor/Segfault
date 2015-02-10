@@ -31,9 +31,12 @@ private:
     GyroInputModel(const GyroInputModel&) = delete;
     GyroInputModel& operator=(const GyroInputModel&) = delete;
 
-    QuaternionState &state;
+    Eigen::Matrix4f GetS(const Eigen::Vector3f& omega) const;
 
+    QuaternionState &state;
     Eigen::Matrix4f F;
+public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
 

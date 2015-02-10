@@ -8,7 +8,7 @@
 class QuaternionState : public State
 {
 public:
-    QuaternionState() = default;
+    QuaternionState();
     virtual ~QuaternionState() {};
 
     virtual const Eigen::VectorXf& GetX() const override;
@@ -17,11 +17,13 @@ public:
     virtual const Eigen::MatrixXf& GetP() const override;
     virtual Eigen::MatrixXf& GetP() override;
 
-    virtual Eigen::Quaternionf GetQuaternion() const;
-    virtual Eigen::Vector3f GetEulerAngles() const;
-    virtual Eigen::Matrix3f GetRotationMatrix() const;
+    virtual U32 GetTimeStamp() const override;
+    virtual void SetTimeStamp(const U32 timeStamp) override;
 
-    virtual U32 GetCurrentTimeStamp() const override;
+    Eigen::Quaternionf GetQuaternion() const;
+    Eigen::Vector3f GetEulerAngles() const;
+    Eigen::Matrix3f GetRotationMatrix() const;
+
 private:
     QuaternionState(const QuaternionState&) = delete;
     QuaternionState& operator=(const QuaternionState&) = delete;

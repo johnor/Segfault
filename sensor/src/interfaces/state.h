@@ -17,5 +17,6 @@ public:
     virtual const Eigen::MatrixXf& GetP() const = 0;
     virtual Eigen::MatrixXf& GetP() = 0;
 
-    virtual U32 GetCurrentTimeStamp() const = 0;
+    virtual U32 GetTimeStamp() const = 0;
+    virtual void SetTimeStamp(const U32 timeStamp) = 0;
 };

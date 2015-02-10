@@ -14,7 +14,8 @@ State& GyroInputModel::GetState()
 
 Eigen::VectorXf GyroInputModel::GetPredictedState() const
 {
-    Eigen::Vector4f nextState = GetF() * state.GetX();
+    Eigen::VectorXf nextState{GetF() * state.GetX()};
+    nextState.normalize();
 
     return nextState;
 }
@@ -46,23 +47,51 @@ Eigen::MatrixXf GyroInputModel::GetR() const
 
 void GyroInputModel::Visit(const AccelerometerMeasurement& accMeas)
 {
+    F = Eigen::Matrix4f::Identity();
 }
 
 void GyroInputModel::Visit(const GyroscopeMeasurement& gyroMeas)
 {
-    const F32 dt = (F32)(gyroMeas.GetTimeStamp() - state.GetCurrentTimeStamp()); //TODO scale factor
+    const F32 dt = static_cast<F32>((gyroMeas.GetTimeStamp() - state.GetTimeStamp())) * 1e-6f;
+    const Eigen::Vector3f omega{gyroMeas.GetXValue(), gyroMeas.GetYValue(), gyroMeas.GetZValue()};
 
-    F = Eigen::Matrix4f::Identity();
+    F = Eigen::Matrix4f::Identity() + 0.5f * GetS(omega) * dt;
 }
 
 void GyroInputModel::Visit(const CompassMeasurement& compassMeas)
 {
+    F = Eigen::Matrix4f::Identity();
 }
 
 void GyroInputModel::Visit(const PressureMeasurement& pressureMeas)
 {
+    F = Eigen::Matrix4f::Identity();
 }
 
 void GyroInputModel::Visit(const TemperatureMeasurement& tempMeas)
 {
+    F = Eigen::Matrix4f::Identity();
+}
+
+Eigen::Matrix4f GyroInputModel::GetS(const Eigen::Vector3f& omega) const
+{
+    Eigen::Matrix4f result{Eigen::Matrix4f::Zero()};
+
+    result(0, 1) = -omega(0);
+    result(0, 2) = -omega(1);
+    result(0, 3) = -omega(2);
+
+    result(1, 0) = omega(0);
+    result(1, 2) = omega(2);
+    result(1, 3) = -omega(1);
+
+    result(2, 0) = omega(1);
+    result(2, 1) = -omega(2);
+    result(2, 3) = omega(0);
+
+    result(3, 0) = omega(2);
+    result(3, 1) = omega(1);
+    result(3, 2) = -omega(0);
+
+    return result;
 }

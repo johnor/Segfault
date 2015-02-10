@@ -1,6 +1,15 @@
 #include "quaternion_state.h"
 #include <stdexcept>
 
+QuaternionState::QuaternionState()
+    : state{4, 1}
+{
+    state(0) = 1.f;
+    state(1) = 0.f;
+    state(2) = 0.f;
+    state(3) = 0.f;
+}
+
 Eigen::Quaternionf QuaternionState::GetQuaternion() const
 {
     return{ state(0), state(1), state(2), state(3) };
@@ -8,7 +17,8 @@ Eigen::Quaternionf QuaternionState::GetQuaternion() const
 
 Eigen::Vector3f QuaternionState::GetEulerAngles() const
 {
-    return{ 0.f, 0.f, 0.f };
+    Eigen::Quaternionf quat{state(0), state(1), state(2), state(3)};
+    return quat.toRotationMatrix().eulerAngles(0, 1, 2) * 180/3.1415926;
 }
 
 Eigen::Matrix3f QuaternionState::GetRotationMatrix() const
@@ -36,7 +46,12 @@ Eigen::MatrixXf& QuaternionState::GetP()
     return P;
 }
 
-U32 QuaternionState::GetCurrentTimeStamp() const
+U32 QuaternionState::GetTimeStamp() const
 {
-    throw std::logic_error("The method or operation is not implemented.");
+    return timeStamp;
+}
+
+void QuaternionState::SetTimeStamp(const U32 timeStamp)
+{
+    this->timeStamp = timeStamp;
 }
