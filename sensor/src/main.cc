@@ -27,6 +27,37 @@
 void PrintAndLogMeasurements(const MeasurementBatch& measurementBatch);
 void SendTest(ConnectionManager &connectionManager);
 
+class SensorApp
+{
+public:
+    SensorApp(const SensorHandlerFactoryPtr &sensorHandlerFactory, Clock &clock)
+        : imu{ new AltIMU{ sensorHandlerFactory } }, model{ new GyroInputModel{ state } }, clock{ clock }
+    {
+    };
+
+    ~SensorApp() = default;
+
+    void Update()
+    {
+        MeasurementBatch measurementBatch{ imu->GetNextMeasurementBatch() };
+        //PrintAndLogMeasurements(measurementBatch);
+
+        filter.Update(model, measurementBatch);
+        std::cout << state.GetEulerAngles();
+    };
+private:
+    SensorApp(const SensorApp&) = delete;
+    SensorApp& operator=(const SensorApp&) = delete;
+
+    IMUPtr imu;
+    QuaternionState state;
+    KalmanModelPtr model;
+    EkfFilter filter;
+
+    Clock &clock;
+
+};
+
 int main(int argc, char* argv[])
 {
     Logger::Log(LogLevel::Info) << "SensorApp initialized";
@@ -47,23 +78,33 @@ int main(int argc, char* argv[])
 
     try
     {
-        IMUPtr imu{new AltIMU{factory}};
-        QuaternionState state;
-        KalmanModelPtr model{new GyroInputModel{state}};
-        EkfFilter filter;
-        #ifdef _MSC_VER
-            clock.IncreaseTimeStamp(1/20.f);
-        #endif
-            while (true)
-            {
-                MeasurementBatch measurementBatch{imu->GetNextMeasurementBatch()};
-                //PrintAndLogMeasurements(measurementBatch);
+        asio::io_service io_service;
+        tcp::endpoint endpoint(tcp::v4(), 5001);
 
-                filter.Update(model, measurementBatch);
-                std::cout << state.GetEulerAngles();
+        Server server(io_service, endpoint);
+        ConnectionManager &connectionManager = server.GetConnectionManager();
+
+        SensorApp sensorApp{ factory, clock };
+
+        while (true)
+        {
+            #ifdef _MSC_VER
                 clock.IncreaseTimeStamp(1 / 20.f);
-                Sleep(50);
-            }
+            #endif
+            sensorApp.Update();
+            Sleep(50);
+        }
+
+
+        std::function<void()> sendTestFunction = std::bind(SendTest, std::ref(connectionManager));
+        Job job{ io_service, sendTestFunction, std::chrono::milliseconds{ 1000 } };
+
+        io_service.run();
+
+        /* Do not close console immediately */
+        Logger::LogToConsole(LogLevel::Info) << "Press any key to exit the application.";
+        std::cin.get();
+        Logger::LogToFile(LogLevel::Info) << "SensorApp exiting...";
     }
     catch (const I2CException& e)
     {
@@ -85,23 +126,6 @@ int main(int argc, char* argv[])
         Logger::Log(LogLevel::Info) << "Exiting application due to unrecoverable error.";
         return EXIT_FAILURE;
     }
-
-    asio::io_service io_service;
-
-    tcp::endpoint endpoint(tcp::v4(), 5001);
-
-    Server server(io_service, endpoint);
-    ConnectionManager &connectionManager = server.GetConnectionManager();
-
-    std::function<void()> sendTestFunction = std::bind(SendTest, std::ref(connectionManager));
-    Job job{ io_service, sendTestFunction, std::chrono::milliseconds{ 1000 } };
-
-    io_service.run();
-
-    /* Do not close console immediately */
-    Logger::LogToConsole(LogLevel::Info) << "Press any key to exit the application.";
-    std::cin.get();
-    Logger::LogToFile(LogLevel::Info) << "SensorApp exiting...";
 
     return 0;
 }
