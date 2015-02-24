@@ -24,13 +24,17 @@ class ClientSession
       public std::enable_shared_from_this<ClientSession>
 {
 public:
-    ClientSession(tcp::socket socket, ConnectionManager& room);
+    ClientSession(tcp::socket socket, ConnectionManager& connectionManager);
+    ~ClientSession() = default;
 
     virtual void Send(const Message& msg) override;
     virtual void Start() override;
     virtual void Stop() override;
 
 private:
+    ClientSession(const ClientSession&) = delete;
+    ClientSession& operator=(const ClientSession&) = delete;
+
     void ReadHeader();
     void ReadBody();
     void Write();

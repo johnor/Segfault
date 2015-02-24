@@ -14,10 +14,14 @@ class Server
 public:
     Server(asio::io_service& io_service,
         const tcp::endpoint& endpoint);
+    ~Server() = default;
 
     ConnectionManager &GetConnectionManager();
 
 private:
+    Server(const Server&) = delete;
+    const Server& operator=(const Server&) = delete;
+
     void Accept();
 
     tcp::acceptor acceptor;

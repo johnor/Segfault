@@ -1,8 +1,8 @@
 #include "client.h"
 #include "classes/logger.h"
 
-ClientSession::ClientSession(tcp::socket socket, ConnectionManager& room)
-: socket(std::move(socket)), connectionManager(room)
+ClientSession::ClientSession(tcp::socket socket, ConnectionManager& connectionManager)
+: socket{std::move(socket)}, connectionManager{connectionManager}
 {
 }
 

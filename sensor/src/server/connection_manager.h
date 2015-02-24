@@ -11,6 +11,7 @@ class ConnectionManager
 {
 public:
     ConnectionManager() = default;
+    ~ConnectionManager() = default;
 
     void Join(ClientPtr client);
     void Leave(ClientPtr client);

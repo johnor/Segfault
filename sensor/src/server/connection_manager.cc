@@ -21,7 +21,9 @@ void ConnectionManager::Leave(ClientPtr client)
 void ConnectionManager::SendToAll(const Message& msg)
 {
     for (auto client : connectedClients)
+    {
         client->Send(msg);
+    }
 }
 
 void ConnectionManager::OnRecieveMessage(const Message& msg)

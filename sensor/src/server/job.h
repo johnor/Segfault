@@ -9,6 +9,7 @@ class Job
 {
 public:
     Job(asio::io_service &io_service, std::function<void()> callbackFunction, std::chrono::milliseconds timerDelay_);
+    ~Job() = default;
 
 private:
     Job(const Job&) = delete;
