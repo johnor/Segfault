@@ -8,6 +8,7 @@ class Clock
 public:
     virtual ~Clock() {}
     virtual U32 GetTimeStampInMicroSecs() const = 0;
+    virtual void IncreaseTimeStamp(const F32 seconds) = 0;
 };
 
 #endif

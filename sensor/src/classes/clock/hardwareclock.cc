@@ -11,6 +11,10 @@ U32 HardwareClock::GetTimeStampInMicroSecs() const
     return static_cast<U32>(microSecsSinceStart);
 }
 
+void HardwareClock::IncreaseTimeStamp(const F32)
+{
+}
+
 std::chrono::system_clock::time_point HardwareClock::GetCurrentTime()
 {
     return std::chrono::high_resolution_clock::now();

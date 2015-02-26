@@ -11,8 +11,9 @@ public:
     virtual ~SoftwareClock() {};
 
     virtual U32 GetTimeStampInMicroSecs() const override;
+    virtual void IncreaseTimeStamp(const F32 seconds) override;
+
     void SetCurrentTimeStamp(const U32 currentTimeStamp_);
-    void IncreaseTimeStamp(const F32 seconds);
 private:
     SoftwareClock(const SoftwareClock&) = delete;
     SoftwareClock& operator=(const SoftwareClock&) = delete;

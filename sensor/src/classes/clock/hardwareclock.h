@@ -12,6 +12,7 @@ public:
     virtual ~HardwareClock() {};
 
     virtual U32 GetTimeStampInMicroSecs() const override;
+    virtual void IncreaseTimeStamp(const F32 seconds) override;
 private:
     HardwareClock(const HardwareClock&) = delete;
     HardwareClock& operator=(const HardwareClock&) = delete;

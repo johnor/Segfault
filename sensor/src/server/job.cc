@@ -11,13 +11,9 @@ Job::Job(asio::io_service &io_service, std::function<void()> callbackFunction, s
 void Job::Timeout()
 {
     timer.expires_from_now(timerDelay);
+    callbackFunction();
     timer.async_wait([this](std::error_code ec)
     {
-        if (!ec)
-        {
-            callbackFunction();
-        }
-
         Timeout();
     });
 }

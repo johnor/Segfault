@@ -22,8 +22,6 @@
 
 #include <iostream>
 
-#include <windows.h>
-
 void PrintAndLogMeasurements(const MeasurementBatch& measurementBatch);
 void SendTest(ConnectionManager &connectionManager);
 
@@ -31,7 +29,7 @@ class SensorApp
 {
 public:
     SensorApp(const SensorHandlerFactoryPtr &sensorHandlerFactory, Clock &clock)
-        : imu{ new AltIMU{ sensorHandlerFactory } }, model{ new GyroInputModel{ state } }, clock{ clock }
+        : imu{ new AltIMU{ sensorHandlerFactory } }, model{ new GyroInputModel{ state } }, clock(clock)
     {
     };
 
@@ -39,11 +37,23 @@ public:
 
     void Update()
     {
+        clock.IncreaseTimeStamp(1 / 20.f);
+
         MeasurementBatch measurementBatch{ imu->GetNextMeasurementBatch() };
-        //PrintAndLogMeasurements(measurementBatch);
+        
+        PrintAndLogMeasurements(measurementBatch);
+
 
         filter.Update(model, measurementBatch);
-        std::cout << state.GetEulerAngles();
+        std::cout << "Euler: " << std::endl << state.GetEulerAngles() << std::endl;
+
+        static int i = 0;
+        ++i;
+        if (i == 100)
+        {
+            
+            exit(0);
+        }
     };
 private:
     SensorApp(const SensorApp&) = delete;
@@ -55,7 +65,6 @@ private:
     EkfFilter filter;
 
     Clock &clock;
-
 };
 
 int main(int argc, char* argv[])
@@ -86,18 +95,11 @@ int main(int argc, char* argv[])
 
         SensorApp sensorApp{ factory, clock };
 
-        while (true)
-        {
-            #ifdef _MSC_VER
-                clock.IncreaseTimeStamp(1 / 20.f);
-            #endif
-            sensorApp.Update();
-            Sleep(50);
-        }
-
-
         std::function<void()> sendTestFunction = std::bind(SendTest, std::ref(connectionManager));
-        Job job{ io_service, sendTestFunction, std::chrono::milliseconds{ 1000 } };
+        //Job testSendJob{ io_service, sendTestFunction, std::chrono::milliseconds{ 1000 } };
+
+        std::function<void()> updateFunction = std::bind(&SensorApp::Update, &sensorApp);
+        Job updateJob{ io_service, updateFunction, std::chrono::milliseconds{ 50 } };
 
         io_service.run();
 
@@ -156,7 +158,7 @@ void SendTest(ConnectionManager &connectionManager)
 void PrintAndLogMeasurements(const MeasurementBatch& measurementBatch)
 {
     #ifndef _MSC_VER
-        LoggerVisitor loggerVisitor{ "measurementslog.txt"};
+        static LoggerVisitor loggerVisitor{ "measurementslog.txt"};
         for (const auto& measurement : measurementBatch)
         {
             measurement->Accept(loggerVisitor);

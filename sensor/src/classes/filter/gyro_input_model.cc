@@ -1,6 +1,7 @@
 #include "gyro_input_model.h"
 #include "../measurements.h"
 #include <stdexcept>
+#include <iostream>
 
 GyroInputModel::GyroInputModel(QuaternionState &state) : state(state)
 {
@@ -53,6 +54,7 @@ void GyroInputModel::Visit(const AccelerometerMeasurement& accMeas)
 void GyroInputModel::Visit(const GyroscopeMeasurement& gyroMeas)
 {
     const F32 dt = static_cast<F32>((gyroMeas.GetTimeStamp() - state.GetTimeStamp())) * 1e-6f;
+    std::cout << "Dt: " << dt << std::endl;
     const Eigen::Vector3f omega{gyroMeas.GetXValue(), gyroMeas.GetYValue(), gyroMeas.GetZValue()};
 
     F = Eigen::Matrix4f::Identity() + 0.5f * GetS(omega) * dt;

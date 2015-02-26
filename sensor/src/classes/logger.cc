@@ -29,8 +29,11 @@ LogStreamPtr Logger::Log(const LogLevel level)
 void Logger::Log(const std::string& message, const LogLevel level)
 {
     std::string formattedMessage{FormatMessage(message, level)};
-    WriteMessageToFile(formattedMessage);
-    WriteMessageToConsole(formattedMessage);
+    if (level >= LogLevel::Warning)
+    {
+        WriteMessageToFile(formattedMessage);
+        WriteMessageToConsole(formattedMessage);
+    }
 }
 
 LogStreamPtr Logger::LogToFile(const LogLevel level)
