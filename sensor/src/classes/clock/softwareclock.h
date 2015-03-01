@@ -1,8 +1,8 @@
 #ifndef SOFTWARE_CLOCK_H_
 #define SOFTWARE_CLOCK_H_
 
-#include "headers/numeric_typedefs.h"
-#include "interfaces/clock.h"
+#include "../../headers/numeric_typedefs.h"
+#include "../../interfaces/clock.h"
 
 class SoftwareClock : public Clock
 {

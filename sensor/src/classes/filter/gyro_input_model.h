@@ -2,7 +2,7 @@
 #define GYRO_INPUT_MODEL_H_
 
 #include <eigen/Eigen>
-#include "interfaces/kalman_model.h"
+#include "../../interfaces/kalman_model.h"
 #include "quaternion_state.h"
 
 class GyroInputModel : public KalmanModel

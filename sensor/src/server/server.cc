@@ -1,5 +1,5 @@
 #include "server.h"
-#include "classes/logger.h"
+#include "../classes/logger.h"
 
 Server::Server(asio::io_service& io_service, const tcp::endpoint& endpoint) : acceptor(io_service, endpoint),
 socket(io_service)

@@ -1,7 +1,7 @@
-#ifndef CONNECTED_CLIENTS_H_
-#define CONNECTED_CLIENTS_H_
+#ifndef CONNECTION_MANAGER_H_
+#define CONNECTION_MANAGER_H_
 
-#include "headers/smart_pointer_typedefs.h"
+#include "../headers/smart_pointer_typedefs.h"
 
 #include <set>
 

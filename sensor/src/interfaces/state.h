@@ -1,5 +1,8 @@
+#ifndef STATE_H_
+#define STATE_H_
+
 #include <eigen/Eigen>
-#include "headers/numeric_typedefs.h"
+#include "../headers/numeric_typedefs.h"
 
 class State
 {
@@ -15,3 +18,5 @@ public:
     virtual U32 GetTimeStamp() const = 0;
     virtual void SetTimeStamp(const U32 timeStamp) = 0;
 };
+
+#endif

@@ -1,5 +1,5 @@
-#ifndef SESSION_H_
-#define SESSION_H_
+#ifndef CLIENT_H_
+#define CLIENT_H_
 
 #include <asio.hpp>
 

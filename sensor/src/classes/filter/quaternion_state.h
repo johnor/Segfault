@@ -2,7 +2,7 @@
 #define QUATERNION_STATE_H_
 
 #include <eigen/Eigen>
-#include "interfaces/state.h"
+#include  "../../interfaces/state.h"
 
 class QuaternionState : public State
 {

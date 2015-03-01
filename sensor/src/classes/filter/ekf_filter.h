@@ -1,7 +1,7 @@
 #ifndef EKF_FILTER_H_
 #define EKF_FILTER_H_
 
-#include "headers/smart_pointer_typedefs.h"
+#include "../../headers/smart_pointer_typedefs.h"
 
 class EkfFilter
 {
