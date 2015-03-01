@@ -13,6 +13,8 @@ public:
     SensorApp(IMUPtr imu, KalmanModelPtr model, Clock& clock);
     ~SensorApp() = default;
     void Update();
+
+    static const U16 serverPort{ 5001 };
 private:
     SensorApp(const SensorApp&) = delete;
     SensorApp& operator=(const SensorApp&) = delete;

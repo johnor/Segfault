@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import os
 
 import socket
 import struct
@@ -49,9 +50,13 @@ try:
 
 except socket.timeout:
    print("Connection timed out")
+except ConnectionResetError:
+    print("Connection to server lost")
 except Exception as err:
-   print("Unknown exception")
-   print(traceback.format_exc())
+    print("Unknown exception")
+    exc_type, exc_obj, exc_tb = sys.exc_info()
+    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+    print(exc_type, fname, exc_tb.tb_lineno)
 
 
 

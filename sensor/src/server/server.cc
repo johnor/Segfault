@@ -1,9 +1,14 @@
 #include "server.h"
 #include "../classes/logger.h"
 
-Server::Server(asio::io_service& io_service, const tcp::endpoint& endpoint) : acceptor(io_service, endpoint),
-socket(io_service)
+Server::Server(asio::io_service& io_service, const U16 port) : acceptor(io_service), socket(io_service)
 {
+    tcp::endpoint endpoint(tcp::v4(), port);
+    acceptor.open(endpoint.protocol());
+    acceptor.set_option(asio::ip::tcp::acceptor::reuse_address(true));
+    acceptor.bind(endpoint);
+    acceptor.listen();
+
     Accept();
 }
 

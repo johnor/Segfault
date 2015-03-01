@@ -22,7 +22,7 @@
 #include "sensor_app.h"
 
 //void PrintAndLogMeasurements(const MeasurementBatch& measurementBatch);
-//void SendTest(ConnectionManager &connectionManager);
+void SendTest(ConnectionManager &connectionManager);
 
 int main(int argc, char **argv)
 {
@@ -47,16 +47,14 @@ int main(int argc, char **argv)
         SensorApp sensorApp{std::move(imu), std::move(model), clock};
 
         asio::io_service ioService;
+        Server server(ioService, SensorApp::serverPort);
+        ConnectionManager &connectionManager = server.GetConnectionManager();
+
         std::function<void()> updateFunction{std::bind(&SensorApp::Update, &sensorApp)};
         Job updateJob{ioService, updateFunction, std::chrono::milliseconds{50}};
 
-        /*
-        tcp::endpoint endpoint(tcp::v4(), 5001);
-        Server server(ioService, endpoint);
-        ConnectionManager &connectionManager = server.GetConnectionManager();
         std::function<void()> sendTestFunction = std::bind(SendTest, std::ref(connectionManager));
-        Job testSendJob{ io_service, sendTestFunction, std::chrono::milliseconds{1000}};
-        */
+        Job testSendJob{ ioService, sendTestFunction, std::chrono::milliseconds{1000}};
 
         ioService.run();
     }
@@ -74,11 +72,9 @@ int main(int argc, char **argv)
     return 0;
 }
 
-/*
+
 void SendTest(ConnectionManager &connectionManager)
 {
-    Logger::Log(LogLevel::Debug) << "SendTest";
-
     Message msg;
     msg.SetMsgType(1);
     msg.SetBodyLength(3);
@@ -97,7 +93,7 @@ void SendTest(ConnectionManager &connectionManager)
     msg2.WriteFloat(15.0f);
     connectionManager.SendToAll(msg2);
 }
-
+/*
 void PrintAndLogMeasurements(const MeasurementBatch& measurementBatch)
 {
     #ifndef _MSC_VER

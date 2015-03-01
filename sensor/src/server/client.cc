@@ -2,7 +2,7 @@
 #include "../classes/logger.h"
 
 ClientSession::ClientSession(tcp::socket socket, ConnectionManager& connectionManager)
-: socket{std::move(socket)}, connectionManager{connectionManager}
+: socket{std::move(socket)}, connectionManager(connectionManager)
 {
 }
 

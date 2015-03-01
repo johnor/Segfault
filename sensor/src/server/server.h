@@ -12,8 +12,7 @@ using asio::ip::tcp;
 class Server
 {
 public:
-    Server(asio::io_service& io_service,
-        const tcp::endpoint& endpoint);
+    Server(asio::io_service& io_service, const U16 port);
     ~Server() = default;
 
     ConnectionManager &GetConnectionManager();
