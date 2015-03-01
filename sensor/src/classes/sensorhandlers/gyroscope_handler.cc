@@ -15,29 +15,32 @@
 * LPF cutoff-freq is 12.5 Hz (nyquist freq / 4)
 *
 * Measurement range is +- 245 degrees per second.
+*
+* Output is scaled to radians per second.
 */
 
-#include "gyroscope_handler.h"
-#include "../measurements.h"
 #include "../../headers/exceptions.h"
 #include "../../interfaces/clock.h"
+#include "../measurements.h"
 
-const U8 I2C_ADDRESS_SA0_HIGH = 0x6b;
+#include "gyroscope_handler.h"
 
-const U8 WHO_AM_I_ADDRESS = 0x0f;
-const U8 WHO_AM_I_DATA = 0xd7;
+const U8 I2C_ADDRESS_SA0_HIGH = 0x6bU;
 
-const U8 X_OUT_LOW_ADDRESS = 0x28;
-const U8 Y_OUT_LOW_ADDRESS = 0x2a;
-const U8 Z_OUT_LOW_ADDRESS = 0x2c;
+const U8 WHO_AM_I_ADDRESS = 0x0fU;
+const U8 WHO_AM_I_DATA = 0xd7U;
 
-const U8 CTRL_1_ADDRESS = 0x20;
-const U8 CTRL_1_DATA = 0x0f; /* Power on, all axes enabled. */
+const U8 X_OUT_LOW_ADDRESS = 0x28U;
+const U8 Y_OUT_LOW_ADDRESS = 0x2aU;
+const U8 Z_OUT_LOW_ADDRESS = 0x2cU;
 
-const U8 CTRL_4_ADDRESS = 0x23;
-const U8 CTRL_4_DATA = 0x80; /* Block data update enabled, range +- 245 degrees per second */
+const U8 CTRL_1_ADDRESS = 0x20U;
+const U8 CTRL_1_DATA = 0x0fU; /* Power on, all axes enabled. */
 
-const U8 STATUS_ADDRESS = 0x27;
+const U8 CTRL_4_ADDRESS = 0x23U;
+const U8 CTRL_4_DATA = 0x80U; /* Block data update enabled, range +- 245 degrees per second */
+
+const U8 STATUS_ADDRESS = 0x27U;
 const U8 NDA_BITMASK = (1u << 3);
 
 const F32 PI = 3.14159265358979323846f;
@@ -59,7 +62,7 @@ MeasurementBatch GyroscopeHandler::GetMeasurements() const
         const F32 xValue{i2cDevice.ReadTwo8BitRegsToFloat(X_OUT_LOW_ADDRESS, scaleToRadiansPerSecond)};
         const F32 yValue{i2cDevice.ReadTwo8BitRegsToFloat(Y_OUT_LOW_ADDRESS, scaleToRadiansPerSecond)};
         const F32 zValue{i2cDevice.ReadTwo8BitRegsToFloat(Z_OUT_LOW_ADDRESS, scaleToRadiansPerSecond)};
-        const U32 timeStamp{ clock.GetTimeStampInMicroSecs() };
+        const U32 timeStamp{clock.GetTimeStampInMicroSecs()};
 
         measurements.push_back(MeasurementPtr{new GyroscopeMeasurement{timeStamp, xValue, yValue, zValue}});
     }
@@ -70,7 +73,7 @@ MeasurementBatch GyroscopeHandler::GetMeasurements() const
 bool GyroscopeHandler::HasAvailableMeasurements() const
 {
     const U8 statusReg{i2cDevice.Read8BitReg(STATUS_ADDRESS)};
-    const bool newDataAvailable{ statusReg & NDA_BITMASK ? true : false };
+    const bool newDataAvailable{(statusReg & NDA_BITMASK) ? true : false};
 
     return newDataAvailable;
 }

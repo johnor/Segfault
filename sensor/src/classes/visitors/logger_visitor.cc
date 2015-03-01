@@ -1,8 +1,8 @@
-#include "logger_visitor.h"
 #include "../../classes/measurements.h"
+#include "logger_visitor.h"
 
 LoggerVisitor::LoggerVisitor(const std::string& logFile)
-: logStream{ logFile }
+    : logStream{logFile}
 {
 }
 

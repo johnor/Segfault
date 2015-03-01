@@ -1,9 +1,9 @@
-#ifndef HARDWARECLOCK_H_
-#define HARDWARECLOCK_H_
+#ifndef HARDWARE_CLOCK_H_
+#define HARDWARE_CLOCK_H_
 
+#include <chrono>
 #include "headers/numeric_typedefs.h"
 #include "interfaces/clock.h"
-#include <chrono>
 
 class HardwareClock : public Clock
 {

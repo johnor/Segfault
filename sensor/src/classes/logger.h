@@ -1,11 +1,11 @@
-#ifndef LOG_H_
-#define LOG_H_
-
-#include "../headers/smart_pointer_typedefs.h"
+#ifndef LOGGER_H_
+#define LOGGER_H_
 
 #include <fstream>
 #include <sstream>
 #include <string>
+
+#include "../headers/smart_pointer_typedefs.h"
 
 enum class LogLevel
 {

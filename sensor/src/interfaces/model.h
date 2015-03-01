@@ -5,8 +5,10 @@
 #ifndef MODEL_H_
 #define MODEL_H_
 
-#include "../headers/numeric_typedefs.h"
 #include <eigen/Eigen>
+#include "../headers/numeric_typedefs.h"
+
+class State;
 
 class Model
 {

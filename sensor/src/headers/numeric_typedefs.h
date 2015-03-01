@@ -2,8 +2,8 @@
 * Contains typedefs for core integer types.
 */
 
-#ifndef INT_TYPEDEFS_H_
-#define INT_TYPEDEFS_H_
+#ifndef NUMERIC_TYPEDEFS_H_
+#define NUMERIC_TYPEDEFS_H_
 
 #include <cstdint>
 

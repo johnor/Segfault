@@ -1,9 +1,9 @@
 #include "quaternion_state.h"
-#include <stdexcept>
 
 QuaternionState::QuaternionState()
     : state{4, 1}
 {
+    /* Initialize a unit quaternion */
     state(0) = 1.f;
     state(1) = 0.f;
     state(2) = 0.f;
@@ -12,18 +12,20 @@ QuaternionState::QuaternionState()
 
 Eigen::Quaternionf QuaternionState::GetQuaternion() const
 {
-    return{ state(0), state(1), state(2), state(3) };
+    return Eigen::Quaternionf{state(0), state(1), state(2), state(3)};
 }
 
 Eigen::Vector3f QuaternionState::GetEulerAngles() const
 {
+    const F32 degToRad{180.f / 3.1415926f};
     Eigen::Quaternionf quat{state(0), state(1), state(2), state(3)};
-    return quat.toRotationMatrix().eulerAngles(0, 1, 2) * 180/3.1415926;
+    return quat.toRotationMatrix().eulerAngles(0, 1, 2) * degToRad;
 }
 
 Eigen::Matrix3f QuaternionState::GetRotationMatrix() const
 {
-    return Eigen::Matrix3f::Identity();
+    Eigen::Quaternionf quat{state(0), state(1), state(2), state(3)};
+    return quat.toRotationMatrix();
 }
 
 const Eigen::VectorXf& QuaternionState::GetX() const

@@ -1,5 +1,5 @@
-#ifndef LOGREADER_H_
-#define LOGREADER_H_
+#ifndef LOG_READER_HANDLER_H_
+#define LOG_READER_HANDLER_H_
 
 #include <string>
 #include "../../interfaces/sensorhandler.h"
@@ -7,18 +7,19 @@
 
 class Clock;
 
-class LogReader : public SensorHandler
+class LogReaderHandler : public SensorHandler
 {
 public:
-    LogReader(const Clock& clock, const std::string& logFile);
-    virtual ~LogReader() {}
+    LogReaderHandler(const Clock& clock, const std::string& logFile);
+    virtual ~LogReaderHandler() {}
     virtual MeasurementBatch GetMeasurements() const override;
     virtual bool HasAvailableMeasurements() const override;
 private:
-    LogReader(const LogReader&) = delete;
-    LogReader& operator=(const LogReader&) = delete;
+    LogReaderHandler(const LogReaderHandler&) = delete;
+    LogReaderHandler& operator=(const LogReaderHandler&) = delete;
 
     MeasurementPtr CreateMeasurement(const std::string& inputLine) const;
+    std::vector<std::string> SplitString(const std::string& input, const char delim) const;
 
     const Clock& clock;
     mutable MeasurementBatch measurementList;

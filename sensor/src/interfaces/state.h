@@ -1,8 +1,3 @@
-/*
-* Interface for model states
-* A State can return its own representation in different formats.
-*/
-
 #include <eigen/Eigen>
 #include "headers/numeric_typedefs.h"
 

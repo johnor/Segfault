@@ -1,12 +1,21 @@
-#include "../../interfaces/measurement_visitor.h"
+#ifndef LOGGER_VISITOR_H_
+#define LOGGER_VISITOR_H_
 
 #include <fstream>
 #include <string>
 
+#include "../../interfaces/measurement_visitor.h"
+
+class AccelerometerMeasurement;
+class GyroscopeMeasurement;
+class CompassMeasurement;
+class PressureMeasurement;
+class TemperatureMeasurement;
+
 class LoggerVisitor : public MeasurementVisitor
 {
 public:
-    LoggerVisitor(const std::string& logFile);
+    explicit LoggerVisitor(const std::string& logFile);
     virtual ~LoggerVisitor() {}
 
     virtual void Visit(const AccelerometerMeasurement& accMeas) override;
@@ -20,3 +29,5 @@ private:
 
     std::ofstream logStream;
 };
+
+#endif

@@ -4,8 +4,8 @@
 * that are needed by an IMU to communicate with its sensors.
 */
 
-#ifndef I2C_HANDLER_FACTORY_H_
-#define I2C_HANDLER_FACTORY_H_
+#ifndef SENSOR_HANDLER_FACTORY_H_
+#define SENSOR_HANDLER_FACTORY_H_
 
 #include "../headers/smart_pointer_typedefs.h"
 

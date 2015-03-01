@@ -15,25 +15,26 @@
 * Temperature data is scaled to degrees Celcius.
 */
 
-#include "barometer_handler.h"
-#include "../measurements.h"
 #include "../../headers/exceptions.h"
 #include "../../interfaces/clock.h"
+#include "../measurements.h"
 
-const U8 I2C_ADDRESS_SA0_HIGH = 0x5d;
+#include "barometer_handler.h"
 
-const U8 WHO_AM_I_ADDRESS = 0x0f;
-const U8 WHO_AM_I_DATA = 0xbd;
+const U8 I2C_ADDRESS_SA0_HIGH = 0x5dU;
 
-const U8 CTRL_1_ADDRESS = 0x20;
-const U8 CTRL_1_DATA = 0xc4; /* Power on, sample rate 25 Hz, block data update enabled. */
+const U8 WHO_AM_I_ADDRESS = 0x0fU;
+const U8 WHO_AM_I_DATA = 0xbdU;
 
-const U8 PRESS_OUT_LOW_ADDRESS = 0x28;
+const U8 CTRL_1_ADDRESS = 0x20U;
+const U8 CTRL_1_DATA = 0xc4U; /* Power on, sample rate 25 Hz, block data update enabled. */
 
-const U8 TEMP_OUT_LOW_ADDRESS = 0x2b;
+const U8 PRESS_OUT_LOW_ADDRESS = 0x28U;
 
-const U8 STATUS_ADDRESS = 0x27;
-const U8 TEMP_NDA_MASK = 1u;
+const U8 TEMP_OUT_LOW_ADDRESS = 0x2bU;
+
+const U8 STATUS_ADDRESS = 0x27U;
+const U8 TEMP_NDA_MASK = 1U;
 const U8 PRESS_NDA_MASK = (1u << 1);
 
 const F32 scaleToHectoPascals = 1.f / 4096.f;
@@ -41,7 +42,7 @@ const F32 tempScaleFactor = 1.f / 480.f;
 const F32 tempOffsetFactor = 42.5f;
 
 BarometerHandler::BarometerHandler(const Clock& clock)
-: i2cDevice{ I2C_ADDRESS_SA0_HIGH }, clock(clock)
+    : i2cDevice{I2C_ADDRESS_SA0_HIGH}, clock(clock)
 {
     SetupRegisters();
 }
@@ -54,7 +55,7 @@ MeasurementBatch BarometerHandler::GetMeasurements() const
     {
         const F32 pressureMeasurement{i2cDevice.ReadThree8BitRegsToFloat(PRESS_OUT_LOW_ADDRESS, scaleToHectoPascals)};
         const F32 tempMeasurement{i2cDevice.ReadTwo8BitRegsToFloat(TEMP_OUT_LOW_ADDRESS, tempScaleFactor) + tempOffsetFactor};
-        const U32 timeStamp{ clock.GetTimeStampInMicroSecs() };
+        const U32 timeStamp{clock.GetTimeStampInMicroSecs()};
 
         measurements.push_back(MeasurementPtr{new PressureMeasurement{timeStamp, pressureMeasurement}});
         measurements.push_back(MeasurementPtr{new TemperatureMeasurement{timeStamp, tempMeasurement}});
@@ -65,11 +66,11 @@ MeasurementBatch BarometerHandler::GetMeasurements() const
 
 bool BarometerHandler::HasAvailableMeasurements() const
 {
-    const U8 statusReg{ i2cDevice.Read8BitReg(STATUS_ADDRESS) };
-    const bool pressureDataAvailable{ statusReg & PRESS_NDA_MASK ? true : false };
-    const bool tempDataAvailable{ statusReg & TEMP_NDA_MASK ? true : false };
+    const U8 statusReg{i2cDevice.Read8BitReg(STATUS_ADDRESS)};
+    const bool pressureDataAvailable{(statusReg & PRESS_NDA_MASK) ? true : false};
+    const bool tempDataAvailable{(statusReg & TEMP_NDA_MASK) ? true : false};
 
-    return (pressureDataAvailable && tempDataAvailable);
+    return pressureDataAvailable && tempDataAvailable;
 }
 
 void BarometerHandler::SetupRegisters()

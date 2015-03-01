@@ -1,69 +1,82 @@
 /*
 * This file defines the AccAndMagHandler class which handles
 * I2C-communication with the accelerometer and magnetometer on the IMU-chip.
+*
+* The accelerometer and magnetometer will operate in bypass mode, meaning that
+* each new measurement will overwrite the previous one.
+*
+* Block data update is enabled, meaning that the
+* output registers cannot be updated until both
+* output registers have been read sequentially.
+*
+* Accelerometer data rate is set to 100 Hz.
+* Accelerometer scale is +- 4g.
+* The accelerometer anti-alias filter is enabled with bandwidth 50 Hz.
+* The accelerometer high-pass filter is disabled.
+* Output is scaled to m/s^2.
+*
+* Magnetometer data rate is set to 100 Hz.
+* Magnetometer scale is +- 2 Gauss.
+* The magnetometer high resolution mode is enabled.
+* Continuouos conversion mode is enabled.
+* Output is scaled to T.
+*
+* The temperature sensor is disabled.
+*
 */
-#include "acc_and_mag_handler.h"
 
-#include <iostream>
-#include <math.h>
-#include <bitset>
-
-#include "../measurements.h"
-#include "classes/logger.h"
 #include "../../headers/exceptions.h"
 #include "../../interfaces/clock.h"
+#include "../measurements.h"
 
-const U8 LSM303D_ADDRESS  = 0x1d;
-const U8 LSM303D_ID       = 0x49;
-const U8 L3GD20H_WHO_AM_I = 0x0f;
+#include "acc_and_mag_handler.h"
 
-/* Accelerometer defines */
-const U8 LSM303D_CTRL1         = 0x20;
-const U8 LSM303D_CTRL2         = 0x21;
-const U8 LSM303D_STATUS_A      = 0x27;
-const U8 LSM303D_STATUS_ZYXADA = (1u << 3);
+/* I2C and who am I */
+const U8 I2C_ADDRESS_SA0_HIGH = 0x1dU;
+const U8 WHO_AM_I_ADDRESS = 0x0fU;
+const U8 WHO_AM_I_DATA = 0x49U;
 
-const U8 LSM303D_OUT_X_L_A = 0x28;
-const U8 LSM303D_OUT_X_H_A = 0x29;
-const U8 LSM303D_OUT_Y_L_A = 0x2A;
-const U8 LSM303D_OUT_Y_H_A = 0x2B;
-const U8 LSM303D_OUT_Z_L_A = 0x2C;
-const U8 LSM303D_OUT_Z_H_A = 0x2D;
+/* Accelerometer specifics */
+const U8 ACC_STATUS_ADDRESS = 0x27U;
+const U8 ACC_NDA_BITMASK = (1u << 3);
+const U8 ACC_X_OUT_LOW_ADDRESS = 0x28U;
+const U8 ACC_Y_OUT_LOW_ADDRESS = 0x2aU;
+const U8 ACC_Z_OUT_LOW_ADDRESS = 0x2cU;
 
-const U8 LSM303D_ACCEL_SAMPLERATE_50 = 5u; // Sample rate 50 hz
-const U8 LSM303D_ACCEL_FSR_8         = 3u; // Full scale selection +- 8g
-const U8 LSM303D_ACCEL_LPF_50        = 3u; // Low pass filter 50hz
+/* Magnetometer specifics */
+const U8 MAG_STATUS_ADDRESS = 0x07U;
+const U8 MAG_NDA_BITMASK = (1u << 3);
+const U8 MAG_X_OUT_LOW_ADDRESS = 0x08U;
+const U8 MAG_Y_OUT_LOW_ADDRESS = 0x0aU;
+const U8 MAG_Z_OUT_LOW_ADDRESS = 0x0cU;
 
-const F32 accelerometerScale = 0.000244f;  // g/LSB from table 3, page 10 in data sheet
+/* Control registers */
+const U8 CTRL_1_ADDRESS = 0x20U;
+const U8 CTRL_1_DATA = 0x6fU; /* Acc data rate 100 Hz, BDU enabled, all acc axes enabled. */
 
-/* Magnetometer defines */
-const U8 LSM303D_CTRL5         = 0x24;
-const U8 LSM303D_CTRL6         = 0x25;
-const U8 LSM303D_CTRL7         = 0x26;
-const U8 LSM303D_STATUS_M      = 0x07;
-const U8 LSM303D_STATUS_ZYXMDA = (1u << 3);
+const U8 CTRL_2_ADDRESS = 0x21U;
+const U8 CTRL_2_DATA = 0xc8U; /* Acc AA-filter bw 50 Hz, full-scale selection +- 4g */
 
-const U8 LSM303D_OUT_X_L_M = 0x08;
-const U8 LSM303D_OUT_X_H_M = 0x09;
-const U8 LSM303D_OUT_Y_L_M = 0x0a;
-const U8 LSM303D_OUT_Y_H_M = 0x0b;
-const U8 LSM303D_OUT_Z_L_M = 0x0c;
-const U8 LSM303D_OUT_Z_H_M = 0x0d;
+const U8 CTRL_5_ADDRESS = 0x24U;
+const U8 CTRL_5_DATA = 0x74U; /* Temp sensor disabled, mag high resolution enabled, mag data rate 100 Hz */
 
-const U8 LSM303D_COMPASS_SAMPLERATE_50 = 4u;
-const U8 LSM303D_COMPASS_FSR_2         = 0u;
+const U8 CTRL_6_ADDRESS = 0x25U;
+const U8 CTRL_6_DATA = 0u; /* Mag full-scale +- 2 Gauss. */
 
-const F32 compassScale = 0.00008f; // gauss/LSB from table 3, page 10 in data sheet
+const U8 CTRL_7_ADDRESS = 0x26U;
+const U8 CTRL_7_DATA = 0u; /* Acc high-pass filter disabled, mag continuous conversion mode enabled. */
+
+/* Scale factors */
+const F32 gravitationalAcceleration = 9.81f;
+const F32 accelerometerScaleFactor = 0.000122f * gravitationalAcceleration; /* 0.122 mg/LSB at +- 4g full-scale */
+
+const F32 gaussToTesla = 0.0001f;
+const F32 magnetometerScaleFactor = 0.00008f * gaussToTesla; /* 0.080 mGauss/LSB at +- 2 Gauss full-scale */
 
 AccAndMagHandler::AccAndMagHandler(const Clock& clock)
-try
-: i2cDevice{LSM303D_ADDRESS}, clock(clock)
+    : i2cDevice{I2C_ADDRESS_SA0_HIGH}, clock(clock)
 {
     SetUpRegisters();
-}
-catch (std::runtime_error &e)
-{
-    Logger::Log(LogLevel::Error) << "AccAndMagHandler::AccAndMagHandler: " << e.what();
 }
 
 MeasurementBatch AccAndMagHandler::GetMeasurements() const
@@ -72,13 +85,11 @@ MeasurementBatch AccAndMagHandler::GetMeasurements() const
 
     if (HasNewAccelerometerMeasurement())
     {
-        Logger::Log(LogLevel::Info) << "New accelerometer measurement available";
         measurements.push_back(GetNextAccelerometerMeasurement());
     }
 
     if (HasNewMagnetometerMeasurement())
     {
-        Logger::Log(LogLevel::Info) << "New magnetometer measurement available";
         measurements.push_back(GetNextMagnetometerMeasurement());
     }
 
@@ -87,89 +98,53 @@ MeasurementBatch AccAndMagHandler::GetMeasurements() const
 
 bool AccAndMagHandler::HasAvailableMeasurements() const
 {
-    /* For testing purposes only */
-    return true;
+    return HasNewAccelerometerMeasurement() || HasNewMagnetometerMeasurement();
 }
 
 void AccAndMagHandler::SetUpRegisters()
 {
-    Logger::Log(LogLevel::Info) << "Initializing i2c for acc and mag handler";
-    if (i2cDevice.Read8BitReg(L3GD20H_WHO_AM_I) != LSM303D_ID)
+    if (i2cDevice.Read8BitReg(WHO_AM_I_ADDRESS) != WHO_AM_I_DATA)
     {
-        throw I2CException("AccAndMagHandler::SetUpRegisters(): Wrong id read");
+        throw I2CException("AccAndMagHandler::SetUpRegisters(): Wrong WHO_AM_I value read.");
     }
 
-    /* accelerometer registers */
-    // Init ctrl1
-    U8 ctrl1{ 0u };
-    ctrl1 = LSM303D_ACCEL_SAMPLERATE_50 << 4; // Set data rate
-    ctrl1 |= 0x07; //Enable z, x and y axes
-    i2cDevice.WriteReg8(LSM303D_CTRL1, ctrl1);
+    i2cDevice.WriteReg8(CTRL_1_ADDRESS, CTRL_1_DATA);
 
-    // Init ctrl2
-    U8 ctrl2{ 0u };
-    ctrl2 = LSM303D_ACCEL_LPF_50 << 6; // Set anti-alias filter bandwidth
-    ctrl2 |= LSM303D_ACCEL_FSR_8 << 3; // Select full scale
-    i2cDevice.WriteReg8(LSM303D_CTRL2, ctrl2);
+    i2cDevice.WriteReg8(CTRL_2_ADDRESS, CTRL_2_DATA);
 
-    /* magnetometer registers */
-    // Init ctrl5
-    U8 ctrl5{ 0u };
-    ctrl5 = LSM303D_COMPASS_SAMPLERATE_50 << 2; // Set data rate
-    i2cDevice.WriteReg8(LSM303D_CTRL5, ctrl5);
+    i2cDevice.WriteReg8(CTRL_5_ADDRESS, CTRL_5_DATA);
 
-    // Init ctrl6
-    U8 ctrl6{ 0u };
-    ctrl6 = 0u; // Select full scale +- 2 gauss
-    i2cDevice.WriteReg8(LSM303D_CTRL6, ctrl6);
+    i2cDevice.WriteReg8(CTRL_6_ADDRESS, CTRL_6_DATA);
 
-    // Init ctrl7
-    U8 ctrl7{ 0u };
-    ctrl7 = 0x60;
-    i2cDevice.WriteReg8(LSM303D_CTRL7, ctrl7);
+    i2cDevice.WriteReg8(CTRL_7_ADDRESS, CTRL_7_DATA);
 }
 
 bool AccAndMagHandler::HasNewAccelerometerMeasurement() const
 {
-    // read status
-    const U8 status{i2cDevice.Read8BitReg(LSM303D_STATUS_A)};
-    Logger::Log(LogLevel::Debug) << "Status: " << (std::bitset<8>)status;
-
-    return (status & LSM303D_STATUS_ZYXADA) ? true : false;
+    const U8 status{i2cDevice.Read8BitReg(ACC_STATUS_ADDRESS)};
+    return (status & ACC_NDA_BITMASK) ? true : false;
 }
 
 bool AccAndMagHandler::HasNewMagnetometerMeasurement() const
 {
-    // read status
-    const U8 status{i2cDevice.Read8BitReg(LSM303D_STATUS_M)};
-    Logger::Log(LogLevel::Debug) << "Status: " << (std::bitset<8>)status;
-
-    return (status & LSM303D_STATUS_ZYXMDA) ? true : false;
+    const U8 status{i2cDevice.Read8BitReg(MAG_STATUS_ADDRESS)};
+    return (status & MAG_NDA_BITMASK) ? true : false;
 }
 
 MeasurementPtr AccAndMagHandler::GetNextAccelerometerMeasurement() const
 {
-    Logger::Log(LogLevel::Debug) << "Reading measurement from accelerometer";
-    const F32 xAcc{i2cDevice.ReadTwo8BitRegsToFloat(LSM303D_OUT_X_L_A, accelerometerScale)};
-    const F32 yAcc{i2cDevice.ReadTwo8BitRegsToFloat(LSM303D_OUT_Y_L_A, accelerometerScale)};
-    const F32 zAcc{i2cDevice.ReadTwo8BitRegsToFloat(LSM303D_OUT_Z_L_A, accelerometerScale)};
-    const F32 sum{static_cast<F32>(sqrt(xAcc*xAcc + yAcc*yAcc + zAcc*zAcc))};
+    const F32 xAcc{i2cDevice.ReadTwo8BitRegsToFloat(ACC_X_OUT_LOW_ADDRESS, accelerometerScaleFactor)};
+    const F32 yAcc{i2cDevice.ReadTwo8BitRegsToFloat(ACC_Y_OUT_LOW_ADDRESS, accelerometerScaleFactor)};
+    const F32 zAcc{i2cDevice.ReadTwo8BitRegsToFloat(ACC_Z_OUT_LOW_ADDRESS, accelerometerScaleFactor)};
 
-    Logger::Log(LogLevel::Debug) << "Sum: " << sum;
-
-    return MeasurementPtr{ new AccelerometerMeasurement{ clock.GetTimeStampInMicroSecs(), xAcc, yAcc, zAcc } };
+    return MeasurementPtr{new AccelerometerMeasurement{clock.GetTimeStampInMicroSecs(), xAcc, yAcc, zAcc }};
 }
 
 MeasurementPtr AccAndMagHandler::GetNextMagnetometerMeasurement() const
 {
-    Logger::Log(LogLevel::Debug) << "Reading measurement from magnetometer";
-    const F32 xComp{i2cDevice.ReadTwo8BitRegsToFloat(LSM303D_OUT_X_L_M, compassScale)};
-    const F32 yComp{i2cDevice.ReadTwo8BitRegsToFloat(LSM303D_OUT_Y_L_M, compassScale)};
-    const F32 zComp{i2cDevice.ReadTwo8BitRegsToFloat(LSM303D_OUT_Z_L_M, compassScale)};
+    const F32 xMag{i2cDevice.ReadTwo8BitRegsToFloat(MAG_X_OUT_LOW_ADDRESS, magnetometerScaleFactor)};
+    const F32 yMag{i2cDevice.ReadTwo8BitRegsToFloat(MAG_Y_OUT_LOW_ADDRESS, magnetometerScaleFactor)};
+    const F32 zMag{i2cDevice.ReadTwo8BitRegsToFloat(MAG_Z_OUT_LOW_ADDRESS, magnetometerScaleFactor)};
 
-    Logger::Log(LogLevel::Debug) << "xComp: " << xComp;
-    Logger::Log(LogLevel::Debug) << "yComp: " << yComp;
-    Logger::Log(LogLevel::Debug) << "zComp: " << zComp;
-
-    return MeasurementPtr{ new CompassMeasurement{ clock.GetTimeStampInMicroSecs(), xComp, yComp, zComp } };
+    return MeasurementPtr{new CompassMeasurement{clock.GetTimeStampInMicroSecs(), xMag, yMag, zMag}};
 }

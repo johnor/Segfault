@@ -1,15 +1,14 @@
-#ifndef GYROINPUTMODEL_H_
-#define GYROINPUTMODEL_H_
+#ifndef GYRO_INPUT_MODEL_H_
+#define GYRO_INPUT_MODEL_H_
 
-#include "quaternion_state.h"
+#include <eigen/Eigen>
 #include "interfaces/kalman_model.h"
 #include "quaternion_state.h"
-#include <eigen/Eigen>
 
 class GyroInputModel : public KalmanModel
 {
 public:
-    GyroInputModel(QuaternionState &state);
+    explicit GyroInputModel(QuaternionState &state);
 
     virtual State& GetState() override;
 
@@ -27,18 +26,15 @@ public:
     virtual void Visit(const PressureMeasurement& pressureMeas) override;
     virtual void Visit(const TemperatureMeasurement& tempMeas) override;
 
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 private:
     GyroInputModel(const GyroInputModel&) = delete;
     GyroInputModel& operator=(const GyroInputModel&) = delete;
 
     Eigen::Matrix4f GetS(const Eigen::Vector3f& omega) const;
 
-    QuaternionState &state;
+    QuaternionState& state;
     Eigen::Matrix4f F;
-public:
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
-
-
 
 #endif

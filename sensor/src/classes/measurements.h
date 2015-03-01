@@ -30,7 +30,7 @@ public:
     virtual ~ScalarMeasurement() {}
     F32 GetValue() const;
 protected:
-    explicit ScalarMeasurement(const U32 timeStamp, const F32 value);
+    ScalarMeasurement(const U32 timeStamp, const F32 value);
     std::string ToString(const std::string& header, const std::string& unit) const;
 private:
     const F32 value;

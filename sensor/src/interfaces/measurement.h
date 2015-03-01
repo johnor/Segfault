@@ -8,10 +8,10 @@
 #ifndef MEASUREMENT_H_
 #define MEASUREMENT_H_
 
-#include "../headers/smart_pointer_typedefs.h"
 #include "../headers/numeric_typedefs.h"
-#include "measurement_visitor.h"
 #include <string>
+
+class MeasurementVisitor;
 
 class Measurement
 {

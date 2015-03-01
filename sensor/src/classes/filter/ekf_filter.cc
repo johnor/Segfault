@@ -1,8 +1,8 @@
-#include "ekf_filter.h"
-#include "gyro_input_model.h"
-#include "interfaces/measurement.h"
-#include "interfaces/kalman_model.h"
+#include "../../interfaces/state.h"
+#include "../../interfaces/measurement.h"
+#include "../../interfaces/kalman_model.h"
 
+#include "ekf_filter.h"
 
 void EkfFilter::Update(KalmanModelPtr& model, const MeasurementBatch& measurementBatch)
 {

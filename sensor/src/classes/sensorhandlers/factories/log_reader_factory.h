@@ -1,9 +1,9 @@
-#ifndef LOG_READER_HANDLER_FACTORY_H_
-#define LOG_READER_HANDLER_FACTORY_H_
+#ifndef LOG_READER_FACTORY_H_
+#define LOG_READER_FACTORY_H_
 
+#include <string>
 #include "../../../headers/smart_pointer_typedefs.h"
 #include "../../../interfaces/sensor_handler_factory.h"
-#include <string>
 
 class Clock;
 

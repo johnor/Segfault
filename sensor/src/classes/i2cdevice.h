@@ -1,8 +1,8 @@
-#ifndef I2CDEVICE_H_
-#define I2CDEVICE_H_
+#ifndef I2C_DEVICE_H_
+#define I2C_DEVICE_H_
 
-#include "headers/numeric_typedefs.h"
 #include <string>
+#include "headers/numeric_typedefs.h"
 
 /*
 * Wrapper class around the WiringPi lib handling

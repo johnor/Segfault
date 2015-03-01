@@ -2,15 +2,16 @@
 * This file defines classes implementing the Measurement interface.
 */
 
-#include "measurements.h"
-#include "../interfaces/measurement_visitor.h"
-
 #include <sstream>
 #include <iomanip>
 
+#include "../interfaces/measurement_visitor.h"
+
+#include "measurements.h"
+
 /* Measurement base */
-MeasurementBase::MeasurementBase(const U32 timeStamp_)
-: timeStamp{ timeStamp_ }
+MeasurementBase::MeasurementBase(const U32 timeStamp)
+    : timeStamp{timeStamp}
 {
 }
 
@@ -21,13 +22,13 @@ U32 MeasurementBase::GetTimeStamp() const
 
 /* Scalar measurement */
 ScalarMeasurement::ScalarMeasurement(const U32 timeStamp, const F32 value)
-: MeasurementBase{ timeStamp }, value{ value }
+    : MeasurementBase{timeStamp}, value{value}
 {
 }
 
 std::string ScalarMeasurement::ToString(const std::string& header, const std::string& unit) const
 {
-    std::ostringstream os{};
+    std::ostringstream os;
 
     os << std::fixed << std::setprecision(2);
     os << header << '\n';
@@ -45,13 +46,13 @@ F32 ScalarMeasurement::GetValue() const
 
 /* Vectorial measurement */
 VectorialMeasurement::VectorialMeasurement(const U32 timeStamp, const F32 xValue, const F32 yValue, const F32 zValue)
-: MeasurementBase{ timeStamp }, xValue{ xValue }, yValue{ yValue }, zValue{ zValue }
+    : MeasurementBase{timeStamp}, xValue{xValue}, yValue{yValue}, zValue{zValue}
 {
 }
 
 std::string VectorialMeasurement::ToString(const std::string& header, const std::string& unit) const
 {
-    std::ostringstream os{};
+    std::ostringstream os;
 
     os << std::fixed << std::setprecision(2);
     os << header << '\n';

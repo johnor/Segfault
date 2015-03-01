@@ -1,9 +1,8 @@
-#ifndef QUATERNIONSTATE_H_
-#define QUATERNIONSTATE_H_
-
-#include "interfaces/state.h"
+#ifndef QUATERNION_STATE_H_
+#define QUATERNION_STATE_H_
 
 #include <eigen/Eigen>
+#include "interfaces/state.h"
 
 class QuaternionState : public State
 {
@@ -23,16 +22,13 @@ public:
     Eigen::Quaternionf GetQuaternion() const;
     Eigen::Vector3f GetEulerAngles() const;
     Eigen::Matrix3f GetRotationMatrix() const;
-
 private:
     QuaternionState(const QuaternionState&) = delete;
     QuaternionState& operator=(const QuaternionState&) = delete;
 
     Eigen::VectorXf state;
     Eigen::MatrixXf P;
-    U32 timeStamp{ 0u };
+    U32 timeStamp{0u};
 };
-
-
 
 #endif

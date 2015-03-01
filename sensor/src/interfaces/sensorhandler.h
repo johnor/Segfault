@@ -4,8 +4,8 @@
 * the I2C bus and return collected measurements.
 */
 
-#ifndef I2C_HANDLER_H_
-#define I2C_HANDLER_H_
+#ifndef SENSOR_HANDLER_H_
+#define SENSOR_HANDLER_H_
 
 #include "../headers/smart_pointer_typedefs.h"
 
