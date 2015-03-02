@@ -10,7 +10,7 @@ void EkfFilter::Update(KalmanModelPtr& model, const MeasurementBatch& measuremen
     {
         measurement->Accept(*model);
 
-        auto& state = model->GetState();
+        State& state = model->GetState();
         state.GetX() = model->GetPredictedState();
         state.SetTimeStamp(measurement->GetTimeStamp());
 

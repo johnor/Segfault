@@ -3,8 +3,7 @@
 
 #include "gyro_input_model.h"
 
-GyroInputModel::GyroInputModel(QuaternionState& state)
-    : state(state)
+GyroInputModel::GyroInputModel()
 {
 }
 

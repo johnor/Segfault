@@ -8,7 +8,8 @@
 class GyroInputModel : public KalmanModel
 {
 public:
-    explicit GyroInputModel(QuaternionState &state);
+    GyroInputModel();
+    ~GyroInputModel() = default;
 
     virtual State& GetState() override;
 
@@ -33,7 +34,7 @@ private:
 
     Eigen::Matrix4f GetS(const Eigen::Vector3f& omega) const;
 
-    QuaternionState& state;
+    QuaternionState state;
     Eigen::Matrix4f F;
 };
 
