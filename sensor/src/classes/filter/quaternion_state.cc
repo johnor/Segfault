@@ -17,9 +17,9 @@ Eigen::Quaternionf QuaternionState::GetQuaternion() const
 
 Eigen::Vector3f QuaternionState::GetEulerAngles() const
 {
-    const F32 degToRad{180.f / 3.1415926f};
+    const F32 radToDeg{180.f / 3.1415926f};
     Eigen::Quaternionf quat{state(0), state(1), state(2), state(3)};
-    return quat.toRotationMatrix().eulerAngles(0, 1, 2) * degToRad;
+    return quat.toRotationMatrix().eulerAngles(0, 1, 2) * radToDeg;
 }
 
 Eigen::Matrix3f QuaternionState::GetRotationMatrix() const
