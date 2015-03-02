@@ -1,24 +1,31 @@
 #include <iostream>
+#include <utility>
 
 #include "interfaces/imu.h"
 #include "interfaces/clock.h"
+#include "interfaces/kalman_model.h"
 #include "interfaces/measurement.h"
-#include "classes/alt_imu.h"
-#include "classes/filter/gyro_input_model.h"
+#include "classes/filter/quaternion_state.h"
 
 #include "sensor_app.h"
 
-SensorApp::SensorApp(const SensorHandlerFactoryPtr& sensorHandlerFactory, Clock& clock)
-    : clock(clock), imu{new AltIMU{sensorHandlerFactory}}, model{new GyroInputModel{state}}
+SensorApp::SensorApp(IMUPtr imu, KalmanModelPtr model, Clock& clock)
+    : imu{std::move(imu)}, model{std::move(model)}, clock(clock)
 {
 }
 
 void SensorApp::Update()
 {
+    static QuaternionState* state{dynamic_cast<QuaternionState*>(&model->GetState())};
+
     MeasurementBatch measurementBatch{imu->GetNextMeasurementBatch()};
 
     filter.Update(model, measurementBatch);
-    std::cout << "EulerAngles:" << std::endl << state.GetEulerAngles() << std::endl;
+
+    if (state != nullptr)
+    {
+        std::cout << "EulerAngles:\n" << state->GetEulerAngles() << std::endl;
+    }
 
     clock.IncreaseTimeStamp(1.f / 20.f);
 }

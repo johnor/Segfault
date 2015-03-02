@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
+#include <utility>
 
 #include "headers/smart_pointer_typedefs.h"
 
@@ -12,6 +13,9 @@
 #include "classes/sensorhandlers/factories/default_handler_factory.h"
 #include "classes/clock/softwareclock.h"
 #include "classes/clock/hardwareclock.h"
+#include "classes/filter/quaternion_state.h"
+#include "classes/filter/gyro_input_model.h"
+#include "classes/alt_imu.h"
 
 #include "server/server.h"
 #include "server/job.h"
@@ -39,7 +43,10 @@ int main(int argc, char **argv)
             SensorHandlerFactoryPtr factory{new DefaultHandlerFactory{clock}};
         #endif
 
-        SensorApp sensorApp{factory, clock};
+        QuaternionState state;
+        IMUPtr imu{new AltIMU{factory}};
+        KalmanModelPtr model{new GyroInputModel{state}};
+        SensorApp sensorApp{std::move(imu), std::move(model), clock};
 
         asio::io_service ioService;
         std::function<void()> updateFunction{std::bind(&SensorApp::Update, &sensorApp)};
