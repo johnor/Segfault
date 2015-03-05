@@ -4,13 +4,10 @@
 #include "headers/smart_pointer_typedefs.h"
 #include "classes/filter/ekf_filter.h"
 
-class Clock;
-class QuaternionState;
-
 class SensorApp
 {
 public:
-    SensorApp(IMUPtr imu, KalmanModelPtr model, Clock& clock);
+    SensorApp(IMUPtr imu, KalmanModelPtr model, ClockPtr clock);
     ~SensorApp() = default;
     void Update();
 
@@ -21,7 +18,7 @@ private:
 
     IMUPtr imu;
     KalmanModelPtr model;
-    Clock& clock;
+    ClockPtr clock;
     EkfFilter filter;
 };
 

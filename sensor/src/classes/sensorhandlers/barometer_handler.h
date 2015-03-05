@@ -10,12 +10,10 @@
 #include "../../interfaces/sensorhandler.h"
 #include "../i2cdevice.h"
 
-class Clock;
-
 class BarometerHandler : public SensorHandler
 {
 public:
-    explicit BarometerHandler(const Clock& clock);
+    explicit BarometerHandler(ClockPtr clock);
     virtual ~BarometerHandler() {}
     virtual MeasurementBatch GetMeasurements() const override;
     virtual bool HasAvailableMeasurements() const override;
@@ -25,7 +23,7 @@ private:
     void SetupRegisters();
 
     I2CDevice i2cDevice;
-    const Clock& clock;
+    ClockPtr clock;
 };
 
 #endif

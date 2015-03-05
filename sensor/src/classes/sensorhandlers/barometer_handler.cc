@@ -41,8 +41,8 @@ const F32 scaleToHectoPascals = 1.f / 4096.f;
 const F32 tempScaleFactor = 1.f / 480.f;
 const F32 tempOffsetFactor = 42.5f;
 
-BarometerHandler::BarometerHandler(const Clock& clock)
-    : i2cDevice{I2C_ADDRESS_SA0_HIGH}, clock(clock)
+BarometerHandler::BarometerHandler(ClockPtr clock)
+    : i2cDevice{I2C_ADDRESS_SA0_HIGH}, clock{clock}
 {
     SetupRegisters();
 }
@@ -55,7 +55,7 @@ MeasurementBatch BarometerHandler::GetMeasurements() const
     {
         const F32 pressureMeasurement{i2cDevice.ReadThree8BitRegsToFloat(PRESS_OUT_LOW_ADDRESS, scaleToHectoPascals)};
         const F32 tempMeasurement{i2cDevice.ReadTwo8BitRegsToFloat(TEMP_OUT_LOW_ADDRESS, tempScaleFactor) + tempOffsetFactor};
-        const U32 timeStamp{clock.GetTimeStampInMicroSecs()};
+        const U32 timeStamp{clock->GetTimeStampInMicroSecs()};
 
         measurements.push_back(MeasurementPtr{new PressureMeasurement{timeStamp, pressureMeasurement}});
         measurements.push_back(MeasurementPtr{new TemperatureMeasurement{timeStamp, tempMeasurement}});

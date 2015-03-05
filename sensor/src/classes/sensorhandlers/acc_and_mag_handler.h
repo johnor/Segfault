@@ -10,12 +10,10 @@
 #include "../../interfaces/sensorhandler.h"
 #include "classes/i2cdevice.h"
 
-class Clock;
-
 class AccAndMagHandler : public SensorHandler
 {
 public:
-    explicit AccAndMagHandler(const Clock& clock);
+    explicit AccAndMagHandler(ClockPtr clock);
     virtual ~AccAndMagHandler() {}
     virtual MeasurementBatch GetMeasurements() const override;
     virtual bool HasAvailableMeasurements() const override;
@@ -31,7 +29,7 @@ private:
     MeasurementPtr GetNextMagnetometerMeasurement() const;
 
     I2CDevice i2cDevice;
-    const Clock& clock;
+    ClockPtr clock;
 };
 
 #endif
