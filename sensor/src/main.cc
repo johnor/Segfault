@@ -40,9 +40,7 @@ int main(int argc, char **argv)
             SensorHandlerFactoryPtr factory{new DefaultHandlerFactory{clock}};
         #endif
 
-        IMUPtr imu{new AltIMU{factory}};
-        ModelPtr model{new GyroInputModel};
-        SensorApp sensorApp{std::move(imu), std::move(model), clock};
+        SensorApp sensorApp{IMUPtr{new AltIMU{factory}}, ModelPtr{new GyroInputModel}, clock};
 
         asio::io_service ioService;
         Server server(ioService, SensorApp::serverPort);
