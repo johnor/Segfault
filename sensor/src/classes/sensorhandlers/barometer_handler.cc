@@ -50,14 +50,18 @@ BarometerHandler::BarometerHandler(ClockPtr clock)
 MeasurementBatch BarometerHandler::GetMeasurements() const
 {
     MeasurementBatch measurements;
+    const U8 statusReg{i2cDevice.Read8BitReg(STATUS_ADDRESS)};
+    const U32 timeStamp{clock->GetTimeStampInMicroSecs()};
 
-    if (HasAvailableMeasurements())
+    if (HasAvailablePressureMeasurement(statusReg))
     {
         const F32 pressureMeasurement{i2cDevice.ReadThree8BitRegsToFloat(PRESS_OUT_LOW_ADDRESS, scaleToHectoPascals)};
-        const F32 tempMeasurement{i2cDevice.ReadTwo8BitRegsToFloat(TEMP_OUT_LOW_ADDRESS, tempScaleFactor) + tempOffsetFactor};
-        const U32 timeStamp{clock->GetTimeStampInMicroSecs()};
-
         measurements.push_back(MeasurementPtr{new PressureMeasurement{timeStamp, pressureMeasurement}});
+    }
+
+    if (HasAvailableTemperatureMeasurement(statusReg))
+    {
+        const F32 tempMeasurement{i2cDevice.ReadTwo8BitRegsToFloat(TEMP_OUT_LOW_ADDRESS, tempScaleFactor) + tempOffsetFactor};
         measurements.push_back(MeasurementPtr{new TemperatureMeasurement{timeStamp, tempMeasurement}});
     }
 
@@ -67,10 +71,9 @@ MeasurementBatch BarometerHandler::GetMeasurements() const
 bool BarometerHandler::HasAvailableMeasurements() const
 {
     const U8 statusReg{i2cDevice.Read8BitReg(STATUS_ADDRESS)};
-    const bool pressureDataAvailable{(statusReg & PRESS_NDA_MASK) ? true : false};
-    const bool tempDataAvailable{(statusReg & TEMP_NDA_MASK) ? true : false};
 
-    return pressureDataAvailable && tempDataAvailable;
+    return HasAvailablePressureMeasurement(statusReg) ||
+           HasAvailableTemperatureMeasurement(statusReg);
 }
 
 void BarometerHandler::SetupRegisters()
@@ -83,4 +86,16 @@ void BarometerHandler::SetupRegisters()
 
     /* Set power on, sample rate 25 Hz, block data update enabled. */
     i2cDevice.WriteReg8(CTRL_1_ADDRESS, CTRL_1_DATA);
+}
+
+bool BarometerHandler::HasAvailablePressureMeasurement(const U8 statusReg) const
+{
+    const bool pressureDataAvailable{(statusReg & PRESS_NDA_MASK) ? true : false};
+    return pressureDataAvailable;
+}
+
+bool BarometerHandler::HasAvailableTemperatureMeasurement(const U8 statusReg) const
+{
+    const bool temperatureDataAvailable{(statusReg & TEMP_NDA_MASK) ? true : false};
+    return temperatureDataAvailable;
 }
