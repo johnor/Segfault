@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     /* Create default factory if compiling for target, else log reader factory. */
     try
     {
-        #ifdef _MSC_VER
+        #ifndef __arm__
             std::string logFileName{"logs/measurementslog_D2014-12-09_T18-49_180_degrees_rotation_and_back.txt"};
             if (argc > 1)
             {
