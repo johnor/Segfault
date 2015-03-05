@@ -5,26 +5,16 @@
 #ifndef MODEL_H_
 #define MODEL_H_
 
-#include <eigen/Eigen>
+#include "../headers/smart_pointer_typedefs.h"
 #include "../headers/numeric_typedefs.h"
+#include "../interfaces/measurement_visitor.h"
 
-class State;
-
-class Model
+class Model : public MeasurementVisitor
 {
 public:
     virtual ~Model() {}
-
-    virtual State& GetState() = 0;
-
-    virtual Eigen::VectorXf GetPredictedState() const = 0;
-
-    virtual Eigen::VectorXf GetInnovation() const = 0;
-
-    virtual Eigen::MatrixXf GetF() const = 0;
-    virtual Eigen::MatrixXf GetH() const = 0;
-    virtual Eigen::MatrixXf GetQ() const = 0;
-    virtual Eigen::MatrixXf GetR() const = 0;
+    virtual void TimeUpdate(const F32 dt) = 0;
+    virtual StatePtr GetState() const = 0;
 };
 
 #endif

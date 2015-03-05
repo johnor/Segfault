@@ -2,12 +2,11 @@
 #define SENSOR_APP_H
 
 #include "headers/smart_pointer_typedefs.h"
-#include "classes/filter/ekf_filter.h"
 
 class SensorApp
 {
 public:
-    SensorApp(IMUPtr imu, KalmanModelPtr model, ClockPtr clock);
+    SensorApp(IMUPtr imu, ModelPtr model, ClockPtr clock);
     ~SensorApp() = default;
     void Update();
 
@@ -17,9 +16,8 @@ private:
     SensorApp& operator=(const SensorApp&) = delete;
 
     IMUPtr imu;
-    KalmanModelPtr model;
+    ModelPtr model;
     ClockPtr clock;
-    EkfFilter filter;
 };
 
 #endif

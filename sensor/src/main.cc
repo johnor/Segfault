@@ -8,7 +8,6 @@
 #include "headers/smart_pointer_typedefs.h"
 
 #include "interfaces/imu.h"
-#include "interfaces/kalman_model.h"
 #include "classes/sensorhandlers/factories/log_reader_factory.h"
 #include "classes/sensorhandlers/factories/default_handler_factory.h"
 #include "classes/clock/softwareclock.h"
@@ -43,7 +42,7 @@ int main(int argc, char **argv)
         #endif
 
         IMUPtr imu{new AltIMU{factory}};
-        KalmanModelPtr model{new GyroInputModel};
+        ModelPtr model{new GyroInputModel};
         SensorApp sensorApp{std::move(imu), std::move(model), clock};
 
         asio::io_service ioService;

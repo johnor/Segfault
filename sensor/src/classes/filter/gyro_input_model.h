@@ -2,24 +2,18 @@
 #define GYRO_INPUT_MODEL_H_
 
 #include <eigen/Eigen>
-#include "../../interfaces/kalman_model.h"
+#include "../../headers/smart_pointer_typedefs.h"
+#include "../../interfaces/model.h"
 #include "quaternion_state.h"
 
-class GyroInputModel : public KalmanModel
+class GyroInputModel : public Model
 {
 public:
-    GyroInputModel();
+    GyroInputModel() = default;
     ~GyroInputModel() = default;
 
-    virtual State& GetState() override;
-
-    virtual Eigen::VectorXf GetPredictedState() const override;
-    virtual Eigen::VectorXf GetInnovation() const override;
-
-    virtual Eigen::MatrixXf GetF() const override;
-    virtual Eigen::MatrixXf GetH() const override;
-    virtual Eigen::MatrixXf GetQ() const override;
-    virtual Eigen::MatrixXf GetR() const override;
+    virtual StatePtr GetState() const override;
+    virtual void TimeUpdate(const F32 dt) override;
 
     virtual void Visit(const AccelerometerMeasurement& accMeas) override;
     virtual void Visit(const GyroscopeMeasurement& gyroMeas) override;
@@ -32,10 +26,9 @@ private:
     GyroInputModel(const GyroInputModel&) = delete;
     GyroInputModel& operator=(const GyroInputModel&) = delete;
 
-    Eigen::Matrix4f GetS(const Eigen::Vector3f& omega) const;
+    static Eigen::Matrix4f GetS(const Eigen::Vector3f& omega);
 
     QuaternionState state;
-    Eigen::Matrix4f F;
 };
 
 #endif

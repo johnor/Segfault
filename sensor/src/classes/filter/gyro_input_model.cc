@@ -3,78 +3,48 @@
 
 #include "gyro_input_model.h"
 
-GyroInputModel::GyroInputModel()
+StatePtr GyroInputModel::GetState() const
 {
+    return state.Clone();
 }
 
-State& GyroInputModel::GetState()
+void GyroInputModel::TimeUpdate(const F32 dt)
 {
-    return state;
-}
 
-Eigen::VectorXf GyroInputModel::GetPredictedState() const
-{
-    Eigen::VectorXf nextState{GetF() * state.GetX()};
-    nextState.normalize();
-
-    return nextState;
-}
-
-Eigen::VectorXf GyroInputModel::GetInnovation() const
-{
-    throw std::logic_error("The method or operation is not implemented.");
-}
-
-Eigen::MatrixXf GyroInputModel::GetF() const
-{
-    return F;
-}
-
-Eigen::MatrixXf GyroInputModel::GetH() const
-{
-    throw std::logic_error("The method or operation is not implemented.");
-}
-
-Eigen::MatrixXf GyroInputModel::GetQ() const
-{
-    throw std::logic_error("The method or operation is not implemented.");
-}
-
-Eigen::MatrixXf GyroInputModel::GetR() const
-{
-    throw std::logic_error("The method or operation is not implemented.");
 }
 
 void GyroInputModel::Visit(const AccelerometerMeasurement& accMeas)
 {
-    F = Eigen::Matrix4f::Identity();
+
 }
 
 void GyroInputModel::Visit(const GyroscopeMeasurement& gyroMeas)
 {
     const F32 microsecondsToSeconds{1e-6f};
-    const F32 dt = static_cast<F32>((gyroMeas.GetTimeStamp() - state.GetTimeStamp())) * microsecondsToSeconds;
-    const Eigen::Vector3f omega{gyroMeas.GetXValue(), gyroMeas.GetYValue(), gyroMeas.GetZValue()};
+    const U32 measurementTimeStamp{gyroMeas.GetTimeStamp()};
+    const F32 dt = static_cast<F32>((measurementTimeStamp - state.GetTimeStamp())) * microsecondsToSeconds;
 
-    F = Eigen::Matrix4f::Identity() + 0.5f * GetS(omega) * dt;
+    const Eigen::Vector3f omega{gyroMeas.GetXValue(), gyroMeas.GetYValue(), gyroMeas.GetZValue()};
+    const Eigen::Matrix4f F{Eigen::Matrix4f::Identity() + 0.5f * GetS(omega) * dt};
+
+    state.X = F * state.X;
+    state.X.normalize();
+    state.timeStamp = measurementTimeStamp;
 }
 
 void GyroInputModel::Visit(const CompassMeasurement& compassMeas)
 {
-    F = Eigen::Matrix4f::Identity();
 }
 
 void GyroInputModel::Visit(const PressureMeasurement& pressureMeas)
 {
-    F = Eigen::Matrix4f::Identity();
 }
 
 void GyroInputModel::Visit(const TemperatureMeasurement& tempMeas)
 {
-    F = Eigen::Matrix4f::Identity();
 }
 
-Eigen::Matrix4f GyroInputModel::GetS(const Eigen::Vector3f& omega) const
+Eigen::Matrix4f GyroInputModel::GetS(const Eigen::Vector3f& omega)
 {
     Eigen::Matrix4f result{Eigen::Matrix4f::Zero()};
 

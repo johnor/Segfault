@@ -1,49 +1,21 @@
 #include "quaternion_state.h"
 
 QuaternionState::QuaternionState()
-    : state{4, 1}
+    : X{4, 1}
 {
     /* Initialize a unit quaternion */
-    state(0) = 1.f;
-    state(1) = 0.f;
-    state(2) = 0.f;
-    state(3) = 0.f;
+    X(0) = 1.f;
+    X(1) = 0.f;
+    X(2) = 0.f;
+    X(3) = 0.f;
 }
 
-Eigen::Quaternionf QuaternionState::GetQuaternion() const
+Eigen::VectorXf QuaternionState::GetX() const
 {
-    return Eigen::Quaternionf{state(0), state(1), state(2), state(3)};
+    return X;
 }
 
-Eigen::Vector3f QuaternionState::GetEulerAngles() const
-{
-    const F32 radToDeg{180.f / 3.1415926f};
-    Eigen::Quaternionf quat{state(0), state(1), state(2), state(3)};
-    return quat.toRotationMatrix().eulerAngles(0, 1, 2) * radToDeg;
-}
-
-Eigen::Matrix3f QuaternionState::GetRotationMatrix() const
-{
-    Eigen::Quaternionf quat{state(0), state(1), state(2), state(3)};
-    return quat.toRotationMatrix();
-}
-
-const Eigen::VectorXf& QuaternionState::GetX() const
-{
-    return state;
-}
-
-Eigen::VectorXf& QuaternionState::GetX()
-{
-    return state;
-}
-
-const Eigen::MatrixXf& QuaternionState::GetP() const
-{
-    return P;
-}
-
-Eigen::MatrixXf& QuaternionState::GetP()
+Eigen::MatrixXf QuaternionState::GetP() const
 {
     return P;
 }
@@ -53,7 +25,26 @@ U32 QuaternionState::GetTimeStamp() const
     return timeStamp;
 }
 
-void QuaternionState::SetTimeStamp(const U32 timeStamp)
+Eigen::Quaternionf QuaternionState::GetQuaternion() const
 {
-    this->timeStamp = timeStamp;
+    return Eigen::Quaternionf{X(0), X(1), X(2), X(3)};
+}
+
+Eigen::Vector3f QuaternionState::GetEulerAngles() const
+{
+    const F32 radToDeg{180.f / 3.1415926f};
+    const Eigen::Quaternionf quat{X(0), X(1), X(2), X(3)};
+    return quat.toRotationMatrix().eulerAngles(0, 1, 2) * radToDeg;
+}
+
+Eigen::Matrix3f QuaternionState::GetRotationMatrix() const
+{
+    const Eigen::Quaternionf quat{X(0), X(1), X(2), X(3)};
+    return quat.toRotationMatrix();
+}
+
+StatePtr QuaternionState::Clone() const
+{
+    StatePtr result{new QuaternionState{*this}};
+    return result;
 }
