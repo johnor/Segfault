@@ -12,7 +12,7 @@ class Client : public QObject
 public:
     Client():
         m_host("localhost"),
-        m_port(55555)
+        m_port(5001)
     {
         QObject::connect(&m_tcpSocket, SIGNAL(connected()), this, SLOT(connected()));
         QObject::connect(&m_tcpSocket, SIGNAL(disconnected()), this, SLOT(disconnected()));
@@ -57,17 +57,36 @@ public slots:
 
     void reciveQuaternion()
     {
-        float data[NUM_VALUES];
-        const int quaternionSize = sizeof(data);
+        static bool recivedHeader = false;
+        static int headerData[2];
+        static float bodyData[100];
 
-        if (m_tcpSocket.bytesAvailable() < quaternionSize)
+        const int headerSize = sizeof(headerData);
+
+        if (!recivedHeader)
+        {
+            if (m_tcpSocket.bytesAvailable() < headerSize)
+                return;
+
+            m_tcpSocket.read((char*)headerData, headerSize);
+            recivedHeader = true;
+        }
+        const int bodySize = headerData[0];
+        const int messageType = headerData[1];
+
+        if (m_tcpSocket.bytesAvailable() < bodySize)
             return;
 
-        m_tcpSocket.read((char*)data, quaternionSize);
+        m_tcpSocket.read((char*)bodyData, bodySize);
+        recivedHeader = false;
 
-        QQuaternion quaternion(data[SCALAR], data[X], data[Y], data[Z]);
-
-        emit recivedQuaternion(quaternion);
+        switch (messageType)
+        {
+            case 3:
+                QQuaternion quaternion(bodyData[0], bodyData[1], bodyData[2], bodyData[3]);
+                emit recivedQuaternion(quaternion);
+                break;
+        }
     }
 
 signals:
@@ -85,7 +104,6 @@ private:
     QTimer m_reconnectTimer;
     QTcpSocket m_tcpSocket;
     QMatrix4x4 m_rotations;
-    enum QuaternionValue {SCALAR, X, Y, Z, NUM_VALUES};
 };
 
 #endif // CLIENT_H
