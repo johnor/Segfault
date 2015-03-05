@@ -22,7 +22,6 @@
 #include "sensor_app.h"
 
 //void PrintAndLogMeasurements(const MeasurementBatch& measurementBatch);
-void SendTest(ConnectionManager &connectionManager);
 
 int main(int argc, char **argv)
 {
@@ -53,8 +52,8 @@ int main(int argc, char **argv)
         std::function<void()> updateFunction{std::bind(&SensorApp::Update, &sensorApp)};
         Job updateJob{ioService, updateFunction, std::chrono::milliseconds{50}};
 
-        std::function<void()> sendTestFunction = std::bind(SendTest, std::ref(connectionManager));
-        Job testSendJob{ ioService, sendTestFunction, std::chrono::milliseconds{1000}};
+        std::function<void()> sendDataFunction = std::bind(&SensorApp::SendData, &sensorApp, std::ref(connectionManager));
+        Job testSendJob{ ioService, sendDataFunction, std::chrono::milliseconds{ 100 } };
 
         ioService.run();
     }
@@ -72,27 +71,6 @@ int main(int argc, char **argv)
     return 0;
 }
 
-
-void SendTest(ConnectionManager &connectionManager)
-{
-    Message msg;
-    msg.SetMsgType(1);
-    msg.SetBodyLength(3);
-    msg.EncodeHeader();
-    msg.WriteChar('H');
-    msg.WriteChar('e');
-    msg.WriteChar('j');
-    connectionManager.SendToAll(msg);
-
-    Message msg2;
-    msg2.SetMsgType(2);
-    msg2.SetBodyLength(sizeof(F32) * 3);
-    msg2.EncodeHeader();
-    msg2.WriteFloat(1.0f);
-    msg2.WriteFloat(10.0f);
-    msg2.WriteFloat(15.0f);
-    connectionManager.SendToAll(msg2);
-}
 /*
 void PrintAndLogMeasurements(const MeasurementBatch& measurementBatch)
 {
