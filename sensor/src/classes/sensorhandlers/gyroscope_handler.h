@@ -10,12 +10,10 @@
 #include "../../interfaces/sensorhandler.h"
 #include "../i2cdevice.h"
 
-class Clock;
-
 class GyroscopeHandler : public SensorHandler
 {
 public:
-    explicit GyroscopeHandler(const Clock& clock);
+    explicit GyroscopeHandler(ClockPtr clock);
     virtual ~GyroscopeHandler() {}
     virtual MeasurementBatch GetMeasurements() const override;
     virtual bool HasAvailableMeasurements() const override;
@@ -25,7 +23,7 @@ private:
     void SetupRegisters();
 
     I2CDevice i2cDevice;
-    const Clock& clock;
+    ClockPtr clock;
 };
 
 #endif

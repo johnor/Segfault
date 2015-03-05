@@ -35,10 +35,10 @@ int main(int argc, char **argv)
             {
                 logFileName = argv[1];
             }
-            SoftwareClock clock;
+            ClockPtr clock{new SoftwareClock};
             SensorHandlerFactoryPtr factory{new LogReaderFactory{clock, logFileName}};
         #else
-            HardwareClock clock;
+            ClockPtr clock{new HardwareClock};
             SensorHandlerFactoryPtr factory{new DefaultHandlerFactory{clock}};
         #endif
 

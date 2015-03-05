@@ -1,8 +1,8 @@
 #include "../log_reader_handler.h"
 #include "log_reader_factory.h"
 
-LogReaderFactory::LogReaderFactory(Clock& clock, const std::string& logFileName)
-    : clock(clock), logFileName(logFileName)
+LogReaderFactory::LogReaderFactory(ClockPtr clock, const std::string& logFileName)
+    : clock{clock}, logFileName(logFileName)
 {
 }
 

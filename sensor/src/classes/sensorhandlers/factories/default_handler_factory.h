@@ -10,12 +10,10 @@
 #include "../../../headers/smart_pointer_typedefs.h"
 #include "../../../interfaces/sensor_handler_factory.h"
 
-class Clock;
-
 class DefaultHandlerFactory : public SensorHandlerFactory
 {
 public:
-    explicit DefaultHandlerFactory(const Clock& clock);
+    explicit DefaultHandlerFactory(ClockPtr clock);
     virtual ~DefaultHandlerFactory() {};
     virtual SensorHandlerPtr MakeAccAndMagHandler() const override;
     virtual SensorHandlerPtr MakeGyroscopeHandler() const override;
@@ -24,7 +22,7 @@ private:
     DefaultHandlerFactory(const DefaultHandlerFactory&) = delete;
     DefaultHandlerFactory& operator=(const DefaultHandlerFactory&) = delete;
 
-    const Clock& clock;
+    ClockPtr clock;
 };
 
 #endif

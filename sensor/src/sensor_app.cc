@@ -9,8 +9,8 @@
 
 #include "sensor_app.h"
 
-SensorApp::SensorApp(IMUPtr imu, KalmanModelPtr model, Clock& clock)
-    : imu{std::move(imu)}, model{std::move(model)}, clock(clock)
+SensorApp::SensorApp(IMUPtr imu, KalmanModelPtr model, ClockPtr clock)
+    : imu{std::move(imu)}, model{std::move(model)}, clock{clock}
 {
 }
 
@@ -27,5 +27,5 @@ void SensorApp::Update()
         std::cout << "EulerAngles:\n" << state->GetEulerAngles() << std::endl;
     }
 
-    clock.IncreaseTimeStamp(1.f / 20.f);
+    clock->IncreaseTimeStamp(1.f / 20.f);
 }

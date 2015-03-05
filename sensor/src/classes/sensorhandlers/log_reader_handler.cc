@@ -8,8 +8,8 @@
 
 #include "log_reader_handler.h"
 
-LogReaderHandler::LogReaderHandler(const Clock& clock, const std::string& logFile)
-    : clock(clock)
+LogReaderHandler::LogReaderHandler(ClockPtr clock, const std::string& logFile)
+    : clock{clock}
 {
     std::ifstream logStream{logFile};
     if (!logStream)
@@ -46,7 +46,7 @@ MeasurementBatch LogReaderHandler::GetMeasurements() const
 
 bool LogReaderHandler::HasAvailableMeasurements() const
 {
-    const U32 currentTimeStamp{clock.GetTimeStampInMicroSecs()};
+    const U32 currentTimeStamp{clock->GetTimeStampInMicroSecs()};
     return (measurementList.front()->GetTimeStamp() < currentTimeStamp);
 }
 

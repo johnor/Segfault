@@ -10,8 +10,8 @@
 
 #include "default_handler_factory.h"
 
-DefaultHandlerFactory::DefaultHandlerFactory(const Clock& clock)
-    : clock(clock)
+DefaultHandlerFactory::DefaultHandlerFactory(ClockPtr clock)
+    : clock{clock}
 {
 }
 
