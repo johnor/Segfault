@@ -41,8 +41,10 @@ solution "Sensor"
    location "build"
    
    -- set working directory for visual studio projects
-   debugdir "." 
-   
+   if os.get() == "windows" then
+     debugdir "."
+   end
+
    -- prevent "warning LNK4098: defaultlib 'MSVCRTD' conflicts with use of other libs; use /NODEFAULTLIB:library"
    configuration { "vs*" }
       buildoptions { "/MDd" }
@@ -69,7 +71,9 @@ solution "Sensor"
          
       configuration "vs*"
          defines { "_WIN32_WINNT=0x0601" }
-         vpaths { ["*"] = "src" }
+         if os.get() == "windows" then
+            vpaths { ["*"] = "src" }
+         end
          
          buildoptions
          {
@@ -100,5 +104,7 @@ solution "Sensor"
       
       includedirs { "lib" }
       files { "lib/wiringPi/**.h", "lib/wiringPi/src-x86/**.c"}
-      vpaths { ["*"] = "lib/wiringPi" }
+      if os.get() == "windows" then
+         vpaths { ["*"] = "lib/wiringPi" }
+      end
 
