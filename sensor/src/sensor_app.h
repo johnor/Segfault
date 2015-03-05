@@ -9,6 +9,7 @@ public:
     SensorApp(IMUPtr imu, ModelPtr model, ClockPtr clock);
     ~SensorApp() = default;
     void Update();
+    void SendData(ConnectionManager &connectionManager);
 
     static const U16 serverPort{ 5001 };
 private:

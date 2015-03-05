@@ -6,6 +6,8 @@
 #include "interfaces/measurement.h"
 #include "interfaces/model.h"
 #include "interfaces/state.h"
+#include "server/connection_manager.h"
+#include "server/message.h"
 
 #include "sensor_app.h"
 
@@ -26,4 +28,18 @@ void SensorApp::Update()
     std::cout << "EulerAngles:\n" << model->GetState()->GetEulerAngles() << std::endl;
 
     clock->IncreaseTimeStamp(1.f / 20.f);
+}
+
+void SensorApp::SendData(ConnectionManager &connectionManager)
+{
+    const auto quaternion = model->GetState()->GetQuaternion();
+    Message msg;
+    msg.SetMsgType(3);
+    msg.SetBodyLength(sizeof(F32)* 4);
+    msg.EncodeHeader();
+    msg.WriteFloat(quaternion.w());
+    msg.WriteFloat(quaternion.x());
+    msg.WriteFloat(quaternion.y());
+    msg.WriteFloat(quaternion.z());
+    connectionManager.SendToAll(msg);
 }
