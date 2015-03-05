@@ -6,6 +6,7 @@
 #ifndef BAROMETER_HANDLER_H_
 #define BAROMETER_HANDLER_H_
 
+#include "../../headers/numeric_typedefs.h"
 #include "../../headers/smart_pointer_typedefs.h"
 #include "../../interfaces/sensorhandler.h"
 #include "../i2cdevice.h"
@@ -21,6 +22,8 @@ private:
     BarometerHandler(const BarometerHandler&) = delete;
     BarometerHandler& operator=(const BarometerHandler&) = delete;
     void SetupRegisters();
+    bool HasAvailablePressureMeasurement(const U8 statusReg) const;
+    bool HasAvailableTemperatureMeasurement(const U8 statusReg) const;
 
     I2CDevice i2cDevice;
     ClockPtr clock;
