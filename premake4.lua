@@ -40,71 +40,52 @@ solution "Sensor"
    platforms { "rpi", "native" }
    location "build"
    
+   includedirs { "lib", "lib/asio" }
+   
    -- set working directory for visual studio projects
    if os.get() == "windows" then
      debugdir "."
    end
+   
+   -- defines for asio
+   defines { "ASIO_STANDALONE" }
 
-   -- prevent "warning LNK4098: defaultlib 'MSVCRTD' conflicts with use of other libs; use /NODEFAULTLIB:library"
+   -- debug release config
+   configuration "Debug"
+      defines { "DEBUG" }
+      flags { "Symbols", "ExtraWarnings" }
+      targetdir "bin/debug"
+
+   configuration "Release"
+      defines { "NDEBUG" }
+      flags { "Optimize", "ExtraWarnings" }
+      targetdir "bin/release" 
+
+   -- specific compiler flags
    configuration { "vs*" }
-      buildoptions { "/MDd" }
+      -- remove warning from asio
+      defines { "_WIN32_WINNT=0x0601" }
+
+      buildoptions
+      {
+         -- prevent "warning LNK4098: defaultlib 'MSVCRTD' conflicts with use of other libs; use /NODEFAULTLIB:library"
+         "/MDd",
+         --'GetVersionExA': was declared deprecated
+         "/wd4996"
+      }
+
+   -- compiler flags
+   configuration { "gmake" }
+      buildoptions { "-std=c++0x" }
+
+   configuration { "gmake" , "rpi"}
+      buildoptions { "-mcpu=arm1176jzf-s -mthumb -mtune=arm1176jzf-s -mfpu=vfp -marm -march=armv6k -mfloat-abi=hard" }
+      
+   configuration { "rpi" }
+      libdirs { "lib/wiringPi/lib-rpi" }
    
-   project "SensorApp"
-      kind "ConsoleApp"
-      language "C++"
-      
-      files { "components/sensor/src/**.h", "components/sensor/src/**.cc"}
-      includedirs { "lib", "src" , "lib/asio" }
-      
-      -- defines for asio
-      defines { "ASIO_STANDALONE" }
-
-      configuration "Debug"
-         defines { "DEBUG" }
-         flags { "Symbols", "ExtraWarnings" }
-         targetdir "bin/debug"
-
-      configuration "Release"
-         defines { "NDEBUG" }
-         flags { "Optimize", "ExtraWarnings" }
-         targetdir "bin/release" 
-         
-      configuration "vs*"
-         defines { "_WIN32_WINNT=0x0601" }
-         if os.get() == "windows" then
-            vpaths { ["*"] = "components/sensor/src" }
-         end
-         
-         buildoptions
-         {
-            --'GetVersionExA': was declared deprecated
-            "/wd4996"
-         }
+    dofile "components/sensor/sensor_app.lua"
+    dofile "components/sensor/sensor_lib.lua"
+    dofile "lib/wiringPi/wiringPi.lua"
    
-      -- compiler flags
-      configuration { "gmake" }
-        buildoptions { "-std=c++0x" }
-
-      configuration { "gmake" , "rpi"}
-         buildoptions { "-mcpu=arm1176jzf-s -mthumb -mtune=arm1176jzf-s -mfpu=vfp -marm -march=armv6k -mfloat-abi=hard" }
-      
-      -- Link wiringPi
-      configuration { "not rpi" } 
-         links { "wiringPi-x86" }
-
-      configuration { "rpi" }
-         libdirs { "lib/wiringPi/lib-rpi" }
-         links { "pthread", "wiringPi" }
-   
-   -- wiringRpi for x86
-   project "wiringPi-x86"
-      kind "StaticLib"
-      language "C"
-      targetdir "build/libs"
-      
-      includedirs { "lib" }
-      files { "lib/wiringPi/**.h", "lib/wiringPi/src-x86/**.c"}
-      if os.get() == "windows" then
-         vpaths { ["*"] = "lib/wiringPi" }
-      end
 
