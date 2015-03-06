@@ -1,6 +1,0 @@
-#ifndef AVRCOMMONDEF_H_
-#define AVRCOMMONDEF_H_
-
-#define AVR_SLAVE_ADDRESS (0x04)
-
-#endif /* AVRCOMMONDEF_H_ */
