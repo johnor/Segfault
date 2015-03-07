@@ -53,7 +53,7 @@ solution "Sensor"
       kind "ConsoleApp"
       language "C++"
       
-      files { "src/**.h", "src/**.cc"}
+      files { "components/sensor/src/**.h", "components/sensor/src/**.cc"}
       includedirs { "lib", "src" , "lib/asio" }
       
       -- defines for asio
@@ -72,7 +72,7 @@ solution "Sensor"
       configuration "vs*"
          defines { "_WIN32_WINNT=0x0601" }
          if os.get() == "windows" then
-            vpaths { ["*"] = "src" }
+            vpaths { ["*"] = "components/sensor/src" }
          end
          
          buildoptions

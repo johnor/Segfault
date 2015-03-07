@@ -8,7 +8,7 @@
 
 #include "../../headers/smart_pointer_typedefs.h"
 #include "../../interfaces/sensorhandler.h"
-#include "classes/i2cdevice.h"
+#include "../../classes/i2cdevice.h"
 
 class AccAndMagHandler : public SensorHandler
 {

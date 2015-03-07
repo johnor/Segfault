@@ -1,0 +1,8 @@
+build
+bin
+*.sdf
+*.sln
+*.suo
+Makefile
+/*.txt
+.idea
