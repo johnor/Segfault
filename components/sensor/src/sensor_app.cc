@@ -6,8 +6,9 @@
 #include "interfaces/measurement.h"
 #include "interfaces/model.h"
 #include "interfaces/state.h"
-#include "server/connection_manager.h"
-#include "server/message.h"
+
+#include "components/server/src/connection_manager.h"
+#include "components/server/src/message.h"
 
 #include "sensor_app.h"
 

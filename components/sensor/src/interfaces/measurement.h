@@ -8,7 +8,7 @@
 #ifndef MEASUREMENT_H_
 #define MEASUREMENT_H_
 
-#include "../headers/numeric_typedefs.h"
+#include "components/common/src/numeric_typedefs.h"
 #include <string>
 
 class MeasurementVisitor;

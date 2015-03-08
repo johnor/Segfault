@@ -1,4 +1,4 @@
-project "SensorLib"
+project "ServerLib"
    configuration {}
 
    kind "StaticLib"
@@ -10,12 +10,8 @@ project "SensorLib"
    links { "Common" }
 
    if os.get() == "windows" then
-      vpaths { ["*"] = "components/sensor/src" }
+      vpaths { ["*"] = "components/server/src" }
    end
 
-   -- Link wiringPi
-   configuration { "not rpi" }
-      links { "wiringPi-x86" }
-
    configuration { "rpi" }
-      links { "pthread", "wiringPi" }
+      links { "pthread" }

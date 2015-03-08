@@ -2,7 +2,7 @@
 #include "client.h"
 #include "message.h"
 
-#include "../classes/logger.h"
+#include "components/common/src/logger.h"
 
 void ConnectionManager::Join(ClientPtr client)
 {

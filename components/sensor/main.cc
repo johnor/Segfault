@@ -15,8 +15,8 @@
 #include "classes/filter/gyro_input_model.h"
 #include "classes/alt_imu.h"
 
-#include "server/server.h"
-#include "server/job.h"
+#include "server/src/server.h"
+#include "server/src/job.h"
 
 #include "sensor_app.h"
 

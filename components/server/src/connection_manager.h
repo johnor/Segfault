@@ -1,7 +1,8 @@
 #ifndef CONNECTION_MANAGER_H_
 #define CONNECTION_MANAGER_H_
 
-#include "../headers/smart_pointer_typedefs.h"
+#include "components/common/src/numeric_typedefs.h"
+#include "components/sensor/src/headers/smart_pointer_typedefs.h"
 
 #include <set>
 

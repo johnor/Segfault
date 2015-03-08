@@ -1,7 +1,7 @@
 #ifndef CLOCK_H_
 #define CLOCK_H_
 
-#include "../headers/numeric_typedefs.h"
+#include "components/common/src/numeric_typedefs.h"
 
 class Clock
 {

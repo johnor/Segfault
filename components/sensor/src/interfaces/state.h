@@ -2,7 +2,7 @@
 #define STATE_H_
 
 #include <eigen/Eigen>
-#include "../headers/numeric_typedefs.h"
+#include "components/common/src/numeric_typedefs.h"
 #include "../headers/smart_pointer_typedefs.h"
 
 class State

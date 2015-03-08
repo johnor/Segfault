@@ -2,17 +2,17 @@
 function newplatform(plf)
     local name = plf.name
     local description = plf.description
- 
+
     -- Register new platform
     premake.platforms[name] = {
         cfgsuffix = "_"..name,
         iscrosscompiler = true
     }
- 
+
     -- Allow use of new platform in --platfroms
     table.insert(premake.option.list["platform"].allowed, { name, description })
     table.insert(premake.fields.platforms.allowed, name)
- 
+
     -- Add compiler support
     -- gcc
     premake.gcc.platforms[name] = plf.gcc
@@ -35,18 +35,19 @@ if _ACTION == 'clean' then
     os.rmdir('./bin')
 end
 
+
 solution "Sensor"
    configurations { "Debug", "Release" }
    platforms { "rpi", "native" }
    location "build"
-   
-   includedirs { "lib", "lib/asio" }
-   
+
+   includedirs { "lib", "lib/asio", ".", "components" }
+
    -- set working directory for visual studio projects
    if os.get() == "windows" then
      debugdir "."
    end
-   
+
    -- defines for asio
    defines { "ASIO_STANDALONE" }
 
@@ -59,7 +60,7 @@ solution "Sensor"
    configuration "Release"
       defines { "NDEBUG" }
       flags { "Optimize", "ExtraWarnings" }
-      targetdir "bin/release" 
+      targetdir "bin/release"
 
    -- specific compiler flags
    configuration { "vs*" }
@@ -80,12 +81,16 @@ solution "Sensor"
 
    configuration { "gmake" , "rpi"}
       buildoptions { "-mcpu=arm1176jzf-s -mthumb -mtune=arm1176jzf-s -mfpu=vfp -marm -march=armv6k -mfloat-abi=hard" }
-      
+
    configuration { "rpi" }
       libdirs { "lib/wiringPi/lib-rpi" }
-   
+
     dofile "components/sensor/sensor_app.lua"
     dofile "components/sensor/sensor_lib.lua"
+
+    dofile "components/common/common.lua"
+
+    dofile "components/server/server_lib.lua"
+
     dofile "lib/wiringPi/wiringPi.lua"
-   
 

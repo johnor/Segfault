@@ -6,7 +6,7 @@
 #ifndef BAROMETER_HANDLER_H_
 #define BAROMETER_HANDLER_H_
 
-#include "../../headers/numeric_typedefs.h"
+#include "components/common/src/numeric_typedefs.h"
 #include "../../headers/smart_pointer_typedefs.h"
 #include "../../interfaces/sensorhandler.h"
 #include "../i2cdevice.h"

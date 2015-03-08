@@ -5,7 +5,7 @@
 #include <sstream>
 #include <string>
 
-#include "../headers/smart_pointer_typedefs.h"
+#include "sensor/src/headers/smart_pointer_typedefs.h"
 
 enum class LogLevel
 {

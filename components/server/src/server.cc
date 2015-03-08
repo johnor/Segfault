@@ -1,5 +1,5 @@
 #include "server.h"
-#include "../classes/logger.h"
+#include "common/src/logger.h"
 
 Server::Server(asio::io_service& io_service, const U16 port) : acceptor(io_service), socket(io_service)
 {

@@ -2,7 +2,7 @@
 #include "wiringPi/wiringPiI2C.h"
 
 #include "../headers/exceptions.h"
-#include "logger.h"
+#include "common/src/logger.h"
 
 #include "i2cdevice.h"
 
