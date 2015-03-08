@@ -3,7 +3,7 @@
 
 #include <chrono>
 #include "components/common/src/numeric_typedefs.h"
-#include "../../interfaces/clock.h"
+#include "interfaces/clock.h"
 
 class HardwareClock : public Clock
 {

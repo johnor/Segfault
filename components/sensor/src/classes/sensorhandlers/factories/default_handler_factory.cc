@@ -4,9 +4,9 @@
 * The factory is intended to be used by the IMU-class for dependency injection.
 */
 
-#include "../acc_and_mag_handler.h"
-#include "../gyroscope_handler.h"
-#include "../barometer_handler.h"
+#include "../acc_and_mag_handler/acc_and_mag_handler.h"
+#include "../gyroscope_handler/gyroscope_handler.h"
+#include "../barometer_handler/barometer_handler.h"
 
 #include "default_handler_factory.h"
 

@@ -1,7 +1,7 @@
 #include <sstream>
 #include "wiringPi/wiringPiI2C.h"
 
-#include "../headers/exceptions.h"
+#include "headers/exceptions.h"
 #include "common/src/logger.h"
 
 #include "i2cdevice.h"

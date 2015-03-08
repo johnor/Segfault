@@ -2,8 +2,8 @@
 #define GYRO_INPUT_MODEL_H_
 
 #include <eigen/Eigen>
-#include "../../headers/smart_pointer_typedefs.h"
-#include "../../interfaces/model.h"
+#include "headers/smart_pointer_typedefs.h"
+#include "interfaces/model.h"
 #include "quaternion_state.h"
 
 class GyroInputModel : public Model

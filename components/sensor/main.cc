@@ -13,7 +13,7 @@
 #include "classes/clock/softwareclock.h"
 #include "classes/clock/hardwareclock.h"
 #include "classes/filter/gyro_input_model.h"
-#include "classes/alt_imu.h"
+#include "classes/imu/alt_imu.h"
 
 #include "server/src/server.h"
 #include "server/src/job.h"

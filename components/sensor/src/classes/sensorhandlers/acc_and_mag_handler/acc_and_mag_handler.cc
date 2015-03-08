@@ -25,9 +25,9 @@
 *
 */
 
-#include "../../headers/exceptions.h"
-#include "../../interfaces/clock.h"
-#include "../measurements.h"
+#include "headers/exceptions.h"
+#include "interfaces/clock.h"
+#include "classes/measurements/measurements.h"
 
 #include "acc_and_mag_handler.h"
 

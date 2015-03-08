@@ -5,7 +5,7 @@
 #include <sstream>
 #include <iomanip>
 
-#include "../interfaces/measurement_visitor.h"
+#include "interfaces/measurement_visitor.h"
 
 #include "measurements.h"
 

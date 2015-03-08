@@ -3,8 +3,8 @@
 * the project. It uses an I2CHandler factory to initialize its I2CHandlers.
 */
 
-#include "../interfaces/sensor_handler_factory.h"
-#include "../interfaces/measurement.h"
+#include "interfaces/sensor_handler_factory.h"
+#include "interfaces/measurement.h"
 #include "common/src/logger.h"
 
 #include "alt_imu.h"

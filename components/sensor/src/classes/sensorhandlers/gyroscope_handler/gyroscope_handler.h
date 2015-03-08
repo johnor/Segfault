@@ -6,9 +6,9 @@
 #ifndef GYROSCOPE_HANDLER_H_
 #define GYROSCOPE_HANDLER_H_
 
-#include "../../headers/smart_pointer_typedefs.h"
-#include "../../interfaces/sensorhandler.h"
-#include "../i2cdevice.h"
+#include "headers/smart_pointer_typedefs.h"
+#include "interfaces/sensorhandler.h"
+#include "../i2cdevice/i2cdevice.h"
 
 class GyroscopeHandler : public SensorHandler
 {

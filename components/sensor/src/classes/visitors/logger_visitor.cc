@@ -1,4 +1,4 @@
-#include "../../classes/measurements.h"
+#include "classes/measurements/measurements.h"
 #include "logger_visitor.h"
 
 LoggerVisitor::LoggerVisitor(const std::string& logFile)

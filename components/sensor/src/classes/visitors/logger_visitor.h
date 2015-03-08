@@ -4,7 +4,7 @@
 #include <fstream>
 #include <string>
 
-#include "../../interfaces/measurement_visitor.h"
+#include "interfaces/measurement_visitor.h"
 
 class AccelerometerMeasurement;
 class GyroscopeMeasurement;

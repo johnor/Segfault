@@ -15,9 +15,9 @@
 * Temperature data is scaled to degrees Celcius.
 */
 
-#include "../../headers/exceptions.h"
-#include "../../interfaces/clock.h"
-#include "../measurements.h"
+#include "headers/exceptions.h"
+#include "interfaces/clock.h"
+#include "classes/measurements/measurements.h"
 
 #include "barometer_handler.h"
 

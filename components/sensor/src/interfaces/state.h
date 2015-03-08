@@ -3,7 +3,7 @@
 
 #include <eigen/Eigen>
 #include "components/common/src/numeric_typedefs.h"
-#include "../headers/smart_pointer_typedefs.h"
+#include "headers/smart_pointer_typedefs.h"
 
 class State
 {

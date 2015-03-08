@@ -31,7 +31,7 @@ void SensorApp::Update()
     clock->IncreaseTimeStamp(1.f / 20.f);
 }
 
-void SensorApp::SendData(ConnectionManager &connectionManager)
+void SensorApp::SendData(ConnectionManager& connectionManager)
 {
     const auto quaternion = model->GetState()->GetQuaternion();
     Message msg;

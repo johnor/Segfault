@@ -7,8 +7,8 @@
 #ifndef DEFAULT_HANDLER_FACTORY_H_
 #define DEFAULT_HANDLER_FACTORY_H_
 
-#include "../../../headers/smart_pointer_typedefs.h"
-#include "../../../interfaces/sensor_handler_factory.h"
+#include "headers/smart_pointer_typedefs.h"
+#include "interfaces/sensor_handler_factory.h"
 
 class DefaultHandlerFactory : public SensorHandlerFactory
 {

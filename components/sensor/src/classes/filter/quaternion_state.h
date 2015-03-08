@@ -2,8 +2,8 @@
 #define QUATERNION_STATE_H_
 
 #include <eigen/Eigen>
-#include "../../headers/smart_pointer_typedefs.h"
-#include  "../../interfaces/state.h"
+#include "headers/smart_pointer_typedefs.h"
+#include "interfaces/state.h"
 
 class QuaternionState : public State
 {

@@ -6,9 +6,9 @@
 #ifndef ACC_AND_MAG_HANDLER_H_
 #define ACC_AND_MAG_HANDLER_H_
 
-#include "../../headers/smart_pointer_typedefs.h"
-#include "../../interfaces/sensorhandler.h"
-#include "../../classes/i2cdevice.h"
+#include "headers/smart_pointer_typedefs.h"
+#include "interfaces/sensorhandler.h"
+#include "../i2cdevice/i2cdevice.h"
 
 class AccAndMagHandler : public SensorHandler
 {

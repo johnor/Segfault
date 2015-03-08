@@ -7,7 +7,7 @@
 #ifndef SENSOR_HANDLER_FACTORY_H_
 #define SENSOR_HANDLER_FACTORY_H_
 
-#include "../headers/smart_pointer_typedefs.h"
+#include "headers/smart_pointer_typedefs.h"
 
 class SensorHandlerFactory
 {

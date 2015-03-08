@@ -6,7 +6,7 @@
 #define MEASUREMENTS_H_
 
 #include "components/common/src/numeric_typedefs.h"
-#include "../interfaces/measurement.h"
+#include "interfaces/measurement.h"
 
 class MeasurementBase : public Measurement
 {

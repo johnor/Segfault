@@ -1,4 +1,4 @@
-#include "../log_reader_handler.h"
+#include "../log_reader/log_reader.h"
 #include "log_reader_factory.h"
 
 LogReaderFactory::LogReaderFactory(ClockPtr clock, const std::string& logFileName)
@@ -8,7 +8,7 @@ LogReaderFactory::LogReaderFactory(ClockPtr clock, const std::string& logFileNam
 
 SensorHandlerPtr LogReaderFactory::MakeAccAndMagHandler() const
 {
-    return SensorHandlerPtr{new LogReaderHandler{clock, logFileName}};
+    return SensorHandlerPtr{new LogReader{clock, logFileName}};
 }
 
 SensorHandlerPtr LogReaderFactory::MakeGyroscopeHandler() const

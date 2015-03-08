@@ -2,7 +2,7 @@
 #define SOFTWARE_CLOCK_H_
 
 #include "common/src/numeric_typedefs.h"
-#include "../../interfaces/clock.h"
+#include "interfaces/clock.h"
 
 class SoftwareClock : public Clock
 {

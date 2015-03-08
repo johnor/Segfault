@@ -19,9 +19,9 @@
 * Output is scaled to radians per second.
 */
 
-#include "../../headers/exceptions.h"
-#include "../../interfaces/clock.h"
-#include "../measurements.h"
+#include "headers/exceptions.h"
+#include "interfaces/clock.h"
+#include "classes/measurements/measurements.h"
 
 #include "gyroscope_handler.h"
 

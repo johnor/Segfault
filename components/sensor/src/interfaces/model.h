@@ -5,9 +5,9 @@
 #ifndef MODEL_H_
 #define MODEL_H_
 
-#include "../headers/smart_pointer_typedefs.h"
+#include "headers/smart_pointer_typedefs.h"
 #include "components/common/src/numeric_typedefs.h"
-#include "../interfaces/measurement_visitor.h"
+#include "interfaces/measurement_visitor.h"
 
 class Model : public MeasurementVisitor
 {

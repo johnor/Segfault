@@ -2,13 +2,13 @@
 #include <fstream>
 #include <sstream>
 
-#include "../../headers/exceptions.h"
-#include "../../interfaces/clock.h"
-#include "../measurements.h"
+#include "headers/exceptions.h"
+#include "interfaces/clock.h"
+#include "classes/measurements/measurements.h"
 
-#include "log_reader_handler.h"
+#include "log_reader.h"
 
-LogReaderHandler::LogReaderHandler(ClockPtr clock, const std::string& logFile)
+LogReader::LogReader(ClockPtr clock, const std::string& logFile)
     : clock{clock}
 {
     std::ifstream logStream{logFile};
@@ -24,7 +24,7 @@ LogReaderHandler::LogReaderHandler(ClockPtr clock, const std::string& logFile)
     }
 }
 
-MeasurementBatch LogReaderHandler::GetMeasurements() const
+MeasurementBatch LogReader::GetMeasurements() const
 {
     MeasurementBatch currentMeasurements;
 
@@ -44,13 +44,13 @@ MeasurementBatch LogReaderHandler::GetMeasurements() const
     return currentMeasurements;
 }
 
-bool LogReaderHandler::HasAvailableMeasurements() const
+bool LogReader::HasAvailableMeasurements() const
 {
     const U32 currentTimeStamp{clock->GetTimeStampInMicroSecs()};
     return (measurementList.front()->GetTimeStamp() < currentTimeStamp);
 }
 
-MeasurementPtr LogReaderHandler::CreateMeasurement(const std::string &inputLine) const
+MeasurementPtr LogReader::CreateMeasurement(const std::string &inputLine) const
 {
     const std::vector<std::string> tokenizedString{SplitString(inputLine, ',')};
     const U32 timeStamp{std::stoul(tokenizedString.at(0))};
@@ -93,7 +93,7 @@ MeasurementPtr LogReaderHandler::CreateMeasurement(const std::string &inputLine)
     }
 }
 
-std::vector<std::string> LogReaderHandler::SplitString(const std::string& input, const char delim) const
+std::vector<std::string> LogReader::SplitString(const std::string& input, const char delim) const
 {
     std::vector<std::string> elems;
     std::string item;

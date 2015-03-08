@@ -1,5 +1,5 @@
 #include <stdexcept>
-#include "../measurements.h"
+#include "classes/measurements/measurements.h"
 
 #include "gyro_input_model.h"
 
