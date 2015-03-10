@@ -85,12 +85,6 @@ solution "Sensor"
    configuration { "rpi" }
       libdirs { "lib/wiringPi/lib-rpi" }
 
-    dofile "components/sensor/sensor_app.lua"
-    dofile "components/sensor/sensor_lib.lua"
-
-    dofile "components/common/common.lua"
-
-    dofile "components/server/server_lib.lua"
-
-    dofile "lib/wiringPi/wiringPi.lua"
+    dofile "components/components.lua"
+    dofile "lib/lib.lua"
 
