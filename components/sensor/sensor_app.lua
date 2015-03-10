@@ -13,7 +13,7 @@ project "SensorApp"
       vpaths { ["*"] = "components/sensor/" }
    end
 
-   -- Link wiringPi, remove and replace with real code
+   -- Link wiringPi
    configuration { "not rpi" }
       links { "wiringPi-x86" }
 
