@@ -12,6 +12,3 @@ project "ServerLib"
    if os.get() == "windows" then
       vpaths { ["*"] = "components/server/src" }
    end
-
-   configuration { "rpi" }
-      links { "pthread" }
