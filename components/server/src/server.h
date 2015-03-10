@@ -3,8 +3,6 @@
 
 #include <asio.hpp>
 
-#include "message.h"
-#include "client.h"
 #include "connection_manager.h"
 
 using asio::ip::tcp;

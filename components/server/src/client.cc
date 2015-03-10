@@ -1,5 +1,6 @@
 #include "client.h"
-#include "components/common/src/logger.h"
+#include "connection_manager.h"
+#include "common/src/logger.h"
 
 ClientSession::ClientSession(tcp::socket socket, ConnectionManager& connectionManager)
 : socket{std::move(socket)}, connectionManager(connectionManager)

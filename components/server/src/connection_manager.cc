@@ -4,14 +4,14 @@
 
 #include "components/common/src/logger.h"
 
-void ConnectionManager::Join(ClientPtr client)
+void ConnectionManager::Join(Client::Ptr client)
 {
     Logger::Log(LogLevel::Info) << "ConnectionManager::Join()";
     connectedClients.insert(client);
     client->Start();
 }
 
-void ConnectionManager::Leave(ClientPtr client)
+void ConnectionManager::Leave(Client::Ptr client)
 {
     Logger::Log(LogLevel::Info) << "ConnectionManager::Leave()";
     connectedClients.erase(client);

@@ -4,9 +4,10 @@
 #include <asio.hpp>
 
 #include "message.h"
-#include "connection_manager.h"
 
 using asio::ip::tcp;
+
+class ConnectionManager;
 
 class Client
 {
@@ -16,6 +17,8 @@ public:
     virtual void Send(const Message& msg) = 0;
     virtual void Start() = 0;
     virtual void Stop() = 0;
+
+    typedef std::shared_ptr<Client> Ptr;
 };
 
 

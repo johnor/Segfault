@@ -1,4 +1,5 @@
 #include "job.h"
+
 #include <chrono>
 #include <iostream>
 
@@ -12,6 +13,7 @@ void Job::Timeout()
 {
     timer.expires_from_now(timerDelay);
     callbackFunction();
+
     timer.async_wait([this](std::error_code ec)
     {
         Timeout();

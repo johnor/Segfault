@@ -17,7 +17,6 @@ class State;
 class Model;
 class LogStream;
 class Clock;
-class Client;
 
 typedef std::unique_ptr<Measurement> MeasurementPtr;
 typedef std::unique_ptr<SensorHandler> SensorHandlerPtr;
@@ -30,6 +29,5 @@ typedef std::unique_ptr<LogStream> LogStreamPtr;
 typedef std::vector<MeasurementPtr> MeasurementBatch;
 
 typedef std::shared_ptr<Clock> ClockPtr;
-typedef std::shared_ptr<Client> ClientPtr;
 
 #endif
