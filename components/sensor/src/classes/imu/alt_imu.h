@@ -7,7 +7,7 @@
 #define ALT_IMU_H_
 
 #include "interfaces/imu.h"
-#include "interfaces/sensorhandler.h"
+#include "interfaces/sensor_handler.h"
 
 class AltIMU : public IMU
 {

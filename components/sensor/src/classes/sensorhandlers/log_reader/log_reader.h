@@ -3,7 +3,7 @@
 
 #include <string>
 #include "headers/smart_pointer_typedefs.h"
-#include "interfaces/sensorhandler.h"
+#include "interfaces/sensor_handler.h"
 #include "interfaces/measurement.h"
 
 class LogReader : public SensorHandler

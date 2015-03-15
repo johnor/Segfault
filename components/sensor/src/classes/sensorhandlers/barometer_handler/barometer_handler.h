@@ -8,7 +8,7 @@
 
 #include "components/common/src/numeric_typedefs.h"
 #include "headers/smart_pointer_typedefs.h"
-#include "interfaces/sensorhandler.h"
+#include "interfaces/sensor_handler.h"
 #include "../i2cdevice/i2cdevice.h"
 
 class BarometerHandler : public SensorHandler

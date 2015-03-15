@@ -1,6 +1,6 @@
 #include <utility>
 
-#include "interfaces/sensorhandler.h"
+#include "interfaces/sensor_handler.h"
 #include "classes/measurements/measurements.h"
 #include "log_reader_imu.h"
 
