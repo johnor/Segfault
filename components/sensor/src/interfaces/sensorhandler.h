@@ -1,9 +1,3 @@
-/*
-* Interface for I2CHandler.
-* An I2CHandler can communicate with a sensor over
-* the I2C bus and return collected measurements.
-*/
-
 #ifndef SENSOR_HANDLER_H_
 #define SENSOR_HANDLER_H_
 
@@ -14,7 +8,6 @@ class SensorHandler
 public:
     virtual ~SensorHandler() {}
     virtual MeasurementBatch GetMeasurements() const = 0;
-    virtual bool HasAvailableMeasurements() const = 0;
 };
 
 #endif

@@ -12,7 +12,7 @@
 class AltIMU : public IMU
 {
 public:
-    explicit AltIMU(const SensorHandlerFactoryPtr& handlerFactory);
+    explicit AltIMU(SensorHandlerFactoryPtr handlerFactory);
     virtual ~AltIMU() {};
     virtual MeasurementBatch GetNextMeasurementBatch() const override;
 private:

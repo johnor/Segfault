@@ -51,29 +51,18 @@ MeasurementBatch BarometerHandler::GetMeasurements() const
 {
     MeasurementBatch measurements;
     const U8 statusReg{i2cDevice.Read8BitReg(STATUS_ADDRESS)};
-    const U32 timeStamp{clock->GetTimeStampInMicroSecs()};
 
     if (HasAvailablePressureMeasurement(statusReg))
     {
-        const F32 pressureMeasurement{i2cDevice.ReadThree8BitRegsToFloat(PRESS_OUT_LOW_ADDRESS, scaleToHectoPascals)};
-        measurements.push_back(MeasurementPtr{new PressureMeasurement{timeStamp, pressureMeasurement}});
+        measurements.push_back(GetNextPressureMeasurement());
     }
 
     if (HasAvailableTemperatureMeasurement(statusReg))
     {
-        const F32 tempMeasurement{i2cDevice.ReadTwo8BitRegsToFloat(TEMP_OUT_LOW_ADDRESS, tempScaleFactor) + tempOffsetFactor};
-        measurements.push_back(MeasurementPtr{new TemperatureMeasurement{timeStamp, tempMeasurement}});
+        measurements.push_back(GetNextTemperatureMeasurement());
     }
 
     return measurements;
-}
-
-bool BarometerHandler::HasAvailableMeasurements() const
-{
-    const U8 statusReg{i2cDevice.Read8BitReg(STATUS_ADDRESS)};
-
-    return HasAvailablePressureMeasurement(statusReg) ||
-           HasAvailableTemperatureMeasurement(statusReg);
 }
 
 void BarometerHandler::SetupRegisters()
@@ -98,4 +87,18 @@ bool BarometerHandler::HasAvailableTemperatureMeasurement(const U8 statusReg) co
 {
     const bool temperatureDataAvailable{(statusReg & TEMP_NDA_MASK) ? true : false};
     return temperatureDataAvailable;
+}
+
+MeasurementPtr BarometerHandler::GetNextPressureMeasurement() const
+{
+    const U32 timeStamp{clock->GetTimeStampInMicroSecs()};
+    const F32 pressureMeasurement{i2cDevice.ReadThree8BitRegsToFloat(PRESS_OUT_LOW_ADDRESS, scaleToHectoPascals)};
+    return MeasurementPtr{new PressureMeasurement{timeStamp, pressureMeasurement}};
+}
+
+MeasurementPtr BarometerHandler::GetNextTemperatureMeasurement() const
+{
+    const U32 timeStamp{clock->GetTimeStampInMicroSecs()};
+    const F32 tempMeasurement{i2cDevice.ReadTwo8BitRegsToFloat(TEMP_OUT_LOW_ADDRESS, tempScaleFactor) + tempOffsetFactor};
+    return MeasurementPtr{new TemperatureMeasurement{timeStamp, tempMeasurement}};
 }

@@ -12,10 +12,11 @@ public:
     LogReader(ClockPtr clock, const std::string& logFile);
     virtual ~LogReader() {}
     virtual MeasurementBatch GetMeasurements() const override;
-    virtual bool HasAvailableMeasurements() const override;
 private:
     LogReader(const LogReader&) = delete;
     LogReader& operator=(const LogReader&) = delete;
+
+    bool HasNewMeasurements() const;
 
     MeasurementPtr CreateMeasurement(const std::string& inputLine) const;
     std::vector<std::string> SplitString(const std::string& input, const char delim) const;

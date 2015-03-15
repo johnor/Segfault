@@ -30,7 +30,7 @@ MeasurementBatch LogReader::GetMeasurements() const
 
     while (!measurementList.empty())
     {
-        if (HasAvailableMeasurements())
+        if (HasNewMeasurements())
         {
             currentMeasurements.push_back(std::move(measurementList.front()));
             measurementList.erase(measurementList.begin());
@@ -44,7 +44,7 @@ MeasurementBatch LogReader::GetMeasurements() const
     return currentMeasurements;
 }
 
-bool LogReader::HasAvailableMeasurements() const
+bool LogReader::HasNewMeasurements() const
 {
     const U32 currentTimeStamp{clock->GetTimeStampInMicroSecs()};
     return (measurementList.front()->GetTimeStamp() < currentTimeStamp);

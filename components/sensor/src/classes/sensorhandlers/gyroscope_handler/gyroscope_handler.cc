@@ -57,25 +57,12 @@ MeasurementBatch GyroscopeHandler::GetMeasurements() const
 {
     MeasurementBatch measurements;
 
-    if (HasAvailableMeasurements())
+    if (HasNewGyroscopeMeasurement())
     {
-        const F32 xValue{i2cDevice.ReadTwo8BitRegsToFloat(X_OUT_LOW_ADDRESS, scaleToRadiansPerSecond)};
-        const F32 yValue{i2cDevice.ReadTwo8BitRegsToFloat(Y_OUT_LOW_ADDRESS, scaleToRadiansPerSecond)};
-        const F32 zValue{i2cDevice.ReadTwo8BitRegsToFloat(Z_OUT_LOW_ADDRESS, scaleToRadiansPerSecond)};
-        const U32 timeStamp{clock->GetTimeStampInMicroSecs()};
-
-        measurements.push_back(MeasurementPtr{new GyroscopeMeasurement{timeStamp, xValue, yValue, zValue}});
+        measurements.push_back(GetNextGyroscopeMeasurement());
     }
 
     return measurements;
-}
-
-bool GyroscopeHandler::HasAvailableMeasurements() const
-{
-    const U8 statusReg{i2cDevice.Read8BitReg(STATUS_ADDRESS)};
-    const bool newDataAvailable{(statusReg & NDA_BITMASK) ? true : false};
-
-    return newDataAvailable;
 }
 
 void GyroscopeHandler::SetupRegisters()
@@ -91,4 +78,22 @@ void GyroscopeHandler::SetupRegisters()
 
     /* Enabled block data update and set range to +- 245 degrees per second. */
     i2cDevice.WriteReg8(CTRL_4_ADDRESS, CTRL_4_DATA);
+}
+
+bool GyroscopeHandler::HasNewGyroscopeMeasurement() const
+{
+    const U8 statusReg{i2cDevice.Read8BitReg(STATUS_ADDRESS)};
+    const bool newDataAvailable{(statusReg & NDA_BITMASK) ? true : false};
+
+    return newDataAvailable;
+}
+
+MeasurementPtr GyroscopeHandler::GetNextGyroscopeMeasurement() const
+{
+    const U32 timeStamp{clock->GetTimeStampInMicroSecs()};
+    const F32 xValue{i2cDevice.ReadTwo8BitRegsToFloat(X_OUT_LOW_ADDRESS, scaleToRadiansPerSecond)};
+    const F32 yValue{i2cDevice.ReadTwo8BitRegsToFloat(Y_OUT_LOW_ADDRESS, scaleToRadiansPerSecond)};
+    const F32 zValue{i2cDevice.ReadTwo8BitRegsToFloat(Z_OUT_LOW_ADDRESS, scaleToRadiansPerSecond)};
+
+    return MeasurementPtr{new GyroscopeMeasurement{timeStamp, xValue, yValue, zValue}};
 }

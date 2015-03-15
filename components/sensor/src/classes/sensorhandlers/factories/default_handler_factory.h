@@ -1,7 +1,7 @@
 /*
 * Declaration of a default concrete factory for the abstract factory pattern.
-* This factory returns different concrete implementations I2Chandler interface.
-* The factory is intended to be used by the IMU-class for dependency injection.
+* This factory returns different concrete implementations I2CHandler interface.
+* The factory is intended to be used by the IMU-classes for dependency injection.
 */
 
 #ifndef DEFAULT_HANDLER_FACTORY_H_

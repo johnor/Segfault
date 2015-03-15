@@ -17,13 +17,17 @@ public:
     explicit BarometerHandler(ClockPtr clock);
     virtual ~BarometerHandler() {}
     virtual MeasurementBatch GetMeasurements() const override;
-    virtual bool HasAvailableMeasurements() const override;
 private:
     BarometerHandler(const BarometerHandler&) = delete;
     BarometerHandler& operator=(const BarometerHandler&) = delete;
+
     void SetupRegisters();
+
     bool HasAvailablePressureMeasurement(const U8 statusReg) const;
     bool HasAvailableTemperatureMeasurement(const U8 statusReg) const;
+
+    MeasurementPtr GetNextPressureMeasurement() const;
+    MeasurementPtr GetNextTemperatureMeasurement() const;
 
     I2CDevice i2cDevice;
     ClockPtr clock;

@@ -8,12 +8,10 @@
 #include "headers/smart_pointer_typedefs.h"
 
 #include "interfaces/imu.h"
-#include "classes/sensorhandlers/factories/log_reader_factory.h"
-#include "classes/sensorhandlers/factories/default_handler_factory.h"
 #include "classes/clock/softwareclock.h"
 #include "classes/clock/hardwareclock.h"
 #include "classes/filter/gyro_input_model.h"
-#include "classes/imu/alt_imu.h"
+#include "classes/imu/factories/imu_factory.h"
 
 #include "server/src/server.h"
 #include "server/src/job.h"
@@ -24,7 +22,6 @@
 
 int main(int argc, char **argv)
 {
-    /* Create default factory if compiling for target, else log reader factory. */
     try
     {
         #ifndef __arm__
@@ -34,13 +31,13 @@ int main(int argc, char **argv)
                 logFileName = argv[1];
             }
             ClockPtr clock{new SoftwareClock};
-            SensorHandlerFactoryPtr factory{new LogReaderFactory{clock, logFileName}};
+            IMUFactory imuFactory{clock};
+            SensorApp sensorApp{imuFactory.GetLogReaderIMU(logFileName), ModelPtr{new GyroInputModel}, clock};
         #else
             ClockPtr clock{new HardwareClock};
-            SensorHandlerFactoryPtr factory{new DefaultHandlerFactory{clock}};
+            IMUFactory imuFactory{clock};
+            SensorApp sensorApp{imuFactory.GetAltIMU(), ModelPtr{new GyroInputModel}, clock};
         #endif
-
-        SensorApp sensorApp{IMUPtr{new AltIMU{factory}}, ModelPtr{new GyroInputModel}, clock};
 
         asio::io_service ioService;
         Server server(ioService, SensorApp::serverPort);

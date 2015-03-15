@@ -16,12 +16,12 @@ public:
     explicit AccAndMagHandler(ClockPtr clock);
     virtual ~AccAndMagHandler() {}
     virtual MeasurementBatch GetMeasurements() const override;
-    virtual bool HasAvailableMeasurements() const override;
 private:
     AccAndMagHandler(const AccAndMagHandler&) = delete;
     AccAndMagHandler& operator=(const AccAndMagHandler&) = delete;
 
     void SetUpRegisters();
+
     bool HasNewAccelerometerMeasurement() const;
     bool HasNewMagnetometerMeasurement() const;
 

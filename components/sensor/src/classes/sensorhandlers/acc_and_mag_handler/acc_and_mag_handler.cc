@@ -96,11 +96,6 @@ MeasurementBatch AccAndMagHandler::GetMeasurements() const
     return measurements;
 }
 
-bool AccAndMagHandler::HasAvailableMeasurements() const
-{
-    return HasNewAccelerometerMeasurement() || HasNewMagnetometerMeasurement();
-}
-
 void AccAndMagHandler::SetUpRegisters()
 {
     if (i2cDevice.Read8BitReg(WHO_AM_I_ADDRESS) != WHO_AM_I_DATA)

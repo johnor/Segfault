@@ -5,11 +5,10 @@
 
 #include "interfaces/sensor_handler_factory.h"
 #include "interfaces/measurement.h"
-#include "common/src/logger.h"
 
 #include "alt_imu.h"
 
-AltIMU::AltIMU(const SensorHandlerFactoryPtr& handlerFactory)
+AltIMU::AltIMU(SensorHandlerFactoryPtr handlerFactory)
 {
     accAndMagHandler = handlerFactory->MakeAccAndMagHandler();
     gyroscopeHandler = handlerFactory->MakeGyroscopeHandler();
@@ -20,23 +19,14 @@ MeasurementBatch AltIMU::GetNextMeasurementBatch() const
 {
     MeasurementBatch measurementBatch;
 
-    if (accAndMagHandler != nullptr)
-    {
-        MeasurementBatch accMeasurements{accAndMagHandler->GetMeasurements()};
-        std::move(accMeasurements.begin(), accMeasurements.end(), std::inserter(measurementBatch, measurementBatch.end()));
-    }
+    MeasurementBatch accMeasurements{accAndMagHandler->GetMeasurements()};
+    std::move(accMeasurements.begin(), accMeasurements.end(), std::inserter(measurementBatch, measurementBatch.end()));
 
-    if (gyroscopeHandler != nullptr)
-    {
-        MeasurementBatch gyroMeasurements{gyroscopeHandler->GetMeasurements()};
-        std::move(gyroMeasurements.begin(), gyroMeasurements.end(), std::inserter(measurementBatch, measurementBatch.end()));
-    }
+    MeasurementBatch gyroMeasurements{gyroscopeHandler->GetMeasurements()};
+    std::move(gyroMeasurements.begin(), gyroMeasurements.end(), std::inserter(measurementBatch, measurementBatch.end()));
 
-    if (barometerHandler != nullptr)
-    {
-        MeasurementBatch barometerMeasurements{barometerHandler->GetMeasurements()};
-        std::move(barometerMeasurements.begin(), barometerMeasurements.end(), std::inserter(measurementBatch, measurementBatch.end()));
-    }
+    MeasurementBatch barometerMeasurements{barometerHandler->GetMeasurements()};
+    std::move(barometerMeasurements.begin(), barometerMeasurements.end(), std::inserter(measurementBatch, measurementBatch.end()));
 
     return measurementBatch;
 }

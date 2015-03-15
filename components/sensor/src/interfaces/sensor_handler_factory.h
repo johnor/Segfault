@@ -1,6 +1,6 @@
 /*
 * Interface for the abstract factory pattern.
-* An I2C factory returns implementations of I2CHandlers
+* An I2C factory returns implementations of SensorHandlers
 * that are needed by an IMU to communicate with its sensors.
 */
 

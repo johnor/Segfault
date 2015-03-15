@@ -16,11 +16,15 @@ public:
     explicit GyroscopeHandler(ClockPtr clock);
     virtual ~GyroscopeHandler() {}
     virtual MeasurementBatch GetMeasurements() const override;
-    virtual bool HasAvailableMeasurements() const override;
 private:
     GyroscopeHandler(const GyroscopeHandler&) = delete;
     GyroscopeHandler& operator=(const GyroscopeHandler&) = delete;
+
     void SetupRegisters();
+
+    bool HasNewGyroscopeMeasurement() const;
+
+    MeasurementPtr GetNextGyroscopeMeasurement() const;
 
     I2CDevice i2cDevice;
     ClockPtr clock;
