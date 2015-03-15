@@ -1,6 +1,6 @@
-#!/bin/bash      
+#!/bin/bash
 
-tools/premake4 gmake
+tools/premake4 --platform=rpi gmake
 
 command="SensorApp"
 
@@ -9,4 +9,4 @@ then :
    command=$1
 fi
 echo "Running make on target $command"
-make -j4 -C build config=debug_rpi verbose=false $command
+make -j4 -C build config=debug_rpi verbose=1 $command
