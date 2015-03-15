@@ -1,7 +1,7 @@
 #include "classes/sensorhandlers/factories/default_handler_factory.h"
-#include "classes/sensorhandlers/log_reader/log_reader.h"
 #include "classes/imu/alt_imu.h"
 #include "classes/imu/log_reader_imu.h"
+#include "classes/measurements/measurements.h"
 
 #include "imu_factory.h"
 
@@ -17,5 +17,5 @@ IMUPtr IMUFactory::GetAltIMU() const
 
 IMUPtr IMUFactory::GetLogReaderIMU(const std::string& logFileName) const
 {
-    return IMUPtr{new LogReaderIMU{SensorHandlerPtr{new LogReader{clock, logFileName}}}};
+    return IMUPtr{new LogReaderIMU{clock, logFileName}};
 }
