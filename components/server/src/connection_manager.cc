@@ -30,17 +30,4 @@ void ConnectionManager::OnRecieveMessage(const Message& msg)
 {
     std::string body((char*)msg.body(), msg.GetBodyLength());
     Logger::Log(LogLevel::Info) << "ConnectionManager::RecievedMessage(), length: " << msg.GetBodyLength() << " body: " << body;
-
-    Message returnMessage;
-    returnMessage.SetBodyLength(5);
-    returnMessage.SetMsgType(1);
-    returnMessage.EncodeHeader();
-    returnMessage.WriteChar('R');
-    returnMessage.WriteChar('E');
-    returnMessage.WriteChar('P');
-    returnMessage.WriteChar('L');
-    returnMessage.WriteChar('Y');
-
-    for (auto client : connectedClients)
-        client->Send(returnMessage);
 }

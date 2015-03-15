@@ -135,6 +135,10 @@ class Network():
     def __init__(self, callback_func):
         self.reply = bytes()
         self.callback_func = callback_func
+
+        self.header_format = "II"
+        self.header_size = struct.calcsize(self.header_format)
+
         try:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.socket.setblocking(False)
@@ -145,44 +149,61 @@ class Network():
         except BlockingIOError:
              pass
 
-
     def tick(self):
         try:
             if self.socket:
                 self.reply = self.reply + self.socket.recv(100)
 
-            while self.reply:
-                header_size = struct.calcsize("II")
-                (length, cmd) = struct.unpack("II", self.reply[0:header_size])
-                print("-------Reply:")
-                print("Length: %i" % (length))
-                print("Cmd: %i" % (cmd))
+            while len(self.reply) > self.header_size:
+                header_data = self.reply[0:self.header_size]
+                (body_length_from_header, command) = struct.unpack(self.header_format, header_data)
+                # print("-------Reply:")
+                # print("Length: %i" % (body_length_from_header))
+                # print("Cmd: %i" % (command))
 
-                if cmd == 1:
-                    struct_type = str(length) + "s"
-                    msg = struct.unpack(struct_type, self.reply[header_size:header_size + length])[0]
-                    msg_size = struct.calcsize(struct_type)
-                    print("Msg: " + str(msg))
-                elif cmd == 2:
-                    struct_type = "fff"
-                    (f1, f2, f3) = struct.unpack(struct_type, self.reply[header_size:header_size + length])
-                    msg_size = struct.calcsize(struct_type)
-                    print("F1: %.2f" % (f1))
-                    print("F2: %.2f" % (f2))
-                    print("F3: %.2f" % (f3))
-                elif cmd == 3:
-                    struct_type = "ffff"
-                    (w, x, y, z) = struct.unpack(struct_type, self.reply[header_size:header_size + length])
-                    msg_size = struct.calcsize(struct_type)
-                    print("F1: %.2f" % (w))
-                    print("F2: %.2f" % (x))
-                    print("F3: %.2f" % (y))
-                    print("F4: %.2f" % (z))
-                    self.callback_func(w, x, y, z)
+                struct_type, body_length = self.get_msg_type_and_length(command)
 
-                self.reply = self.reply[header_size + msg_size:]
+                if len(self.reply) > body_length_from_header + self.header_size:
+                    body_data = self.reply[self.header_size:self.header_size + body_length_from_header]
+
+                    if command == 2:
+                        (f1, f2, f3) = struct.unpack(struct_type, body_data)
+                        body_length = struct.calcsize(struct_type)
+                        print("F1: %.2f" % (f1))
+                        print("F2: %.2f" % (f2))
+                        print("F3: %.2f" % (f3))
+                    elif command == 3:
+                        (w, x, y, z) = struct.unpack(struct_type, body_data)
+
+                        # print("F1: %.2f" % (w))
+                        # print("F2: %.2f" % (x))
+                        # print("F3: %.2f" % (y))
+                        # print("F4: %.2f" % (z))
+                        self.callback_func(w, x, y, z)
+                    else:
+                        raise SystemExit("Command not supported")
+
+                    self.reply = self.reply[self.header_size + body_length:]
+                else:
+                    break
         except BlockingIOError:
             pass
+
+    @staticmethod
+    def get_msg_type_and_length(command):
+        if command == 2:
+            struct_type = "fff"
+        elif command == 3:
+            struct_type = "ffff"
+        else:
+            struct_type = None
+
+        if struct_type is None:
+            return struct_type, 0
+
+        msg_size = struct.calcsize(struct_type)
+        return struct_type, msg_size
+
 
 
 class App():
@@ -225,8 +246,10 @@ class App():
 try:
     app = App()
     app.main_loop()
+except struct.error as err:
+    print("Struct error: " + str(err))
 except Exception as err:
-    print("Unknown exception")
+    print("Unknown exception: ")
     exc_type, exc_obj, exc_tb = sys.exc_info()
     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
     print(exc_type, fname, exc_tb.tb_lineno)

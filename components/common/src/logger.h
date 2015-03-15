@@ -30,12 +30,14 @@ public:
     static void LogToConsole(const std::string& message, const LogLevel level = LogLevel::Debug);
 
     static void SetLogFile(const std::string& fileName);
+    static void SetMinLogLevel(const LogLevel logLevel);
 private:
     static std::string FormatMessage(const std::string& message, const LogLevel level);
     static void WriteMessageToConsole(const std::string& message);
     static void WriteMessageToFile(const std::string& message);
 
     static std::ofstream fileStream;
+    static LogLevel minLogLevel;
 };
 
 /*

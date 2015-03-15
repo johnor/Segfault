@@ -16,12 +16,17 @@
 #include "server/src/server.h"
 #include "server/src/job.h"
 
+#include "common/src/logger.h"
+
 #include "sensor_app.h"
 
 //void PrintAndLogMeasurements(const MeasurementBatch& measurementBatch);
 
 int main(int argc, char **argv)
 {
+    Logger::SetMinLogLevel(LogLevel::Info);
+
+    /* Create default factory if compiling for target, else log reader factory. */
     try
     {
         #ifndef __arm__
@@ -47,7 +52,7 @@ int main(int argc, char **argv)
         Job updateJob{ioService, updateFunction, std::chrono::milliseconds{50}};
 
         std::function<void()> sendDataFunction = std::bind(&SensorApp::SendData, &sensorApp, std::ref(connectionManager));
-        Job testSendJob{ ioService, sendDataFunction, std::chrono::milliseconds{ 100 } };
+        Job testSendJob{ ioService, sendDataFunction, std::chrono::milliseconds{50}};
 
         ioService.run();
     }

@@ -1,6 +1,6 @@
 #!/bin/bash      
 
-tools/premake4 --platform=rpi gmake
+tools/premake4 gmake
 
 command="SensorApp"
 

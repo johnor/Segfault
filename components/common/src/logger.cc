@@ -29,7 +29,7 @@ LogStreamPtr Logger::Log(const LogLevel level)
 void Logger::Log(const std::string& message, const LogLevel level)
 {
     const std::string formattedMessage{FormatMessage(message, level)};
-    if (level >= LogLevel::Warning)
+    if (level >= minLogLevel)
     {
         WriteMessageToFile(formattedMessage);
         WriteMessageToConsole(formattedMessage);
@@ -64,6 +64,11 @@ void Logger::SetLogFile(const std::string& fileName)
     fileStream.open(fileName);
 }
 
+void Logger::SetMinLogLevel(const LogLevel logLevel)
+{
+    minLogLevel = logLevel;
+}
+
 std::string Logger::FormatMessage(const std::string& message, const LogLevel level)
 {
     std::ostringstream stream;
@@ -81,7 +86,9 @@ void Logger::WriteMessageToFile(const std::string& message)
     fileStream << message;
 }
 
-std::ofstream Logger::fileStream{"log.txt"};
+std::ofstream Logger::fileStream{ "log.txt" };
+LogLevel Logger::minLogLevel{ LogLevel::Debug };
+
 
 /* ------------------- LOG STREAM ------------------- */
 
