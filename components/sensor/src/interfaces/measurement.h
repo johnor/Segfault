@@ -9,6 +9,7 @@
 #define MEASUREMENT_H_
 
 #include "components/common/src/numeric_typedefs.h"
+#include "components/common/src/time_point.h"
 #include <string>
 
 class MeasurementVisitor;
@@ -20,6 +21,7 @@ public:
     virtual void Accept(MeasurementVisitor& visitor) const = 0;
     virtual std::string ToString() const = 0;
     virtual U32 GetTimeStamp() const = 0;
+    virtual TimePoint GetTime() const = 0;
 };
 
 #endif

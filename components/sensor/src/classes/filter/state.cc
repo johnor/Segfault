@@ -4,7 +4,7 @@
 State::State(const S32 numberOfStates)
     : X{numberOfStates},
       P{numberOfStates, numberOfStates},
-      timeStamp{0u}
+      timePoint{TimePoint::FromSeconds(0.f)}
 {
     if (numberOfStates < 4)
     {
@@ -38,14 +38,14 @@ Eigen::MatrixXf& State::GetP()
     return P;
 }
 
-U32 State::GetTimeStamp() const
+const TimePoint& State::GetTime() const
 {
-    return timeStamp;
+    return timePoint;
 }
 
-U32& State::GetTimeStamp()
+TimePoint& State::GetTime()
 {
-    return timeStamp;
+    return timePoint;
 }
 
 Eigen::Quaternionf State::GetQuaternion() const

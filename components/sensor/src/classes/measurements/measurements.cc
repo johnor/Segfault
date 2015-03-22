@@ -10,18 +10,23 @@
 #include "measurements.h"
 
 /* Measurement base */
-MeasurementBase::MeasurementBase(const U32 timeStamp)
+MeasurementBase::MeasurementBase(const TimePoint &timeStamp)
     : timeStamp{timeStamp}
 {
 }
 
 U32 MeasurementBase::GetTimeStamp() const
 {
+    return timeStamp.GetTimestamp();
+}
+
+TimePoint MeasurementBase::GetTime() const
+{
     return timeStamp;
 }
 
 /* Scalar measurement */
-ScalarMeasurement::ScalarMeasurement(const U32 timeStamp, const F32 value)
+ScalarMeasurement::ScalarMeasurement(const TimePoint &timeStamp, const F32 value)
     : MeasurementBase{timeStamp}, value{value}
 {
 }
@@ -45,7 +50,7 @@ F32 ScalarMeasurement::GetValue() const
 }
 
 /* Vectorial measurement */
-VectorialMeasurement::VectorialMeasurement(const U32 timeStamp, const F32 xValue, const F32 yValue, const F32 zValue)
+VectorialMeasurement::VectorialMeasurement(const TimePoint &timeStamp, const F32 xValue, const F32 yValue, const F32 zValue)
     : MeasurementBase{timeStamp}, xValue{xValue}, yValue{yValue}, zValue{zValue}
 {
 }
@@ -81,7 +86,7 @@ F32 VectorialMeasurement::GetZValue() const
 }
 
 /* Accelerometer measurement */
-AccelerometerMeasurement::AccelerometerMeasurement(const U32 timeStamp, const F32 xValue, const F32 yValue, const F32 zValue)
+AccelerometerMeasurement::AccelerometerMeasurement(const TimePoint &timeStamp, const F32 xValue, const F32 yValue, const F32 zValue)
     : VectorialMeasurement{timeStamp, xValue, yValue, zValue}
 {
 }
@@ -97,7 +102,7 @@ void AccelerometerMeasurement::Accept(MeasurementVisitor& visitor) const
 }
 
 /* Gyroscope measurement */
-GyroscopeMeasurement::GyroscopeMeasurement(const U32 timeStamp, const F32 xValue, const F32 yValue, const F32 zValue)
+GyroscopeMeasurement::GyroscopeMeasurement(const TimePoint &timeStamp, const F32 xValue, const F32 yValue, const F32 zValue)
     : VectorialMeasurement{timeStamp, xValue, yValue, zValue}
 {
 }
@@ -113,7 +118,7 @@ void GyroscopeMeasurement::Accept(MeasurementVisitor& visitor) const
 }
 
 /* Compass measurement */
-CompassMeasurement::CompassMeasurement(const U32 timeStamp, const F32 xValue, const F32 yValue, const F32 zValue)
+CompassMeasurement::CompassMeasurement(const TimePoint &timeStamp, const F32 xValue, const F32 yValue, const F32 zValue)
     : VectorialMeasurement{timeStamp, xValue, yValue, zValue}
 {
 }
@@ -129,7 +134,7 @@ void CompassMeasurement::Accept(MeasurementVisitor& visitor) const
 }
 
 /* Pressure measurement */
-PressureMeasurement::PressureMeasurement(const U32 timeStamp, const F32 value)
+PressureMeasurement::PressureMeasurement(const TimePoint &timeStamp, const F32 value)
     : ScalarMeasurement{timeStamp, value}
 {
 }
@@ -145,7 +150,7 @@ void PressureMeasurement::Accept(MeasurementVisitor& visitor) const
 }
 
 /* Temperature measurement */
-TemperatureMeasurement::TemperatureMeasurement(const U32 timeStamp, const F32 value)
+TemperatureMeasurement::TemperatureMeasurement(const TimePoint &timeStamp, const F32 value)
     : ScalarMeasurement{timeStamp, value}
 {
 }

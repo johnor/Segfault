@@ -2,17 +2,15 @@
 
 U32 SoftwareClock::GetTimeStampInMicroSecs() const
 {
-    return currentTimeStamp;
+    return currentTimeStamp.GetTimestamp();
 }
 
-void SoftwareClock::SetCurrentTimeStamp(const U32 timeStamp)
+TimePoint SoftwareClock::GetTime() const
 {
-    currentTimeStamp = timeStamp;
+    return currentTimeStamp;
 }
 
 void SoftwareClock::IncreaseTimeStamp(const F32 seconds)
 {
-    const F32 secondsToMicroseconds{1e6f};
-    const U32 microseconds{static_cast<U32>(seconds * secondsToMicroseconds)};
-    currentTimeStamp += microseconds;
+    currentTimeStamp += TimePoint::FromSeconds(seconds);
 }

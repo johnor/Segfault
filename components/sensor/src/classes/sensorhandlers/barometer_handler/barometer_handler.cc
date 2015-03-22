@@ -91,14 +91,14 @@ bool BarometerHandler::HasAvailableTemperatureMeasurement(const U8 statusReg) co
 
 MeasurementPtr BarometerHandler::GetNextPressureMeasurement() const
 {
-    const U32 timeStamp{clock->GetTimeStampInMicroSecs()};
+    const TimePoint timeStamp{ clock->GetTime() };
     const F32 pressureMeasurement{i2cDevice.ReadThree8BitRegsToFloat(PRESS_OUT_LOW_ADDRESS, scaleToHectoPascals)};
     return MeasurementPtr{new PressureMeasurement{timeStamp, pressureMeasurement}};
 }
 
 MeasurementPtr BarometerHandler::GetNextTemperatureMeasurement() const
 {
-    const U32 timeStamp{clock->GetTimeStampInMicroSecs()};
+    const TimePoint timeStamp{ clock->GetTime() };
     const F32 tempMeasurement{i2cDevice.ReadTwo8BitRegsToFloat(TEMP_OUT_LOW_ADDRESS, tempScaleFactor) + tempOffsetFactor};
     return MeasurementPtr{new TemperatureMeasurement{timeStamp, tempMeasurement}};
 }
