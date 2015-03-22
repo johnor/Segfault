@@ -4,11 +4,12 @@
 #include <asio.hpp>
 #include <asio/steady_timer.hpp>
 #include <functional>
+#include <exception>
 
 class Job
 {
 public:
-    Job(asio::io_service &io_service, std::function<void()> callbackFunction, std::chrono::milliseconds timerDelay_);
+    Job(asio::io_service &ioService, std::function<void()> callbackFunction, std::chrono::milliseconds timerDelay);
     ~Job() = default;
 
 private:
@@ -21,6 +22,13 @@ private:
     std::chrono::milliseconds timerDelay;
 
     std::function<void()> callbackFunction;
+};
+
+class JobError : public std::runtime_error
+{
+public:
+    explicit JobError(const std::string& what)
+        : std::runtime_error{ what } {}
 };
 
 #endif

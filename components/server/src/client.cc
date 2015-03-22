@@ -36,10 +36,10 @@ void ClientSession::ReadHeader()
     Logger::Log(LogLevel::Info) << "ClientSession::ReadHeader()";
     auto self(shared_from_this());
     asio::async_read(socket,
-        asio::buffer(currentReadMessage.data(), Message::headerLength),
-        [this, self](std::error_code ec, std::size_t /*length*/)
+                     asio::buffer(currentReadMessage.data(), Message::headerLength),
+                     [this, self](std::error_code errorCode, std::size_t /*length*/)
     {
-        if (!ec && currentReadMessage.DecodeHeader())
+        if (!errorCode && currentReadMessage.DecodeHeader())
         {
             Logger::Log(LogLevel::Info) << "ClientSession::ReadHeader() finished";
             ReadBody();
@@ -56,10 +56,10 @@ void ClientSession::ReadBody()
     Logger::Log(LogLevel::Info) << "ClientSession::ReadBody()";
     auto self(shared_from_this());
     asio::async_read(socket,
-        asio::buffer(currentReadMessage.body(), currentReadMessage.GetBodyLength()),
-        [this, self](std::error_code ec, std::size_t /*length*/)
+                     asio::buffer(currentReadMessage.body(), currentReadMessage.GetBodyLength()),
+                     [this, self](std::error_code errorCode, std::size_t /*length*/)
     {
-        if (!ec)
+        if (!errorCode)
         {
             Logger::Log(LogLevel::Info) << "ClientSession::ReadBody() finished";
             connectionManager.OnRecieveMessage(currentReadMessage);
@@ -67,7 +67,7 @@ void ClientSession::ReadBody()
         }
         else
         {
-            Logger::Log(LogLevel::Error) << ec;
+            Logger::Log(LogLevel::Error) << errorCode;
             connectionManager.Leave(shared_from_this());
         }
     });
@@ -77,11 +77,11 @@ void ClientSession::Write()
 {
     auto self(shared_from_this());
     asio::async_write(socket,
-        asio::buffer(writeMessages.front().data(),
-        writeMessages.front().getLength()),
-        [this, self](std::error_code ec, std::size_t /*length*/)
+                      asio::buffer(writeMessages.front().data(),
+                      writeMessages.front().getLength()),
+                      [this, self](std::error_code errorCode, std::size_t /*length*/)
     {
-        if (!ec)
+        if (!errorCode)
         {
             writeMessages.pop_front();
             if (!writeMessages.empty())

@@ -20,9 +20,9 @@ ConnectionManager & Server::GetConnectionManager()
 void Server::Accept()
 {
     acceptor.async_accept(socket,
-        [this](std::error_code ec)
+                          [this](std::error_code errorCode)
     {
-        if (!ec)
+        if (!errorCode)
         {
             Logger::Log(LogLevel::Info) << "Server::Accept()";
             Client::Ptr connectedClient = std::make_shared<ClientSession>(std::move(socket), connectionManager);

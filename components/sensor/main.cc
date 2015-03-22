@@ -26,7 +26,6 @@ int main(int argc, char **argv)
 {
     Logger::SetMinLogLevel(LogLevel::Info);
 
-    /* Create default factory if compiling for target, else log reader factory. */
     try
     {
         #ifndef __arm__
