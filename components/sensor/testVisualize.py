@@ -1,9 +1,12 @@
+from argparse import ArgumentParser
 from math import sqrt, acos, cos, sin
 import os
 import socket
 import struct
+import traceback
 
-from pyglet import clock, font, image, window
+import pyglet.clock
+from pyglet import font, image, window
 from pyglet.gl import *
 import sys
 
@@ -40,7 +43,7 @@ class RpiModel():
 
         glBegin(GL_QUADS)
 
-        #top
+        # top
         glColor3f(1.0, 0.0, 0.0)
         glVertex3f(self.length, self.width, self.height)
         glVertex3f(-self.length, self.width, self.height)
@@ -85,6 +88,7 @@ class RpiModel():
 
         glPopMatrix()
 
+
 class World():
     def __init__(self):
         self.cube = RpiModel(Quaternion(1., 0., 0., 0.))
@@ -118,36 +122,32 @@ class Camera():
         glLoadIdentity()
         gluLookAt(self.x, self.y, self.z, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0)
 
+
 class Hud():
     def __init__(self):
-        self.fps = clock.ClockDisplay()
+        self.fps = pyglet.clock.ClockDisplay()
 
     def draw(self):
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
         self.fps.draw()
 
-class Network():
-    #ip = '127.0.0.1'
-    ip = '192.168.137.2'
-    port = 5001
 
-    def __init__(self, callback_func):
+class Network():
+    def __init__(self, ip, port, callback_func):
+        print("Connecting to ip: {0}, port: {1}".format(ip, port))
+        self.ip = ip
+        self.port = port
+
+        self.socket = None
+
         self.reply = bytes()
         self.callback_func = callback_func
 
         self.header_format = "II"
         self.header_size = struct.calcsize(self.header_format)
 
-        try:
-            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.socket.setblocking(False)
-            self.socket.connect((self.ip, self.port))
-        except ConnectionRefusedError:
-            print("Connection to server refused")
-            self.socket = None
-        except BlockingIOError:
-             pass
+        self.connect()
 
     def tick(self):
         try:
@@ -188,6 +188,21 @@ class Network():
                     break
         except BlockingIOError:
             pass
+        except socket.error as e:
+            # print("Unknown socket error: {0}".format(str(e).encode('UTF-8')))
+            self.connect()
+
+    def connect(self):
+        try:
+            print("Reconnecting")
+            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.socket.setblocking(False)
+            self.socket.connect((self.ip, self.port))
+        except ConnectionRefusedError:
+            print("Connection to server refused")
+            self.socket = None
+        except BlockingIOError:
+            pass
 
     @staticmethod
     def get_msg_type_and_length(command):
@@ -205,19 +220,18 @@ class Network():
         return struct_type, msg_size
 
 
-
 class App():
-    def __init__(self):
+    def __init__(self, port, ip):
         self.world = World()
         self.win = window.Window(fullscreen=False, vsync=True, resizable=True)
 
-        self.network = Network(self.world.cube.update_quat)
+        self.network = Network(ip=ip, port=port, callback_func=self.world.cube.update_quat)
         self.camera = Camera(self.win, z=4)
         self.hud = Hud()
 
         self.init_gl()
 
-        clock.set_fps_limit(60)
+        pyglet.clock.set_fps_limit(60)
 
     @staticmethod
     def init_gl():
@@ -240,16 +254,23 @@ class App():
             self.camera.hud_projection()
             self.hud.draw()
 
-            clock.tick()
+            pyglet.clock.tick()
             self.win.flip()
 
-try:
-    app = App()
-    app.main_loop()
-except struct.error as err:
-    print("Struct error: " + str(err))
-except Exception as err:
-    print("Unknown exception: ")
-    exc_type, exc_obj, exc_tb = sys.exc_info()
-    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-    print(exc_type, fname, exc_tb.tb_lineno)
+
+if __name__ == "__main__":
+    parser = ArgumentParser()
+
+    parser.add_argument("--ip", default="127.0.0.1", help="Ip to connect to")
+    parser.add_argument("--port", "-p", default=5001, type=int, help="Port to use")
+
+    args = parser.parse_args()
+
+    try:
+        app = App(ip=args.ip, port=args.port)
+        app.main_loop()
+    except struct.error as err:
+        print("Struct error: " + str(err))
+    except Exception as err:
+        print("Unknown exception: ")
+        traceback.print_exc(file=sys.stdout)
