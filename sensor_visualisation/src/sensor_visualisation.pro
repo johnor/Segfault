@@ -4,7 +4,7 @@
 
 QT += network
 TEMPLATE = app
-TARGET = Run
+TARGET = RunClient
 INCLUDEPATH += .
 
 # Input

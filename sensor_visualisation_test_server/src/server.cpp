@@ -57,11 +57,13 @@ void Server::sendQuaternion()
     static QQuaternion quaternion;
     quaternion = quaternion * QQuaternion(0.01f, QVector3D(0.0f, 0.0f, 1.0f)).normalized();
 
-    float data[NUM_VALUES] = {quaternion.scalar(), quaternion.x(), quaternion.y(), quaternion.z()};
-    qint64 size = sizeof(data);
+    float bodyData[NUM_VALUES] = {quaternion.scalar(), quaternion.x(), quaternion.y(), quaternion.z()};
+    qint64 bodySize = sizeof(bodyData);
 
     for (QList<Client*>::iterator clientItr = m_clients.begin(); clientItr != m_clients.constEnd(); ++clientItr)
     {
-        (*clientItr)->send((char*)data, size);
+        int headerData[2] = {(int)bodySize, 3};
+        (*clientItr)->send((char*)headerData, sizeof(headerData));
+        (*clientItr)->send((char*)bodyData, bodySize);
     }
 }

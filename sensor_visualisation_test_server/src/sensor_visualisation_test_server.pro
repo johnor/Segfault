@@ -1,6 +1,6 @@
 QT       += core network
 
-TARGET = Run
+TARGET = RunServer
 CONFIG   += console
 CONFIG   -= app_bundle
 

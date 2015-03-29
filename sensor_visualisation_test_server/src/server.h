@@ -22,7 +22,7 @@ public slots:
 private:
     QTcpServer *m_tcpServer;
     QList<Client*> m_clients;
-    static const quint16 m_port = 55555;
+    static const quint16 m_port = 5001;
     QTimer m_timer;
 };
 

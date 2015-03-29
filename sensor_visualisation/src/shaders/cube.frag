@@ -1,4 +1,4 @@
-#version 120
+//#version 120
 
 varying vec3 frag_Position;
 varying vec3 frag_Normal;
