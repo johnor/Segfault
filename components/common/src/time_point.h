@@ -13,7 +13,7 @@ public:
     TimePoint(const TimePoint &time);
     ~TimePoint() = default;
 
-    U32 GetTimestamp() const;
+    U32 GetMicroSeconds() const;
     F32 GetSeconds() const;
 
     TimePoint& operator+=(const TimePoint& rhs);
@@ -46,7 +46,7 @@ inline TimePoint operator-(TimePoint lhs, const TimePoint& rhs)
 
 inline bool operator==(const TimePoint& lhs, const TimePoint& rhs)
 {
-    return lhs.GetTimestamp() == rhs.GetTimestamp();
+    return lhs.GetMicroSeconds() == rhs.GetMicroSeconds();
 }
 inline bool operator!=(const TimePoint& lhs, const TimePoint& rhs)
 {
@@ -54,7 +54,7 @@ inline bool operator!=(const TimePoint& lhs, const TimePoint& rhs)
 }
 inline bool operator<(const TimePoint& lhs, const TimePoint& rhs)
 {
-    return lhs.GetTimestamp() < rhs.GetTimestamp();
+    return lhs.GetMicroSeconds() < rhs.GetMicroSeconds();
 }
 inline bool operator>(const TimePoint& lhs, const TimePoint& rhs)
 {

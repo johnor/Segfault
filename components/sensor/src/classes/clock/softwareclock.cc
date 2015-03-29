@@ -1,16 +1,11 @@
 #include "softwareclock.h"
 
-U32 SoftwareClock::GetTimeStampInMicroSecs() const
-{
-    return currentTimeStamp.GetTimestamp();
-}
-
 TimePoint SoftwareClock::GetTime() const
 {
-    return currentTimeStamp;
+    return currentTime;
 }
 
-void SoftwareClock::IncreaseTimeStamp(const F32 seconds)
+void SoftwareClock::IncreaseTime(const F32 seconds)
 {
-    currentTimeStamp += TimePoint::FromSeconds(seconds);
+    currentTime += TimePoint::FromSeconds(seconds);
 }

@@ -15,11 +15,6 @@ MeasurementBase::MeasurementBase(const TimePoint &timeStamp)
 {
 }
 
-U32 MeasurementBase::GetTimeStamp() const
-{
-    return timeStamp.GetTimestamp();
-}
-
 TimePoint MeasurementBase::GetTime() const
 {
     return timeStamp;
@@ -37,7 +32,7 @@ std::string ScalarMeasurement::ToString(const std::string& header, const std::st
 
     os << std::fixed << std::setprecision(2);
     os << header << '\n';
-    os << "Ts: " << GetTimeStamp() << ' ';
+    os << "Ts: " << GetTime().GetMicroSeconds() << ' ';
     os << "Value: " << value << ' ' << unit;
     os << '\n';
 
@@ -61,7 +56,7 @@ std::string VectorialMeasurement::ToString(const std::string& header, const std:
 
     os << std::fixed << std::setprecision(2);
     os << header << '\n';
-    os << "Ts: " << GetTimeStamp() << ' ';
+    os << "Ts: " << GetTime().GetMicroSeconds() << ' ';
     os << "X: " << xValue << ' ';
     os << "Y: " << yValue << ' ';
     os << "Z: " << zValue << ' ' << unit;

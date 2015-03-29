@@ -12,12 +12,13 @@ public:
     HardwareClock() = default;
     virtual ~HardwareClock() {};
 
-    virtual U32 GetTimeStampInMicroSecs() const override;
     virtual TimePoint GetTime() const override;
-    virtual void IncreaseTimeStamp(const F32 seconds) override;
+    virtual void IncreaseTime(const F32 seconds) override;
 private:
     HardwareClock(const HardwareClock&) = delete;
     HardwareClock& operator=(const HardwareClock&) = delete;
+
+    U32 GetTimeInMicroSecs() const;
 
     static std::chrono::system_clock::time_point GetCurrentTime();
 

@@ -13,7 +13,6 @@ class MeasurementBase : public Measurement
 {
 public:
     virtual ~MeasurementBase() {}
-    virtual U32 GetTimeStamp() const override;
     virtual TimePoint GetTime() const override;
 protected:
     explicit MeasurementBase(const TimePoint &timeStamp);

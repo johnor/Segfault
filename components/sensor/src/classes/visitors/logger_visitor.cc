@@ -8,7 +8,7 @@ LoggerVisitor::LoggerVisitor(const std::string& logFile)
 
 void LoggerVisitor::Visit(const AccelerometerMeasurement& accMeas)
 {
-    logStream << accMeas.GetTimeStamp() << ","
+    logStream << accMeas.GetTime().GetMicroSeconds() << ","
               << "ACC,"
               << accMeas.GetXValue() << ","
               << accMeas.GetYValue() << ","
@@ -18,7 +18,7 @@ void LoggerVisitor::Visit(const AccelerometerMeasurement& accMeas)
 
 void LoggerVisitor::Visit(const GyroscopeMeasurement& gyroMeas)
 {
-    logStream << gyroMeas.GetTimeStamp() << ','
+    logStream << gyroMeas.GetTime().GetMicroSeconds() << ','
               << "GYRO,"
               << gyroMeas.GetXValue() << ","
               << gyroMeas.GetYValue() << ","
@@ -28,7 +28,7 @@ void LoggerVisitor::Visit(const GyroscopeMeasurement& gyroMeas)
 
 void LoggerVisitor::Visit(const CompassMeasurement& compassMeas)
 {
-    logStream << compassMeas.GetTimeStamp() << ','
+    logStream << compassMeas.GetTime().GetMicroSeconds() << ','
               << "MAG," << compassMeas.GetXValue() << ","
               << compassMeas.GetYValue() << ","
               << compassMeas.GetZValue()
@@ -37,14 +37,14 @@ void LoggerVisitor::Visit(const CompassMeasurement& compassMeas)
 
 void LoggerVisitor::Visit(const PressureMeasurement& pressureMeas)
 {
-    logStream << pressureMeas.GetTimeStamp() << ','
+    logStream << pressureMeas.GetTime().GetMicroSeconds() << ','
               << "BARO," << pressureMeas.GetValue()
               << std::endl;
 }
 
 void LoggerVisitor::Visit(const TemperatureMeasurement& tempMeas)
 {
-    logStream << tempMeas.GetTimeStamp() << ','
+    logStream << tempMeas.GetTime().GetMicroSeconds() << ','
               << "TEMP," << tempMeas.GetValue()
               << std::endl;
 }

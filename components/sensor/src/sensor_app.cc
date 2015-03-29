@@ -28,7 +28,7 @@ void SensorApp::Update()
 
     std::cout << "EulerAngles:\n" << model->GetState().GetEulerAngles() << std::endl;
 
-    clock->IncreaseTimeStamp(1.f / 20.f);
+    clock->IncreaseTime(1.f / 20.f);
 }
 
 void SensorApp::SendData(ConnectionManager& connectionManager)

@@ -11,14 +11,13 @@ public:
     SoftwareClock() = default;
     virtual ~SoftwareClock() {};
 
-    virtual U32 GetTimeStampInMicroSecs() const override;
     virtual TimePoint GetTime() const override;
-    virtual void IncreaseTimeStamp(const F32 seconds) override;
+    virtual void IncreaseTime(const F32 seconds) override;
 private:
     SoftwareClock(const SoftwareClock&) = delete;
     SoftwareClock& operator=(const SoftwareClock&) = delete;
 
-    TimePoint currentTimeStamp{TimePoint::FromSeconds(0.f)};
+    TimePoint currentTime{TimePoint::FromSeconds(0.f)};
 };
 
 #endif

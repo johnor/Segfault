@@ -3,22 +3,22 @@
 
 const std::chrono::system_clock::time_point HardwareClock::applicationStartTime{HardwareClock::GetCurrentTime()};
 
-U32 HardwareClock::GetTimeStampInMicroSecs() const
-{
-    auto microSecsSinceStart = std::chrono::duration_cast<std::chrono::microseconds>(GetCurrentTime() - applicationStartTime).count();
-    return static_cast<U32>(microSecsSinceStart);
-}
-
 TimePoint HardwareClock::GetTime() const
 {
-    return TimePoint::FromMicroSeconds(GetTimeStampInMicroSecs());
+    return TimePoint::FromMicroSeconds(GetTimeInMicroSecs());
 }
 
-void HardwareClock::IncreaseTimeStamp(const F32)
+void HardwareClock::IncreaseTime(const F32)
 {
 }
 
 std::chrono::system_clock::time_point HardwareClock::GetCurrentTime()
 {
     return std::chrono::high_resolution_clock::now();
+}
+
+U32 HardwareClock::GetTimeInMicroSecs() const
+{
+    auto microSecsSinceStart = std::chrono::duration_cast<std::chrono::microseconds>(GetCurrentTime() - applicationStartTime).count();
+    return static_cast<U32>(microSecsSinceStart);
 }

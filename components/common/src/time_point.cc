@@ -30,7 +30,7 @@ TimePoint TimePoint::FromTimeStamp(const U32 timeStamp)
     return TimePoint(timeStamp * timeStampToMicroSeconds);
 }
 
-U32 TimePoint::GetTimestamp() const
+U32 TimePoint::GetMicroSeconds() const
 {
     return timeStampInMicroSeconds;
 }
