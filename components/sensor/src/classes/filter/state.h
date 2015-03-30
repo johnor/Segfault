@@ -24,8 +24,9 @@ public:
      Eigen::Vector3f GetEulerAngles() const;
 
      Eigen::Matrix3f GetRotationMatrix() const;
-private:
 
+     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+private:
     Eigen::VectorXf X;
     Eigen::MatrixXf P;
     U32 timeStamp;

@@ -17,6 +17,9 @@ public:
     virtual void TimeUpdate(const F32 dt) = 0;
     const State& GetState() const;
 protected:
+    static Eigen::Matrix4f GetS(const Eigen::Vector3f& omega);
+    static Eigen::Matrix<F32, 4, 3> GetS(const Eigen::Vector4f& q);
+
     State state;
 };
 

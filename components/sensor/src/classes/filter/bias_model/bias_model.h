@@ -1,15 +1,15 @@
-#ifndef GYRO_INPUT_MODEL_H_
-#define GYRO_INPUT_MODEL_H_
+#ifndef BIAS_MODEL_H_
+#define BIAS_MODEL_H_
 
 #include <eigen/Eigen>
 #include "common/src/numeric_typedefs.h"
 #include "../model.h"
 
-class GyroInputModel : public Model
+class BiasModel : public Model
 {
 public:
-    GyroInputModel();
-    virtual ~GyroInputModel() {}
+    BiasModel();
+    virtual ~BiasModel() {}
 
     virtual void TimeUpdate(const F32 dt) override;
 
@@ -19,8 +19,10 @@ public:
     virtual void Visit(const PressureMeasurement& pressureMeas) override;
     virtual void Visit(const TemperatureMeasurement& tempMeas) override;
 private:
-    GyroInputModel(const GyroInputModel&) = delete;
-    GyroInputModel& operator=(const GyroInputModel&) = delete;
+    BiasModel(const BiasModel&) = delete;
+    BiasModel& operator=(const BiasModel&) = delete;
+
+    Eigen::MatrixXf GetF() const;
 };
 
-#endif
+#endif /* BIAS_MODEL_H_ */
