@@ -1,15 +1,15 @@
-#ifndef QUATERNION_STATE_H_
-#define QUATERNION_STATE_H_
+#ifndef GYRO_INPUT_MODEL_STATE_H_
+#define GYRO_INPUT_MODEL_STATE_H_
 
 #include <eigen/Eigen>
 #include "headers/smart_pointer_typedefs.h"
 #include "interfaces/state.h"
 
-class QuaternionState : public State
+class GyroInputModelState : public State
 {
 public:
-    QuaternionState();
-    virtual ~QuaternionState() {};
+    GyroInputModelState();
+    virtual ~GyroInputModelState() {};
 
     virtual Eigen::VectorXf GetX() const override;
 
@@ -25,8 +25,8 @@ public:
 
     friend class GyroInputModel;
 private:
-    QuaternionState(const QuaternionState&) = default;
-    QuaternionState& operator=(const QuaternionState&) = delete;
+    GyroInputModelState(const GyroInputModelState&) = default;
+    GyroInputModelState& operator=(const GyroInputModelState&) = delete;
 
     Eigen::VectorXf X;
     Eigen::MatrixXf P;

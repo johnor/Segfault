@@ -4,7 +4,7 @@
 #include <eigen/Eigen>
 #include "headers/smart_pointer_typedefs.h"
 #include "interfaces/model.h"
-#include "quaternion_state.h"
+#include "gyro_input_model_state.h"
 
 class GyroInputModel : public Model
 {
@@ -28,7 +28,7 @@ private:
 
     static Eigen::Matrix4f GetS(const Eigen::Vector3f& omega);
 
-    QuaternionState state;
+    GyroInputModelState state;
 };
 
 #endif

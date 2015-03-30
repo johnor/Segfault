@@ -1,6 +1,6 @@
-#include "quaternion_state.h"
+#include "gyro_input_model_state.h"
 
-QuaternionState::QuaternionState()
+GyroInputModelState::GyroInputModelState()
     : X{4, 1}
 {
     /* Initialize a unit quaternion */
@@ -10,41 +10,41 @@ QuaternionState::QuaternionState()
     X(3) = 0.f;
 }
 
-Eigen::VectorXf QuaternionState::GetX() const
+Eigen::VectorXf GyroInputModelState::GetX() const
 {
     return X;
 }
 
-Eigen::MatrixXf QuaternionState::GetP() const
+Eigen::MatrixXf GyroInputModelState::GetP() const
 {
     return P;
 }
 
-U32 QuaternionState::GetTimeStamp() const
+U32 GyroInputModelState::GetTimeStamp() const
 {
     return timeStamp;
 }
 
-Eigen::Quaternionf QuaternionState::GetQuaternion() const
+Eigen::Quaternionf GyroInputModelState::GetQuaternion() const
 {
     return Eigen::Quaternionf{X(0), X(1), X(2), X(3)};
 }
 
-Eigen::Vector3f QuaternionState::GetEulerAngles() const
+Eigen::Vector3f GyroInputModelState::GetEulerAngles() const
 {
     const F32 radToDeg{180.f / 3.1415926f};
     const Eigen::Quaternionf quat{X(0), X(1), X(2), X(3)};
     return quat.toRotationMatrix().eulerAngles(0, 1, 2) * radToDeg;
 }
 
-Eigen::Matrix3f QuaternionState::GetRotationMatrix() const
+Eigen::Matrix3f GyroInputModelState::GetRotationMatrix() const
 {
     const Eigen::Quaternionf quat{X(0), X(1), X(2), X(3)};
     return quat.toRotationMatrix();
 }
 
-StatePtr QuaternionState::Clone() const
+StatePtr GyroInputModelState::Clone() const
 {
-    StatePtr result{new QuaternionState{*this}};
+    StatePtr result{new GyroInputModelState{*this}};
     return result;
 }
