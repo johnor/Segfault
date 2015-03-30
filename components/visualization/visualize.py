@@ -1,14 +1,13 @@
 from argparse import ArgumentParser
-from math import sqrt, acos, cos, sin
-import os
+from math import sqrt, acos
 import socket
 import struct
 import traceback
+import sys
 
 import pyglet.clock
-from pyglet import font, image, window
+from pyglet import window
 from pyglet.gl import *
-import sys
 
 
 class Quaternion():
@@ -194,7 +193,6 @@ class Network():
 
     def connect(self):
         try:
-            print("Reconnecting")
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.socket.setblocking(False)
             self.socket.connect((self.ip, self.port))
