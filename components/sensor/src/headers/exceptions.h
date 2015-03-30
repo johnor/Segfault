@@ -24,4 +24,14 @@ public:
         : std::runtime_error{what} {}
 };
 
+class StateException : public std::logic_error
+{
+public:
+    explicit StateException(const std::string& what)
+        : std::logic_error{what} {}
+
+    explicit StateException(const char* what)
+        : std::logic_error{what} {}
+};
+
 #endif

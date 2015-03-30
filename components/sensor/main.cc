@@ -10,7 +10,7 @@
 #include "interfaces/imu.h"
 #include "classes/clock/softwareclock.h"
 #include "classes/clock/hardwareclock.h"
-#include "classes/filter/gyro_input_model.h"
+#include "classes/filter/gyro_input_model/gyro_input_model.h"
 #include "classes/imu/factories/imu_factory.h"
 
 #include "server/src/server.h"

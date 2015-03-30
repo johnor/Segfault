@@ -13,7 +13,6 @@ class Measurement;
 class SensorHandler;
 class SensorHandlerFactory;
 class IMU;
-class State;
 class Model;
 class LogStream;
 class Clock;
@@ -22,7 +21,6 @@ typedef std::unique_ptr<Measurement> MeasurementPtr;
 typedef std::unique_ptr<SensorHandler> SensorHandlerPtr;
 typedef std::unique_ptr<SensorHandlerFactory> SensorHandlerFactoryPtr;
 typedef std::unique_ptr<IMU> IMUPtr;
-typedef std::unique_ptr<State> StatePtr;
 typedef std::unique_ptr<Model> ModelPtr;
 typedef std::unique_ptr<LogStream> LogStreamPtr;
 

@@ -3,9 +3,11 @@
 
 #include "gyro_input_model.h"
 
-StatePtr GyroInputModel::GetState() const
+
+GyroInputModel::GyroInputModel()
+    : Model{4}
 {
-    return state.Clone();
+
 }
 
 void GyroInputModel::TimeUpdate(const F32 dt)
@@ -27,9 +29,9 @@ void GyroInputModel::Visit(const GyroscopeMeasurement& gyroMeas)
     const Eigen::Vector3f omega{gyroMeas.GetXValue(), gyroMeas.GetYValue(), gyroMeas.GetZValue()};
     const Eigen::Matrix4f F{Eigen::Matrix4f::Identity() + 0.5f * GetS(omega) * dt};
 
-    state.X = F * state.X;
-    state.X.normalize();
-    state.timeStamp = measurementTimeStamp;
+    state.GetX() = F * state.GetX();
+    state.GetX().normalize();
+    state.GetTimeStamp() = measurementTimeStamp;
 }
 
 void GyroInputModel::Visit(const CompassMeasurement& compassMeas)

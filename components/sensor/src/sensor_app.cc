@@ -4,8 +4,8 @@
 #include "interfaces/imu.h"
 #include "interfaces/clock.h"
 #include "interfaces/measurement.h"
-#include "interfaces/model.h"
-#include "interfaces/state.h"
+
+#include "classes/filter/model.h"
 
 #include "components/server/src/connection_manager.h"
 #include "components/server/src/message.h"
@@ -26,14 +26,14 @@ void SensorApp::Update()
         measurement->Accept(*model);
     }
 
-    std::cout << "EulerAngles:\n" << model->GetState()->GetEulerAngles() << std::endl;
+    std::cout << "EulerAngles:\n" << model->GetState().GetEulerAngles() << std::endl;
 
     clock->IncreaseTimeStamp(1.f / 20.f);
 }
 
 void SensorApp::SendData(ConnectionManager& connectionManager)
 {
-    const auto quaternion = model->GetState()->GetQuaternion();
+    const auto quaternion = model->GetState().GetQuaternion();
     Message msg;
     msg.SetMsgType(3);
     msg.SetBodyLength(sizeof(F32)* 4);
