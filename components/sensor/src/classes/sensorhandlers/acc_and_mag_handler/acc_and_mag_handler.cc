@@ -132,7 +132,7 @@ MeasurementPtr AccAndMagHandler::GetNextAccelerometerMeasurement() const
     const F32 yAcc{i2cDevice.ReadTwo8BitRegsToFloat(ACC_Y_OUT_LOW_ADDRESS, accelerometerScaleFactor)};
     const F32 zAcc{i2cDevice.ReadTwo8BitRegsToFloat(ACC_Z_OUT_LOW_ADDRESS, accelerometerScaleFactor)};
 
-    return MeasurementPtr{new AccelerometerMeasurement{clock->GetTimeStampInMicroSecs(), xAcc, yAcc, zAcc }};
+    return MeasurementPtr{new AccelerometerMeasurement{clock->GetTime(), xAcc, yAcc, zAcc }};
 }
 
 MeasurementPtr AccAndMagHandler::GetNextMagnetometerMeasurement() const
@@ -141,5 +141,5 @@ MeasurementPtr AccAndMagHandler::GetNextMagnetometerMeasurement() const
     const F32 yMag{i2cDevice.ReadTwo8BitRegsToFloat(MAG_Y_OUT_LOW_ADDRESS, magnetometerScaleFactor)};
     const F32 zMag{i2cDevice.ReadTwo8BitRegsToFloat(MAG_Z_OUT_LOW_ADDRESS, magnetometerScaleFactor)};
 
-    return MeasurementPtr{new CompassMeasurement{clock->GetTimeStampInMicroSecs(), xMag, yMag, zMag}};
+    return MeasurementPtr{new CompassMeasurement{clock->GetTime(), xMag, yMag, zMag}};
 }

@@ -1,18 +1,11 @@
 #include "softwareclock.h"
 
-U32 SoftwareClock::GetTimeStampInMicroSecs() const
+TimePoint SoftwareClock::GetTime() const
 {
-    return currentTimeStamp;
+    return currentTime;
 }
 
-void SoftwareClock::SetCurrentTimeStamp(const U32 timeStamp)
+void SoftwareClock::IncreaseTime(const F32 seconds)
 {
-    currentTimeStamp = timeStamp;
-}
-
-void SoftwareClock::IncreaseTimeStamp(const F32 seconds)
-{
-    const F32 secondsToMicroseconds{1e6f};
-    const U32 microseconds{static_cast<U32>(seconds * secondsToMicroseconds)};
-    currentTimeStamp += microseconds;
+    currentTime += TimePoint::FromSeconds(seconds);
 }

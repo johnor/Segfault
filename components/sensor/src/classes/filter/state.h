@@ -3,6 +3,7 @@
 
 #include <eigen/Eigen>
 #include "components/common/src/numeric_typedefs.h"
+#include "common/src/time_point.h"
 
 class State
 {
@@ -16,8 +17,8 @@ public:
      const Eigen::MatrixXf& GetP() const;
      Eigen::MatrixXf& GetP();
 
-     U32 GetTimeStamp() const;
-     U32& GetTimeStamp();
+     const TimePoint& GetTime() const;
+     TimePoint& GetTime();
 
      Eigen::Quaternionf GetQuaternion() const;
 
@@ -29,7 +30,7 @@ public:
 private:
     Eigen::VectorXf X;
     Eigen::MatrixXf P;
-    U32 timeStamp;
+    TimePoint timePoint;
 };
 
 #endif

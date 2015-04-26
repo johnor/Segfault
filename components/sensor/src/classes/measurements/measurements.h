@@ -6,19 +6,20 @@
 #define MEASUREMENTS_H_
 
 #include "components/common/src/numeric_typedefs.h"
+#include "components/common/src/time_point.h"
 #include "interfaces/measurement.h"
 
 class MeasurementBase : public Measurement
 {
 public:
     virtual ~MeasurementBase() {}
-    virtual U32 GetTimeStamp() const override;
+    virtual TimePoint GetTime() const override;
 protected:
-    explicit MeasurementBase(const U32 timeStamp);
+    explicit MeasurementBase(const TimePoint &timeStamp);
 private:
     MeasurementBase(const MeasurementBase&) = delete;
     MeasurementBase& operator=(const MeasurementBase&) = delete;
-    const U32 timeStamp;
+    const TimePoint timeStamp;
 };
 
 /* 
@@ -30,7 +31,7 @@ public:
     virtual ~ScalarMeasurement() {}
     F32 GetValue() const;
 protected:
-    ScalarMeasurement(const U32 timeStamp, const F32 value);
+    ScalarMeasurement(const TimePoint &timeStamp, const F32 value);
     std::string ToString(const std::string& header, const std::string& unit) const;
 private:
     const F32 value;
@@ -47,7 +48,7 @@ public:
     F32 GetYValue() const;
     F32 GetZValue() const;
 protected:
-    VectorialMeasurement(const U32 timeStamp, const F32 xValue, const F32 yValue, const F32 zValue);
+    VectorialMeasurement(const TimePoint &timeStamp, const F32 xValue, const F32 yValue, const F32 zValue);
     std::string ToString(const std::string& header, const std::string& unit) const;
 private:
     const F32 xValue;
@@ -63,7 +64,7 @@ private:
 class AccelerometerMeasurement : public VectorialMeasurement
 {
 public:
-    AccelerometerMeasurement(const U32 timeStamp, const F32 xValue, const F32 yValue, const F32 zValue);
+    AccelerometerMeasurement(const TimePoint &timeStamp, const F32 xValue, const F32 yValue, const F32 zValue);
     virtual ~AccelerometerMeasurement() {}
     virtual std::string ToString() const override;
     virtual void Accept(MeasurementVisitor& visitor) const override;
@@ -80,7 +81,7 @@ private:
 class GyroscopeMeasurement : public VectorialMeasurement
 {
 public:
-    GyroscopeMeasurement(const U32 timeStamp, const F32 xValue, const F32 yValue, const F32 zValue);
+    GyroscopeMeasurement(const TimePoint &timeStamp, const F32 xValue, const F32 yValue, const F32 zValue);
     virtual ~GyroscopeMeasurement() {}
     virtual std::string ToString() const override;
     virtual void Accept(MeasurementVisitor& visitor) const override;
@@ -97,7 +98,7 @@ private:
 class CompassMeasurement : public VectorialMeasurement
 {
 public:
-    CompassMeasurement(const U32 timeStamp, const F32 xValue, const F32 yValue, const F32 zValue);
+    CompassMeasurement(const TimePoint &timeStamp, const F32 xValue, const F32 yValue, const F32 zValue);
     virtual ~CompassMeasurement() {}
     virtual std::string ToString() const override;
     virtual void Accept(MeasurementVisitor& visitor) const override;
@@ -113,7 +114,7 @@ private:
 class PressureMeasurement : public ScalarMeasurement
 {
 public:
-    explicit PressureMeasurement(const U32 timeStamp, const F32 value);
+    explicit PressureMeasurement(const TimePoint &timeStamp, const F32 value);
     virtual ~PressureMeasurement() {}
     virtual std::string ToString() const override;
     virtual void Accept(MeasurementVisitor& visitor) const override;
@@ -129,7 +130,7 @@ private:
 class TemperatureMeasurement : public ScalarMeasurement
 {
 public:
-    explicit TemperatureMeasurement(const U32 timeStamp, const F32 value);
+    explicit TemperatureMeasurement(const TimePoint &timeStamp, const F32 value);
     virtual ~TemperatureMeasurement() {}
     virtual std::string ToString() const override;
     virtual void Accept(MeasurementVisitor& visitor) const override;

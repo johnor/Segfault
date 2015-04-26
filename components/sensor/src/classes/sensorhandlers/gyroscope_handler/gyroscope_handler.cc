@@ -90,7 +90,7 @@ bool GyroscopeHandler::HasNewGyroscopeMeasurement() const
 
 MeasurementPtr GyroscopeHandler::GetNextGyroscopeMeasurement() const
 {
-    const U32 timeStamp{clock->GetTimeStampInMicroSecs()};
+    const TimePoint timeStamp{ clock->GetTime() };
     const F32 xValue{i2cDevice.ReadTwo8BitRegsToFloat(X_OUT_LOW_ADDRESS, scaleToRadiansPerSecond)};
     const F32 yValue{i2cDevice.ReadTwo8BitRegsToFloat(Y_OUT_LOW_ADDRESS, scaleToRadiansPerSecond)};
     const F32 zValue{i2cDevice.ReadTwo8BitRegsToFloat(Z_OUT_LOW_ADDRESS, scaleToRadiansPerSecond)};

@@ -47,14 +47,14 @@ MeasurementBatch LogReaderIMU::GetNextMeasurementBatch() const
 
 bool LogReaderIMU::HasNewMeasurements() const
 {
-    const U32 currentTimeStamp{clock->GetTimeStampInMicroSecs()};
-    return (measurementList.front()->GetTimeStamp() < currentTimeStamp);
+    const TimePoint currentTime{clock->GetTime()};
+    return (measurementList.front()->GetTime() < currentTime);
 }
 
 MeasurementPtr LogReaderIMU::CreateMeasurement(const std::string &inputLine) const
 {
     const std::vector<std::string> tokenizedString{SplitString(inputLine, ',')};
-    const U32 timeStamp{std::stoul(tokenizedString.at(0))};
+    const TimePoint timeStamp = TimePoint::FromTimeStamp(std::stoul(tokenizedString.at(0)));
     const std::string measurementStr{tokenizedString.at(1)};
 
     if (measurementStr == "ACC")
