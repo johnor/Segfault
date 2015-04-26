@@ -10,7 +10,7 @@ public:
     static TimePoint FromMicroSeconds(const U32 microSeconds);
     static TimePoint FromTimeStamp(const U32 timeStamp);
 
-    TimePoint(const TimePoint &time);
+    TimePoint(const TimePoint &time) = default;
     ~TimePoint() = default;
 
     U32 GetMicroSeconds() const;

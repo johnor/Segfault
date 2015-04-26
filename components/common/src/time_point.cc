@@ -7,11 +7,6 @@ TimePoint::TimePoint(const U32 microSecs)
 {
 }
 
-TimePoint::TimePoint(const TimePoint& time)
-: timeStampInMicroSeconds{time.timeStampInMicroSeconds}
-{
-}
-
 TimePoint TimePoint::FromSeconds(const F32 seconds)
 {
     const U32 microSeconds = static_cast<U32>(seconds * secondsToMicroSeconds);
