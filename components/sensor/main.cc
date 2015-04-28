@@ -10,7 +10,7 @@
 #include "interfaces/imu.h"
 #include "classes/clock/softwareclock.h"
 #include "classes/clock/hardwareclock.h"
-#include "classes/filter/gyro_input_model/gyro_input_model.h"
+#include "classes/filter/bias_model/bias_model.h"
 #include "classes/imu/factories/imu_factory.h"
 
 #include "server/src/server.h"
@@ -36,11 +36,11 @@ int main(int argc, char **argv)
             }
             ClockPtr clock{new SoftwareClock};
             IMUFactory imuFactory{clock};
-            SensorApp sensorApp{imuFactory.GetLogReaderIMU(logFileName), ModelPtr{new GyroInputModel}, clock};
+            SensorApp sensorApp{imuFactory.GetLogReaderIMU(logFileName), ModelPtr{new BiasModel}, clock};
         #else
             ClockPtr clock{new HardwareClock};
             IMUFactory imuFactory{clock};
-            SensorApp sensorApp{imuFactory.GetAltIMU(), ModelPtr{new GyroInputModel}, clock};
+            SensorApp sensorApp{imuFactory.GetAltIMU(), ModelPtr{new BiasModel}, clock};
         #endif
 
         asio::io_service ioService;

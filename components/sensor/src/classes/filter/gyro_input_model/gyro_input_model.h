@@ -11,7 +11,7 @@ public:
     GyroInputModel();
     virtual ~GyroInputModel() {}
 
-    virtual void TimeUpdate(const F32 dt) override;
+    virtual void TimeUpdate(const TimePoint& newTime) override;
 
     virtual void Visit(const AccelerometerMeasurement& accMeas) override;
     virtual void Visit(const GyroscopeMeasurement& gyroMeas) override;

@@ -5,6 +5,7 @@
 #ifndef MEASUREMENTS_H_
 #define MEASUREMENTS_H_
 
+#include <eigen/Eigen>
 #include "components/common/src/numeric_typedefs.h"
 #include "components/common/src/time_point.h"
 #include "interfaces/measurement.h"
@@ -47,6 +48,7 @@ public:
     F32 GetXValue() const;
     F32 GetYValue() const;
     F32 GetZValue() const;
+    Eigen::Vector3f GetVector() const;
 protected:
     VectorialMeasurement(const TimePoint &timeStamp, const F32 xValue, const F32 yValue, const F32 zValue);
     std::string ToString(const std::string& header, const std::string& unit) const;

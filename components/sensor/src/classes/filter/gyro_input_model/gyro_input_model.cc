@@ -9,7 +9,7 @@ GyroInputModel::GyroInputModel()
 
 }
 
-void GyroInputModel::TimeUpdate(const F32 dt)
+void GyroInputModel::TimeUpdate(const TimePoint& newTime)
 {
 
 }
@@ -26,7 +26,7 @@ void GyroInputModel::Visit(const GyroscopeMeasurement& gyroMeas)
     const TimePoint timeDifference{measurementTime - state.GetTime()};
     const F32 dt = timeDifference.GetSeconds();
 
-    const Eigen::Vector3f omega{gyroMeas.GetXValue(), gyroMeas.GetYValue(), gyroMeas.GetZValue()};
+    const Eigen::Vector3f omega{gyroMeas.GetVector()};
     const Eigen::Matrix4f F{Eigen::Matrix4f::Identity() + 0.5f * GetS(omega) * dt};
 
     state.GetX() = F * state.GetX();

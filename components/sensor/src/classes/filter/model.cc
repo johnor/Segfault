@@ -33,9 +33,9 @@ Eigen::Matrix4f Model::GetS(const Eigen::Vector3f& omega)
     return result;
 }
 
-Eigen::Matrix<F32, 4, 3> Model::GetS(const Eigen::Vector4f& q)
+Eigen::Matrix<F32, Model::Q_SIZE, Model::W_SIZE> Model::GetS(const Eigen::Vector4f& q)
 {
-    Eigen::Matrix<F32, 4, 3> result{Eigen::Matrix<F32, 4, 3>::Zero()};
+    Eigen::Matrix<F32, Q_SIZE, W_SIZE> result{Eigen::Matrix<F32, Q_SIZE, W_SIZE>::Zero()};
 
     result(0, 0) = -q(1);
     result(0, 1) = -q(2);

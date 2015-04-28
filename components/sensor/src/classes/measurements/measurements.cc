@@ -80,6 +80,16 @@ F32 VectorialMeasurement::GetZValue() const
     return zValue;
 }
 
+Eigen::Vector3f VectorialMeasurement::GetVector() const
+{
+    Eigen::Vector3f result;
+    result(0) = xValue;
+    result(1) = yValue;
+    result(2) = zValue;
+
+    return result;
+}
+
 /* Accelerometer measurement */
 AccelerometerMeasurement::AccelerometerMeasurement(const TimePoint &timeStamp, const F32 xValue, const F32 yValue, const F32 zValue)
     : VectorialMeasurement{timeStamp, xValue, yValue, zValue}
