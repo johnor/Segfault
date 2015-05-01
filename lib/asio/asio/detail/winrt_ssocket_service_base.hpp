@@ -2,7 +2,7 @@
 // detail/winrt_ssocket_service_base.hpp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2014 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2015 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -23,8 +23,8 @@
 #include "asio/error.hpp"
 #include "asio/io_service.hpp"
 #include "asio/socket_base.hpp"
-#include "asio/detail/addressof.hpp"
 #include "asio/detail/buffer_sequence_adapter.hpp"
+#include "asio/detail/memory.hpp"
 #include "asio/detail/socket_types.hpp"
 #include "asio/detail/winrt_async_manager.hpp"
 #include "asio/detail/winrt_socket_recv_op.hpp"
@@ -199,11 +199,11 @@ public:
     // Allocate and construct an operation to wrap the handler.
     typedef winrt_socket_send_op<ConstBufferSequence, Handler> op;
     typename op::ptr p = { asio::detail::addressof(handler),
-      asio_handler_alloc_helpers::allocate(
-        sizeof(op), handler), 0 };
+      op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(buffers, handler);
 
-    ASIO_HANDLER_CREATION((p.p, "socket", &impl, "async_send"));
+    ASIO_HANDLER_CREATION((io_service_.context(),
+          *p.p, "socket", &impl, 0, "async_send"));
 
     start_send_op(impl,
         buffer_sequence_adapter<asio::const_buffer,
@@ -255,11 +255,11 @@ public:
     // Allocate and construct an operation to wrap the handler.
     typedef winrt_socket_recv_op<MutableBufferSequence, Handler> op;
     typename op::ptr p = { asio::detail::addressof(handler),
-      asio_handler_alloc_helpers::allocate(
-        sizeof(op), handler), 0 };
+      op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(buffers, handler);
 
-    ASIO_HANDLER_CREATION((p.p, "socket", &impl, "async_receive"));
+    ASIO_HANDLER_CREATION((io_service_.context(),
+          *p.p, "socket", &impl, 0, "async_receive"));
 
     start_receive_op(impl,
         buffer_sequence_adapter<asio::mutable_buffer,

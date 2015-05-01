@@ -2,7 +2,7 @@
 // basic_socket_acceptor.hpp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2014 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2015 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -56,10 +56,6 @@ class basic_socket_acceptor
     public socket_base
 {
 public:
-  /// (Deprecated: Use native_handle_type.) The native representation of an
-  /// acceptor.
-  typedef typename SocketAcceptorService::native_handle_type native_type;
-
   /// The native representation of an acceptor.
   typedef typename SocketAcceptorService::native_handle_type native_handle_type;
 
@@ -231,7 +227,8 @@ public:
   basic_socket_acceptor(
       basic_socket_acceptor<Protocol1, SocketAcceptorService1>&& other,
       typename enable_if<is_convertible<Protocol1, Protocol>::value>::type* = 0)
-    : basic_io_object<SocketAcceptorService>(other.get_io_service())
+    : basic_io_object<SocketAcceptorService>(
+        other.get_service().get_io_service())
   {
     this->get_service().template converting_move_construct<Protocol1>(
         this->get_implementation(), other.get_implementation());
@@ -491,17 +488,6 @@ public:
   asio::error_code close(asio::error_code& ec)
   {
     return this->get_service().close(this->get_implementation(), ec);
-  }
-
-  /// (Deprecated: Use native_handle().) Get the native acceptor representation.
-  /**
-   * This function may be used to obtain the underlying representation of the
-   * acceptor. This is intended to allow access to native acceptor functionality
-   * that is not otherwise provided.
-   */
-  native_type native()
-  {
-    return this->get_service().native_handle(this->get_implementation());
   }
 
   /// Get the native acceptor representation.
@@ -903,6 +889,104 @@ public:
     return this->get_service().local_endpoint(this->get_implementation(), ec);
   }
 
+  /// Wait for the acceptor to become ready to read, ready to write, or to have
+  /// pending error conditions.
+  /**
+   * This function is used to perform a blocking wait for an acceptor to enter
+   * a ready to read, write or error condition state.
+   *
+   * @param w Specifies the desired acceptor state.
+   *
+   * @par Example
+   * Waiting for an acceptor to become readable.
+   * @code
+   * asio::ip::tcp::acceptor acceptor(io_service);
+   * ...
+   * acceptor.wait(asio::ip::tcp::acceptor::wait_read);
+   * @endcode
+   */
+  void wait(wait_type w)
+  {
+    asio::error_code ec;
+    this->get_service().wait(this->get_implementation(), w, ec);
+    asio::detail::throw_error(ec, "wait");
+  }
+
+  /// Wait for the acceptor to become ready to read, ready to write, or to have
+  /// pending error conditions.
+  /**
+   * This function is used to perform a blocking wait for an acceptor to enter
+   * a ready to read, write or error condition state.
+   *
+   * @param w Specifies the desired acceptor state.
+   *
+   * @param ec Set to indicate what error occurred, if any.
+   *
+   * @par Example
+   * Waiting for an acceptor to become readable.
+   * @code
+   * asio::ip::tcp::acceptor acceptor(io_service);
+   * ...
+   * asio::error_code ec;
+   * acceptor.wait(asio::ip::tcp::acceptor::wait_read, ec);
+   * @endcode
+   */
+  asio::error_code wait(wait_type w, asio::error_code& ec)
+  {
+    return this->get_service().wait(this->get_implementation(), w, ec);
+  }
+
+  /// Asynchronously wait for the acceptor to become ready to read, ready to
+  /// write, or to have pending error conditions.
+  /**
+   * This function is used to perform an asynchronous wait for an acceptor to
+   * enter a ready to read, write or error condition state.
+   *
+   * @param w Specifies the desired acceptor state.
+   *
+   * @param handler The handler to be called when the wait operation completes.
+   * Copies will be made of the handler as required. The function signature of
+   * the handler must be:
+   * @code void handler(
+   *   const asio::error_code& error // Result of operation
+   * ); @endcode
+   * Regardless of whether the asynchronous operation completes immediately or
+   * not, the handler will not be invoked from within this function. Invocation
+   * of the handler will be performed in a manner equivalent to using
+   * asio::io_service::post().
+   *
+   * @par Example
+   * @code
+   * void wait_handler(const asio::error_code& error)
+   * {
+   *   if (!error)
+   *   {
+   *     // Wait succeeded.
+   *   }
+   * }
+   *
+   * ...
+   *
+   * asio::ip::tcp::acceptor acceptor(io_service);
+   * ...
+   * acceptor.async_wait(
+   *     asio::ip::tcp::acceptor::wait_read,
+   *     wait_handler);
+   * @endcode
+   */
+  template <typename WaitHandler>
+  ASIO_INITFN_RESULT_TYPE(WaitHandler,
+      void (asio::error_code))
+  async_wait(wait_type w, ASIO_MOVE_ARG(WaitHandler) handler)
+  {
+    // If you get an error on the following line it means that your handler does
+    // not meet the documented type requirements for a WaitHandler.
+    ASIO_WAIT_HANDLER_CHECK(WaitHandler, handler) type_check;
+
+    return this->get_service().async_wait(this->get_implementation(),
+        w, ASIO_MOVE_CAST(WaitHandler)(handler));
+  }
+
   /// Accept a new connection.
   /**
    * This function is used to accept a new connection from a peer into the
@@ -945,7 +1029,7 @@ public:
    * @code
    * asio::ip::tcp::acceptor acceptor(io_service);
    * ...
-   * asio::ip::tcp::soocket socket(io_service);
+   * asio::ip::tcp::socket socket(io_service);
    * asio::error_code ec;
    * acceptor.accept(socket, ec);
    * if (ec)
@@ -1127,6 +1211,519 @@ public:
     return this->get_service().async_accept(this->get_implementation(), peer,
         &peer_endpoint, ASIO_MOVE_CAST(AcceptHandler)(handler));
   }
+
+#if defined(ASIO_HAS_MOVE) || defined(GENERATING_DOCUMENTATION)
+  /// Accept a new connection.
+  /**
+   * This function is used to accept a new connection from a peer. The function
+   * call will block until a new connection has been accepted successfully or
+   * an error occurs.
+   *
+   * This overload requires that the Protocol template parameter satisfy the
+   * AcceptableProtocol type requirements.
+   *
+   * @returns A socket object representing the newly accepted connection.
+   *
+   * @throws asio::system_error Thrown on failure.
+   *
+   * @par Example
+   * @code
+   * asio::ip::tcp::acceptor acceptor(io_service);
+   * ...
+   * asio::ip::tcp::socket socket(acceptor.accept());
+   * @endcode
+   */
+  typename Protocol::socket accept()
+  {
+    asio::error_code ec;
+    typename Protocol::socket peer(
+        this->get_service().accept(
+          this->get_implementation(), 0, 0, ec));
+    asio::detail::throw_error(ec, "accept");
+    return peer;
+  }
+
+  /// Accept a new connection.
+  /**
+   * This function is used to accept a new connection from a peer. The function
+   * call will block until a new connection has been accepted successfully or
+   * an error occurs.
+   *
+   * This overload requires that the Protocol template parameter satisfy the
+   * AcceptableProtocol type requirements.
+   *
+   * @param ec Set to indicate what error occurred, if any.
+   *
+   * @returns On success, a socket object representing the newly accepted
+   * connection. On error, a socket object where is_open() is false.
+   *
+   * @par Example
+   * @code
+   * asio::ip::tcp::acceptor acceptor(io_service);
+   * ...
+   * asio::ip::tcp::socket socket(acceptor.accept(ec));
+   * if (ec)
+   * {
+   *   // An error occurred.
+   * }
+   * @endcode
+   */
+  typename Protocol::socket accept(asio::error_code& ec)
+  {
+    return this->get_service().accept(this->get_implementation(), 0, 0, ec);
+  }
+
+  /// Start an asynchronous accept.
+  /**
+   * This function is used to asynchronously accept a new connection. The
+   * function call always returns immediately.
+   *
+   * This overload requires that the Protocol template parameter satisfy the
+   * AcceptableProtocol type requirements.
+   *
+   * @param handler The handler to be called when the accept operation
+   * completes. Copies will be made of the handler as required. The function
+   * signature of the handler must be:
+   * @code void handler(
+   *   const asio::error_code& error, // Result of operation.
+   *   typename Protocol::socket peer // On success, the newly accepted socket.
+   * ); @endcode
+   * Regardless of whether the asynchronous operation completes immediately or
+   * not, the handler will not be invoked from within this function. Invocation
+   * of the handler will be performed in a manner equivalent to using
+   * asio::io_service::post().
+   *
+   * @par Example
+   * @code
+   * void accept_handler(const asio::error_code& error,
+   *     asio::ip::tcp::socket peer)
+   * {
+   *   if (!error)
+   *   {
+   *     // Accept succeeded.
+   *   }
+   * }
+   *
+   * ...
+   *
+   * asio::ip::tcp::acceptor acceptor(io_service);
+   * ...
+   * acceptor.async_accept(accept_handler);
+   * @endcode
+   */
+  template <typename MoveAcceptHandler>
+  ASIO_INITFN_RESULT_TYPE(MoveAcceptHandler,
+      void (asio::error_code, typename Protocol::socket))
+  async_accept(ASIO_MOVE_ARG(MoveAcceptHandler) handler)
+  {
+    // If you get an error on the following line it means that your handler does
+    // not meet the documented type requirements for a MoveAcceptHandler.
+    ASIO_MOVE_ACCEPT_HANDLER_CHECK(MoveAcceptHandler,
+        handler, typename Protocol::socket) type_check;
+
+    return this->get_service().async_accept(this->get_implementation(),
+        static_cast<asio::io_service*>(0), static_cast<endpoint_type*>(0),
+        ASIO_MOVE_CAST(MoveAcceptHandler)(handler));
+  }
+
+  /// Accept a new connection.
+  /**
+   * This function is used to accept a new connection from a peer. The function
+   * call will block until a new connection has been accepted successfully or
+   * an error occurs.
+   *
+   * This overload requires that the Protocol template parameter satisfy the
+   * AcceptableProtocol type requirements.
+   *
+   * @param io_service The io_service object to be used for the newly accepted
+   * socket.
+   *
+   * @returns A socket object representing the newly accepted connection.
+   *
+   * @throws asio::system_error Thrown on failure.
+   *
+   * @par Example
+   * @code
+   * asio::ip::tcp::acceptor acceptor(io_service);
+   * ...
+   * asio::ip::tcp::socket socket(acceptor.accept());
+   * @endcode
+   */
+  typename Protocol::socket accept(asio::io_service& io_service)
+  {
+    asio::error_code ec;
+    typename Protocol::socket peer(
+        this->get_service().accept(this->get_implementation(),
+          &io_service, static_cast<endpoint_type*>(0), ec));
+    asio::detail::throw_error(ec, "accept");
+    return peer;
+  }
+
+  /// Accept a new connection.
+  /**
+   * This function is used to accept a new connection from a peer. The function
+   * call will block until a new connection has been accepted successfully or
+   * an error occurs.
+   *
+   * This overload requires that the Protocol template parameter satisfy the
+   * AcceptableProtocol type requirements.
+   *
+   * @param io_service The io_service object to be used for the newly accepted
+   * socket.
+   *
+   * @param ec Set to indicate what error occurred, if any.
+   *
+   * @returns On success, a socket object representing the newly accepted
+   * connection. On error, a socket object where is_open() is false.
+   *
+   * @par Example
+   * @code
+   * asio::ip::tcp::acceptor acceptor(io_service);
+   * ...
+   * asio::ip::tcp::socket socket(acceptor.accept(io_service2, ec));
+   * if (ec)
+   * {
+   *   // An error occurred.
+   * }
+   * @endcode
+   */
+  typename Protocol::socket accept(
+      asio::io_service& io_service, asio::error_code& ec)
+  {
+    return this->get_service().accept(this->get_implementation(),
+        &io_service, static_cast<endpoint_type*>(0), ec);
+  }
+
+  /// Start an asynchronous accept.
+  /**
+   * This function is used to asynchronously accept a new connection. The
+   * function call always returns immediately.
+   *
+   * This overload requires that the Protocol template parameter satisfy the
+   * AcceptableProtocol type requirements.
+   *
+   * @param io_service The io_service object to be used for the newly accepted
+   * socket.
+   *
+   * @param handler The handler to be called when the accept operation
+   * completes. Copies will be made of the handler as required. The function
+   * signature of the handler must be:
+   * @code void handler(
+   *   const asio::error_code& error, // Result of operation.
+   *   typename Protocol::socket peer // On success, the newly accepted socket.
+   * ); @endcode
+   * Regardless of whether the asynchronous operation completes immediately or
+   * not, the handler will not be invoked from within this function. Invocation
+   * of the handler will be performed in a manner equivalent to using
+   * asio::io_service::post().
+   *
+   * @par Example
+   * @code
+   * void accept_handler(const asio::error_code& error,
+   *     asio::ip::tcp::socket peer)
+   * {
+   *   if (!error)
+   *   {
+   *     // Accept succeeded.
+   *   }
+   * }
+   *
+   * ...
+   *
+   * asio::ip::tcp::acceptor acceptor(io_service);
+   * ...
+   * acceptor.async_accept(io_service2, accept_handler);
+   * @endcode
+   */
+  template <typename MoveAcceptHandler>
+  ASIO_INITFN_RESULT_TYPE(MoveAcceptHandler,
+      void (asio::error_code, typename Protocol::socket))
+  async_accept(asio::io_service& io_service,
+      ASIO_MOVE_ARG(MoveAcceptHandler) handler)
+  {
+    // If you get an error on the following line it means that your handler does
+    // not meet the documented type requirements for a MoveAcceptHandler.
+    ASIO_MOVE_ACCEPT_HANDLER_CHECK(MoveAcceptHandler,
+        handler, typename Protocol::socket) type_check;
+
+    return this->get_service().async_accept(this->get_implementation(),
+        &io_service, static_cast<endpoint_type*>(0),
+        ASIO_MOVE_CAST(MoveAcceptHandler)(handler));
+  }
+
+  /// Accept a new connection.
+  /**
+   * This function is used to accept a new connection from a peer. The function
+   * call will block until a new connection has been accepted successfully or
+   * an error occurs.
+   *
+   * This overload requires that the Protocol template parameter satisfy the
+   * AcceptableProtocol type requirements.
+   *
+   * @param peer_endpoint An endpoint object into which the endpoint of the
+   * remote peer will be written.
+   *
+   * @returns A socket object representing the newly accepted connection.
+   *
+   * @throws asio::system_error Thrown on failure.
+   *
+   * @par Example
+   * @code
+   * asio::ip::tcp::acceptor acceptor(io_service);
+   * ...
+   * asio::ip::tcp::endpoint endpoint;
+   * asio::ip::tcp::socket socket(acceptor.accept(endpoint));
+   * @endcode
+   */
+  typename Protocol::socket accept(endpoint_type& peer_endpoint)
+  {
+    asio::error_code ec;
+    typename Protocol::socket peer(
+        this->get_service().accept(this->get_implementation(),
+          static_cast<asio::io_service*>(0), &peer_endpoint, ec));
+    asio::detail::throw_error(ec, "accept");
+    return peer;
+  }
+
+  /// Accept a new connection.
+  /**
+   * This function is used to accept a new connection from a peer. The function
+   * call will block until a new connection has been accepted successfully or
+   * an error occurs.
+   *
+   * This overload requires that the Protocol template parameter satisfy the
+   * AcceptableProtocol type requirements.
+   *
+   * @param peer_endpoint An endpoint object into which the endpoint of the
+   * remote peer will be written.
+   *
+   * @param ec Set to indicate what error occurred, if any.
+   *
+   * @returns On success, a socket object representing the newly accepted
+   * connection. On error, a socket object where is_open() is false.
+   *
+   * @par Example
+   * @code
+   * asio::ip::tcp::acceptor acceptor(io_service);
+   * ...
+   * asio::ip::tcp::endpoint endpoint;
+   * asio::ip::tcp::socket socket(acceptor.accept(endpoint, ec));
+   * if (ec)
+   * {
+   *   // An error occurred.
+   * }
+   * @endcode
+   */
+  typename Protocol::socket accept(
+      endpoint_type& peer_endpoint, asio::error_code& ec)
+  {
+    return this->get_service().accept(this->get_implementation(),
+        static_cast<asio::io_service*>(0), &peer_endpoint, ec);
+  }
+
+  /// Start an asynchronous accept.
+  /**
+   * This function is used to asynchronously accept a new connection. The
+   * function call always returns immediately.
+   *
+   * This overload requires that the Protocol template parameter satisfy the
+   * AcceptableProtocol type requirements.
+   *
+   * @param peer_endpoint An endpoint object into which the endpoint of the
+   * remote peer will be written. Ownership of the peer_endpoint object is
+   * retained by the caller, which must guarantee that it is valid until the
+   * handler is called.
+   *
+   * @param handler The handler to be called when the accept operation
+   * completes. Copies will be made of the handler as required. The function
+   * signature of the handler must be:
+   * @code void handler(
+   *   const asio::error_code& error, // Result of operation.
+   *   typename Protocol::socket peer // On success, the newly accepted socket.
+   * ); @endcode
+   * Regardless of whether the asynchronous operation completes immediately or
+   * not, the handler will not be invoked from within this function. Invocation
+   * of the handler will be performed in a manner equivalent to using
+   * asio::io_service::post().
+   *
+   * @par Example
+   * @code
+   * void accept_handler(const asio::error_code& error,
+   *     asio::ip::tcp::socket peer)
+   * {
+   *   if (!error)
+   *   {
+   *     // Accept succeeded.
+   *   }
+   * }
+   *
+   * ...
+   *
+   * asio::ip::tcp::acceptor acceptor(io_service);
+   * ...
+   * asio::ip::tcp::endpoint endpoint;
+   * acceptor.async_accept(endpoint, accept_handler);
+   * @endcode
+   */
+  template <typename MoveAcceptHandler>
+  ASIO_INITFN_RESULT_TYPE(MoveAcceptHandler,
+      void (asio::error_code, typename Protocol::socket))
+  async_accept(endpoint_type& peer_endpoint,
+      ASIO_MOVE_ARG(MoveAcceptHandler) handler)
+  {
+    // If you get an error on the following line it means that your handler does
+    // not meet the documented type requirements for a MoveAcceptHandler.
+    ASIO_MOVE_ACCEPT_HANDLER_CHECK(MoveAcceptHandler,
+        handler, typename Protocol::socket) type_check;
+
+    return this->get_service().async_accept(this->get_implementation(),
+        static_cast<asio::io_service*>(0), &peer_endpoint,
+        ASIO_MOVE_CAST(MoveAcceptHandler)(handler));
+  }
+
+  /// Accept a new connection.
+  /**
+   * This function is used to accept a new connection from a peer. The function
+   * call will block until a new connection has been accepted successfully or
+   * an error occurs.
+   *
+   * This overload requires that the Protocol template parameter satisfy the
+   * AcceptableProtocol type requirements.
+   *
+   * @param io_service The io_service object to be used for the newly accepted
+   * socket.
+   *
+   * @param peer_endpoint An endpoint object into which the endpoint of the
+   * remote peer will be written.
+   *
+   * @returns A socket object representing the newly accepted connection.
+   *
+   * @throws asio::system_error Thrown on failure.
+   *
+   * @par Example
+   * @code
+   * asio::ip::tcp::acceptor acceptor(io_service);
+   * ...
+   * asio::ip::tcp::endpoint endpoint;
+   * asio::ip::tcp::socket socket(
+   *     acceptor.accept(io_service2, endpoint));
+   * @endcode
+   */
+  typename Protocol::socket accept(
+      asio::io_service& io_service, endpoint_type& peer_endpoint)
+  {
+    asio::error_code ec;
+    typename Protocol::socket peer(
+        this->get_service().accept(this->get_implementation(),
+          &io_service, &peer_endpoint, ec));
+    asio::detail::throw_error(ec, "accept");
+    return peer;
+  }
+
+  /// Accept a new connection.
+  /**
+   * This function is used to accept a new connection from a peer. The function
+   * call will block until a new connection has been accepted successfully or
+   * an error occurs.
+   *
+   * This overload requires that the Protocol template parameter satisfy the
+   * AcceptableProtocol type requirements.
+   *
+   * @param io_service The io_service object to be used for the newly accepted
+   * socket.
+   *
+   * @param peer_endpoint An endpoint object into which the endpoint of the
+   * remote peer will be written.
+   *
+   * @param ec Set to indicate what error occurred, if any.
+   *
+   * @returns On success, a socket object representing the newly accepted
+   * connection. On error, a socket object where is_open() is false.
+   *
+   * @par Example
+   * @code
+   * asio::ip::tcp::acceptor acceptor(io_service);
+   * ...
+   * asio::ip::tcp::endpoint endpoint;
+   * asio::ip::tcp::socket socket(
+   *     acceptor.accept(io_service2, endpoint, ec));
+   * if (ec)
+   * {
+   *   // An error occurred.
+   * }
+   * @endcode
+   */
+  typename Protocol::socket accept(asio::io_service& io_service,
+      endpoint_type& peer_endpoint, asio::error_code& ec)
+  {
+    return this->get_service().accept(this->get_implementation(),
+        &io_service, &peer_endpoint, ec);
+  }
+
+  /// Start an asynchronous accept.
+  /**
+   * This function is used to asynchronously accept a new connection. The
+   * function call always returns immediately.
+   *
+   * This overload requires that the Protocol template parameter satisfy the
+   * AcceptableProtocol type requirements.
+   *
+   * @param io_service The io_service object to be used for the newly accepted
+   * socket.
+   *
+   * @param peer_endpoint An endpoint object into which the endpoint of the
+   * remote peer will be written. Ownership of the peer_endpoint object is
+   * retained by the caller, which must guarantee that it is valid until the
+   * handler is called.
+   *
+   * @param handler The handler to be called when the accept operation
+   * completes. Copies will be made of the handler as required. The function
+   * signature of the handler must be:
+   * @code void handler(
+   *   const asio::error_code& error, // Result of operation.
+   *   typename Protocol::socket peer // On success, the newly accepted socket.
+   * ); @endcode
+   * Regardless of whether the asynchronous operation completes immediately or
+   * not, the handler will not be invoked from within this function. Invocation
+   * of the handler will be performed in a manner equivalent to using
+   * asio::io_service::post().
+   *
+   * @par Example
+   * @code
+   * void accept_handler(const asio::error_code& error,
+   *     asio::ip::tcp::socket peer)
+   * {
+   *   if (!error)
+   *   {
+   *     // Accept succeeded.
+   *   }
+   * }
+   *
+   * ...
+   *
+   * asio::ip::tcp::acceptor acceptor(io_service);
+   * ...
+   * asio::ip::tcp::endpoint endpoint;
+   * acceptor.async_accept(io_service2, endpoint, accept_handler);
+   * @endcode
+   */
+  template <typename MoveAcceptHandler>
+  ASIO_INITFN_RESULT_TYPE(MoveAcceptHandler,
+      void (asio::error_code, typename Protocol::socket))
+  async_accept(asio::io_service& io_service,
+      endpoint_type& peer_endpoint,
+      ASIO_MOVE_ARG(MoveAcceptHandler) handler)
+  {
+    // If you get an error on the following line it means that your handler does
+    // not meet the documented type requirements for a MoveAcceptHandler.
+    ASIO_MOVE_ACCEPT_HANDLER_CHECK(MoveAcceptHandler,
+        handler, typename Protocol::socket) type_check;
+
+    return this->get_service().async_accept(
+        this->get_implementation(), &io_service, &peer_endpoint,
+        ASIO_MOVE_CAST(MoveAcceptHandler)(handler));
+  }
+#endif // defined(ASIO_HAS_MOVE) || defined(GENERATING_DOCUMENTATION)
 };
 
 } // namespace asio

@@ -2,7 +2,7 @@
 // detail/handler_type_requirements.hpp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2014 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2015 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -71,19 +71,19 @@ namespace detail {
 # if defined(ASIO_ENABLE_HANDLER_TYPE_REQUIREMENTS_ASSERT)
 
 template <typename Handler>
-auto zero_arg_handler_test(Handler h, void*)
+auto zero_arg_copyable_handler_test(Handler h, void*)
   -> decltype(
     sizeof(Handler(static_cast<const Handler&>(h))),
     ((h)()),
     char(0));
 
 template <typename Handler>
-char (&zero_arg_handler_test(Handler, ...))[2];
+char (&zero_arg_copyable_handler_test(Handler, ...))[2];
 
 template <typename Handler, typename Arg1>
 auto one_arg_handler_test(Handler h, Arg1* a1)
   -> decltype(
-    sizeof(Handler(static_cast<const Handler&>(h))),
+    sizeof(Handler(ASIO_MOVE_CAST(Handler)(h))),
     ((h)(*a1)),
     char(0));
 
@@ -93,12 +93,22 @@ char (&one_arg_handler_test(Handler h, ...))[2];
 template <typename Handler, typename Arg1, typename Arg2>
 auto two_arg_handler_test(Handler h, Arg1* a1, Arg2* a2)
   -> decltype(
-    sizeof(Handler(static_cast<const Handler&>(h))),
+    sizeof(Handler(ASIO_MOVE_CAST(Handler)(h))),
     ((h)(*a1, *a2)),
     char(0));
 
 template <typename Handler>
 char (&two_arg_handler_test(Handler, ...))[2];
+
+template <typename Handler, typename Arg1, typename Arg2>
+auto two_arg_move_handler_test(Handler h, Arg1* a1, Arg2* a2)
+  -> decltype(
+    sizeof(Handler(ASIO_MOVE_CAST(Handler)(h))),
+    ((h)(*a1, ASIO_MOVE_CAST(Arg2)(*a2))),
+    char(0));
+
+template <typename Handler>
+char (&two_arg_move_handler_test(Handler, ...))[2];
 
 #  define ASIO_HANDLER_TYPE_REQUIREMENTS_ASSERT(expr, msg) \
      static_assert(expr, msg);
@@ -113,6 +123,13 @@ template <typename T> T& lvref();
 template <typename T> T& lvref(T);
 template <typename T> const T& clvref();
 template <typename T> const T& clvref(T);
+#if defined(ASIO_HAS_MOVE)
+template <typename T> T rvref();
+template <typename T> T rvref(T);
+#else // defined(ASIO_HAS_MOVE)
+template <typename T> const T& rvref();
+template <typename T> const T& rvref(T);
+#endif // defined(ASIO_HAS_MOVE)
 template <typename T> char argbyv(T);
 
 template <int>
@@ -127,7 +144,7 @@ struct handler_type_requirements
       void()) asio_true_handler_type; \
   \
   ASIO_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
-      sizeof(asio::detail::zero_arg_handler_test( \
+      sizeof(asio::detail::zero_arg_copyable_handler_test( \
           asio::detail::clvref< \
             asio_true_handler_type>(), 0)) == 1, \
       "CompletionHandler type requirements not met") \
@@ -151,7 +168,7 @@ struct handler_type_requirements
   \
   ASIO_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
       sizeof(asio::detail::two_arg_handler_test( \
-          asio::detail::clvref< \
+          asio::detail::rvref< \
             asio_true_handler_type>(), \
           static_cast<const asio::error_code*>(0), \
           static_cast<const std::size_t*>(0))) == 1, \
@@ -160,7 +177,7 @@ struct handler_type_requirements
   typedef asio::detail::handler_type_requirements< \
       sizeof( \
         asio::detail::argbyv( \
-          asio::detail::clvref< \
+          asio::detail::rvref< \
             asio_true_handler_type>())) + \
       sizeof( \
         asio::detail::lvref< \
@@ -168,7 +185,6 @@ struct handler_type_requirements
             asio::detail::lvref<const asio::error_code>(), \
             asio::detail::lvref<const std::size_t>()), \
         char(0))> ASIO_UNUSED_TYPEDEF
-
 
 #define ASIO_WRITE_HANDLER_CHECK( \
     handler_type, handler) \
@@ -179,7 +195,7 @@ struct handler_type_requirements
   \
   ASIO_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
       sizeof(asio::detail::two_arg_handler_test( \
-          asio::detail::clvref< \
+          asio::detail::rvref< \
             asio_true_handler_type>(), \
           static_cast<const asio::error_code*>(0), \
           static_cast<const std::size_t*>(0))) == 1, \
@@ -188,7 +204,7 @@ struct handler_type_requirements
   typedef asio::detail::handler_type_requirements< \
       sizeof( \
         asio::detail::argbyv( \
-          asio::detail::clvref< \
+          asio::detail::rvref< \
             asio_true_handler_type>())) + \
       sizeof( \
         asio::detail::lvref< \
@@ -206,7 +222,7 @@ struct handler_type_requirements
   \
   ASIO_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
       sizeof(asio::detail::one_arg_handler_test( \
-          asio::detail::clvref< \
+          asio::detail::rvref< \
             asio_true_handler_type>(), \
           static_cast<const asio::error_code*>(0))) == 1, \
       "AcceptHandler type requirements not met") \
@@ -214,12 +230,39 @@ struct handler_type_requirements
   typedef asio::detail::handler_type_requirements< \
       sizeof( \
         asio::detail::argbyv( \
-          asio::detail::clvref< \
+          asio::detail::rvref< \
             asio_true_handler_type>())) + \
       sizeof( \
         asio::detail::lvref< \
           asio_true_handler_type>()( \
             asio::detail::lvref<const asio::error_code>()), \
+        char(0))> ASIO_UNUSED_TYPEDEF
+
+#define ASIO_MOVE_ACCEPT_HANDLER_CHECK( \
+    handler_type, handler, socket_type) \
+  \
+  typedef ASIO_HANDLER_TYPE(handler_type, \
+      void(asio::error_code, socket_type)) \
+    asio_true_handler_type; \
+  \
+  ASIO_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
+      sizeof(asio::detail::two_arg_move_handler_test( \
+          asio::detail::rvref< \
+            asio_true_handler_type>(), \
+          static_cast<const asio::error_code*>(0), \
+          static_cast<socket_type*>(0))) == 1, \
+      "MoveAcceptHandler type requirements not met") \
+  \
+  typedef asio::detail::handler_type_requirements< \
+      sizeof( \
+        asio::detail::argbyv( \
+          asio::detail::rvref< \
+            asio_true_handler_type>())) + \
+      sizeof( \
+        asio::detail::lvref< \
+          asio_true_handler_type>()( \
+            asio::detail::lvref<const asio::error_code>(), \
+            asio::detail::rvref<socket_type>()), \
         char(0))> ASIO_UNUSED_TYPEDEF
 
 #define ASIO_CONNECT_HANDLER_CHECK( \
@@ -231,7 +274,7 @@ struct handler_type_requirements
   \
   ASIO_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
       sizeof(asio::detail::one_arg_handler_test( \
-          asio::detail::clvref< \
+          asio::detail::rvref< \
             asio_true_handler_type>(), \
           static_cast<const asio::error_code*>(0))) == 1, \
       "ConnectHandler type requirements not met") \
@@ -239,7 +282,7 @@ struct handler_type_requirements
   typedef asio::detail::handler_type_requirements< \
       sizeof( \
         asio::detail::argbyv( \
-          asio::detail::clvref< \
+          asio::detail::rvref< \
             asio_true_handler_type>())) + \
       sizeof( \
         asio::detail::lvref< \
@@ -256,7 +299,7 @@ struct handler_type_requirements
   \
   ASIO_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
       sizeof(asio::detail::two_arg_handler_test( \
-          asio::detail::clvref< \
+          asio::detail::rvref< \
             asio_true_handler_type>(), \
           static_cast<const asio::error_code*>(0), \
           static_cast<const iter_type*>(0))) == 1, \
@@ -265,7 +308,7 @@ struct handler_type_requirements
   typedef asio::detail::handler_type_requirements< \
       sizeof( \
         asio::detail::argbyv( \
-          asio::detail::clvref< \
+          asio::detail::rvref< \
             asio_true_handler_type>())) + \
       sizeof( \
         asio::detail::lvref< \
@@ -283,7 +326,7 @@ struct handler_type_requirements
   \
   ASIO_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
       sizeof(asio::detail::two_arg_handler_test( \
-          asio::detail::clvref< \
+          asio::detail::rvref< \
             asio_true_handler_type>(), \
           static_cast<const asio::error_code*>(0), \
           static_cast<const iter_type*>(0))) == 1, \
@@ -292,7 +335,7 @@ struct handler_type_requirements
   typedef asio::detail::handler_type_requirements< \
       sizeof( \
         asio::detail::argbyv( \
-          asio::detail::clvref< \
+          asio::detail::rvref< \
             asio_true_handler_type>())) + \
       sizeof( \
         asio::detail::lvref< \
@@ -310,7 +353,7 @@ struct handler_type_requirements
   \
   ASIO_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
       sizeof(asio::detail::one_arg_handler_test( \
-          asio::detail::clvref< \
+          asio::detail::rvref< \
             asio_true_handler_type>(), \
           static_cast<const asio::error_code*>(0))) == 1, \
       "WaitHandler type requirements not met") \
@@ -318,7 +361,7 @@ struct handler_type_requirements
   typedef asio::detail::handler_type_requirements< \
       sizeof( \
         asio::detail::argbyv( \
-          asio::detail::clvref< \
+          asio::detail::rvref< \
             asio_true_handler_type>())) + \
       sizeof( \
         asio::detail::lvref< \
@@ -335,7 +378,7 @@ struct handler_type_requirements
   \
   ASIO_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
       sizeof(asio::detail::two_arg_handler_test( \
-          asio::detail::clvref< \
+          asio::detail::rvref< \
             asio_true_handler_type>(), \
           static_cast<const asio::error_code*>(0), \
           static_cast<const int*>(0))) == 1, \
@@ -344,7 +387,7 @@ struct handler_type_requirements
   typedef asio::detail::handler_type_requirements< \
       sizeof( \
         asio::detail::argbyv( \
-          asio::detail::clvref< \
+          asio::detail::rvref< \
             asio_true_handler_type>())) + \
       sizeof( \
         asio::detail::lvref< \
@@ -362,7 +405,7 @@ struct handler_type_requirements
   \
   ASIO_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
       sizeof(asio::detail::one_arg_handler_test( \
-          asio::detail::clvref< \
+          asio::detail::rvref< \
             asio_true_handler_type>(), \
           static_cast<const asio::error_code*>(0))) == 1, \
       "HandshakeHandler type requirements not met") \
@@ -370,7 +413,7 @@ struct handler_type_requirements
   typedef asio::detail::handler_type_requirements< \
       sizeof( \
         asio::detail::argbyv( \
-          asio::detail::clvref< \
+          asio::detail::rvref< \
             asio_true_handler_type>())) + \
       sizeof( \
         asio::detail::lvref< \
@@ -387,7 +430,7 @@ struct handler_type_requirements
   \
   ASIO_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
       sizeof(asio::detail::two_arg_handler_test( \
-          asio::detail::clvref< \
+          asio::detail::rvref< \
             asio_true_handler_type>(), \
           static_cast<const asio::error_code*>(0), \
           static_cast<const std::size_t*>(0))) == 1, \
@@ -396,7 +439,7 @@ struct handler_type_requirements
   typedef asio::detail::handler_type_requirements< \
       sizeof( \
         asio::detail::argbyv( \
-          asio::detail::clvref< \
+          asio::detail::rvref< \
             asio_true_handler_type>())) + \
       sizeof( \
         asio::detail::lvref< \
@@ -414,7 +457,7 @@ struct handler_type_requirements
   \
   ASIO_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
       sizeof(asio::detail::one_arg_handler_test( \
-          asio::detail::clvref< \
+          asio::detail::rvref< \
             asio_true_handler_type>(), \
           static_cast<const asio::error_code*>(0))) == 1, \
       "ShutdownHandler type requirements not met") \
@@ -422,7 +465,7 @@ struct handler_type_requirements
   typedef asio::detail::handler_type_requirements< \
       sizeof( \
         asio::detail::argbyv( \
-          asio::detail::clvref< \
+          asio::detail::rvref< \
             asio_true_handler_type>())) + \
       sizeof( \
         asio::detail::lvref< \

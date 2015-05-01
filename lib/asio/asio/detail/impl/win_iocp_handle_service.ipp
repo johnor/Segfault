@@ -2,7 +2,7 @@
 // detail/impl/win_iocp_handle_service.ipp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2014 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2015 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 // Copyright (c) 2008 Rep Invariant Systems, Inc. (info@repinvariant.com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -199,7 +199,8 @@ asio::error_code win_iocp_handle_service::close(
 {
   if (is_open(impl))
   {
-    ASIO_HANDLER_OPERATION(("handle", &impl, "close"));
+    ASIO_HANDLER_OPERATION((iocp_service_.context(), "handle",
+          &impl, reinterpret_cast<uintmax_t>(impl.handle_), "close"));
 
     if (!::CloseHandle(impl.handle_))
     {
@@ -233,7 +234,8 @@ asio::error_code win_iocp_handle_service::cancel(
     return ec;
   }
 
-  ASIO_HANDLER_OPERATION(("handle", &impl, "cancel"));
+  ASIO_HANDLER_OPERATION((iocp_service_.context(), "handle",
+        &impl, reinterpret_cast<uintmax_t>(impl.handle_), "cancel"));
 
   if (FARPROC cancel_io_ex_ptr = ::GetProcAddress(
         ::GetModuleHandleA("KERNEL32"), "CancelIoEx"))
@@ -440,19 +442,16 @@ size_t win_iocp_handle_service::do_read(
   if (!ok)
   {
     DWORD last_error = ::GetLastError();
-    if (last_error != ERROR_MORE_DATA)
+    if (last_error == ERROR_HANDLE_EOF)
     {
-      if (last_error == ERROR_HANDLE_EOF)
-      {
-        ec = asio::error::eof;
-      }
-      else
-      {
-        ec = asio::error_code(last_error,
-            asio::error::get_system_category());
-      }
+      ec = asio::error::eof;
     }
-    return 0;
+    else
+    {
+      ec = asio::error_code(last_error,
+          asio::error::get_system_category());
+    }
+    return (last_error == ERROR_MORE_DATA) ? bytes_transferred : 0;
   }
 
   ec = asio::error_code();
@@ -510,7 +509,8 @@ void win_iocp_handle_service::close_for_destruction(implementation_type& impl)
 {
   if (is_open(impl))
   {
-    ASIO_HANDLER_OPERATION(("handle", &impl, "close"));
+    ASIO_HANDLER_OPERATION((iocp_service_.context(), "handle",
+          &impl, reinterpret_cast<uintmax_t>(impl.handle_), "close"));
 
     ::CloseHandle(impl.handle_);
     impl.handle_ = INVALID_HANDLE_VALUE;
