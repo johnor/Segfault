@@ -20,8 +20,6 @@
 
 #include "sensor_app.h"
 
-//void PrintAndLogMeasurements(const MeasurementBatch& measurementBatch);
-
 int main(int argc, char **argv)
 {
     Logger::SetMinLogLevel(LogLevel::Info);
@@ -51,7 +49,16 @@ int main(int argc, char **argv)
         Job updateJob{ioService, updateFunction, std::chrono::milliseconds{50}};
 
         std::function<void()> sendDataFunction = std::bind(&SensorApp::SendData, &sensorApp, std::ref(connectionManager));
-        Job testSendJob{ ioService, sendDataFunction, std::chrono::milliseconds{50}};
+        Job sendDataJob{ ioService, sendDataFunction, std::chrono::milliseconds{50}};
+
+        asio::signal_set signal_set(ioService, SIGINT);
+        signal_set.async_wait(
+            [](const std::error_code &ec,
+               const int signalNumber)
+        {
+            std::cout << "Caught signal: " << signalNumber << std::endl;
+            exit(0);
+        });
 
         ioService.run();
     }
@@ -68,21 +75,3 @@ int main(int argc, char **argv)
 
     return 0;
 }
-
-/*
-void PrintAndLogMeasurements(const MeasurementBatch& measurementBatch)
-{
-    #ifndef _MSC_VER
-        static LoggerVisitor loggerVisitor{ "measurementslog.txt"};
-        for (const auto& measurement : measurementBatch)
-        {
-            measurement->Accept(loggerVisitor);
-        }
-    #endif
-
-    for (const auto& measurement : measurementBatch)
-    {
-        Logger::Log(LogLevel::Debug) << measurement->ToString();
-    }
-}
-*/
