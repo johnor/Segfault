@@ -18,9 +18,12 @@ class App():
         self.world = World()
         self.win = window.Window(fullscreen=False, vsync=True, resizable=True)
 
-        self.network = Network(ip=ip, port=port, callback_func=self.world.cube.update_quat)
+        self.network = Network(ip=ip,
+                               port=port,
+                               gyro_input_model_callback=self.world.gyro_input_model.update_quat,
+                               bias_model_callback=self.world.bias_model.update_quat)
         self.camera = Camera(self.win, z=4)
-        self.hud = Hud()
+        self.hud = Hud(self.win)
 
         self.init_gl()
 

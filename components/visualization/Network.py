@@ -3,7 +3,7 @@ import struct
 
 
 class Network():
-    def __init__(self, ip, port, callback_func):
+    def __init__(self, ip, port, gyro_input_model_callback, bias_model_callback):
         print("Connecting to ip: {0}, port: {1}".format(ip, port))
         self.ip = ip
         self.port = port
@@ -11,7 +11,8 @@ class Network():
         self.socket = None
 
         self.reply = bytes()
-        self.callback_func = callback_func
+        self.gyro_input_model_callback = gyro_input_model_callback
+        self.bias_model_callback = bias_model_callback
 
         self.header_format = "II"
         self.header_size = struct.calcsize(self.header_format)
@@ -43,12 +44,10 @@ class Network():
                         print("F3: %.2f" % f3)
                     elif command == 3:
                         (w, x, y, z) = struct.unpack(struct_type, body_data)
-
-                        # print("F1: %.2f" % (w))
-                        # print("F2: %.2f" % (x))
-                        # print("F3: %.2f" % (y))
-                        # print("F4: %.2f" % (z))
-                        self.callback_func(w, x, y, z)
+                        self.gyro_input_model_callback(w, x, y, z)
+                    elif command == 4:
+                        (w, x, y, z) = struct.unpack(struct_type, body_data)
+                        self.bias_model_callback(w, x, y, z)
                     else:
                         raise SystemExit("Command not supported")
 
@@ -76,7 +75,7 @@ class Network():
     def get_msg_type_and_length(command):
         if command == 2:
             struct_type = "fff"
-        elif command == 3:
+        elif command == 3 or command == 4:
             struct_type = "ffff"
         else:
             struct_type = None

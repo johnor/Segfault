@@ -2,11 +2,13 @@
 #define SENSOR_APP_H
 
 #include "headers/smart_pointer_typedefs.h"
+#include "classes/filter/bias_model/bias_model.h"
+#include "classes/filter/gyro_input_model/gyro_input_model.h"
 
 class SensorApp
 {
 public:
-    SensorApp(IMUPtr imu, ModelPtr model, ClockPtr clock);
+    SensorApp(IMUPtr imu, ClockPtr clock);
     ~SensorApp() = default;
     void Update();
     void SendData(ConnectionManager& connectionManager);
@@ -17,7 +19,8 @@ private:
     SensorApp& operator=(const SensorApp&) = delete;
 
     IMUPtr imu;
-    ModelPtr model;
+    BiasModel biasModel;
+    GyroInputModel gyroInputModel;
     ClockPtr clock;
 };
 

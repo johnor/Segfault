@@ -34,11 +34,11 @@ int main(int argc, char **argv)
             }
             ClockPtr clock{new SoftwareClock};
             IMUFactory imuFactory{clock};
-            SensorApp sensorApp{imuFactory.GetLogReaderIMU(logFileName), ModelPtr{new BiasModel}, clock};
+            SensorApp sensorApp{imuFactory.GetLogReaderIMU(logFileName), clock};
         #else
             ClockPtr clock{new HardwareClock};
             IMUFactory imuFactory{clock};
-            SensorApp sensorApp{imuFactory.GetAltIMU(), ModelPtr{new BiasModel}, clock};
+            SensorApp sensorApp{imuFactory.GetAltIMU(), clock};
         #endif
 
         asio::io_service ioService;
