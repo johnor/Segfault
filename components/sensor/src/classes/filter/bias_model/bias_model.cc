@@ -87,7 +87,7 @@ MatrixXf BiasModel::GetHAcc() const
     Hq << q(2),  q(3),  q(0), q(1),
          -q(1), -q(0),  q(3), q(2),
           q(0), -q(1), -q(2), q(3);
-    Hq *= 2 * 9.82;
+    Hq *= 2.f * 9.82f;
 
     H.block(0, Q0, BA_SIZE, Q_SIZE) = Hq;
     H.block(0, BAX, BA_SIZE, BA_SIZE).setIdentity();

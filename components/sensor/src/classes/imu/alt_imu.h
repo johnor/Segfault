@@ -6,22 +6,25 @@
 #ifndef ALT_IMU_H_
 #define ALT_IMU_H_
 
+#include "classes/sensorhandlers/acc_and_mag_handler/acc_and_mag_handler.h"
+#include "classes/sensorhandlers/gyroscope_handler/gyroscope_handler.h"
+#include "classes/sensorhandlers/barometer_handler/barometer_handler.h"
+
 #include "interfaces/imu.h"
-#include "interfaces/sensor_handler.h"
 
 class AltIMU : public IMU
 {
 public:
-    explicit AltIMU(SensorHandlerFactoryPtr handlerFactory);
+    explicit AltIMU(ClockPtr clock);
     virtual ~AltIMU() {};
     virtual MeasurementBatch GetNextMeasurementBatch() const override;
 private:
     AltIMU(const AltIMU&) = delete;
     AltIMU& operator=(const AltIMU&) = delete;
 
-    SensorHandlerPtr accAndMagHandler;
-    SensorHandlerPtr gyroscopeHandler;
-    SensorHandlerPtr barometerHandler;
+    AccAndMagHandler accAndMagHandler;
+    GyroscopeHandler gyroscopeHandler;
+    BarometerHandler barometerHandler;
 };
 
 #endif

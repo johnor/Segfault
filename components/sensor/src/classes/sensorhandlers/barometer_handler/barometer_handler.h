@@ -8,15 +8,13 @@
 
 #include "components/common/src/numeric_typedefs.h"
 #include "headers/smart_pointer_typedefs.h"
-#include "interfaces/sensor_handler.h"
 #include "../i2cdevice/i2cdevice.h"
 
-class BarometerHandler : public SensorHandler
+class BarometerHandler
 {
 public:
     explicit BarometerHandler(ClockPtr clock);
-    virtual ~BarometerHandler() {}
-    virtual MeasurementBatch GetMeasurements() const override;
+    MeasurementBatch GetMeasurements() const;
 private:
     BarometerHandler(const BarometerHandler&) = delete;
     BarometerHandler& operator=(const BarometerHandler&) = delete;

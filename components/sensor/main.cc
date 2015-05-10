@@ -8,10 +8,12 @@
 #include "headers/smart_pointer_typedefs.h"
 
 #include "interfaces/imu.h"
+#include "classes/imu/alt_imu.h"
+#include "classes/imu/log_reader_imu.h"
 #include "classes/clock/softwareclock.h"
 #include "classes/clock/hardwareclock.h"
 #include "classes/filter/bias_model/bias_model.h"
-#include "classes/imu/factories/imu_factory.h"
+#include "classes/measurements/measurements.h"
 
 #include "server/src/server.h"
 #include "server/src/job.h"
@@ -33,12 +35,10 @@ int main(int argc, char **argv)
                 logFileName = argv[1];
             }
             ClockPtr clock{new SoftwareClock};
-            IMUFactory imuFactory{clock};
-            SensorApp sensorApp{imuFactory.GetLogReaderIMU(logFileName), clock};
+            SensorApp sensorApp{IMUPtr{new LogReaderIMU{clock, logFileName}}, clock};
         #else
             ClockPtr clock{new HardwareClock};
-            IMUFactory imuFactory{clock};
-            SensorApp sensorApp{imuFactory.GetAltIMU(), clock};
+            SensorApp sensorApp{IMUPtr{new AltIMU{clock}}, clock};
         #endif
 
         asio::io_service ioService;

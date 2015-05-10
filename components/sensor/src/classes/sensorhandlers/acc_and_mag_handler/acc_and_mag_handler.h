@@ -7,15 +7,13 @@
 #define ACC_AND_MAG_HANDLER_H_
 
 #include "headers/smart_pointer_typedefs.h"
-#include "interfaces/sensor_handler.h"
 #include "../i2cdevice/i2cdevice.h"
 
-class AccAndMagHandler : public SensorHandler
+class AccAndMagHandler
 {
 public:
     explicit AccAndMagHandler(ClockPtr clock);
-    virtual ~AccAndMagHandler() {}
-    virtual MeasurementBatch GetMeasurements() const override;
+    MeasurementBatch GetMeasurements() const;
 private:
     AccAndMagHandler(const AccAndMagHandler&) = delete;
     AccAndMagHandler& operator=(const AccAndMagHandler&) = delete;
