@@ -18,6 +18,7 @@
 #include "headers/exceptions.h"
 #include "interfaces/clock.h"
 #include "classes/measurements/measurements.h"
+#include "classes/service_locator/service_locator.h"
 
 #include "barometer_handler.h"
 
@@ -41,8 +42,8 @@ const F32 scaleToHectoPascals = 1.f / 4096.f;
 const F32 tempScaleFactor = 1.f / 480.f;
 const F32 tempOffsetFactor = 42.5f;
 
-BarometerHandler::BarometerHandler(ClockPtr clock)
-    : i2cDevice{I2C_ADDRESS_SA0_HIGH}, clock{clock}
+BarometerHandler::BarometerHandler()
+    : i2cDevice{I2C_ADDRESS_SA0_HIGH}
 {
     SetupRegisters();
 }
@@ -91,14 +92,14 @@ bool BarometerHandler::HasAvailableTemperatureMeasurement(const U8 statusReg) co
 
 MeasurementPtr BarometerHandler::GetNextPressureMeasurement() const
 {
-    const TimePoint timeStamp{ clock->GetTime() };
+    const TimePoint timeStamp{ServiceLocator::GetClock().GetTime()};
     const F32 pressureMeasurement{i2cDevice.ReadThree8BitRegsToFloat(PRESS_OUT_LOW_ADDRESS, scaleToHectoPascals)};
     return MeasurementPtr{new PressureMeasurement{timeStamp, pressureMeasurement}};
 }
 
 MeasurementPtr BarometerHandler::GetNextTemperatureMeasurement() const
 {
-    const TimePoint timeStamp{ clock->GetTime() };
+    const TimePoint timeStamp{ServiceLocator::GetClock().GetTime()};
     const F32 tempMeasurement{i2cDevice.ReadTwo8BitRegsToFloat(TEMP_OUT_LOW_ADDRESS, tempScaleFactor) + tempOffsetFactor};
     return MeasurementPtr{new TemperatureMeasurement{timeStamp, tempMeasurement}};
 }

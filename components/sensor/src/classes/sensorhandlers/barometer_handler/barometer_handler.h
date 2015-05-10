@@ -13,7 +13,7 @@
 class BarometerHandler
 {
 public:
-    explicit BarometerHandler(ClockPtr clock);
+    BarometerHandler();
     MeasurementBatch GetMeasurements() const;
 private:
     BarometerHandler(const BarometerHandler&) = delete;
@@ -28,7 +28,6 @@ private:
     MeasurementPtr GetNextTemperatureMeasurement() const;
 
     I2CDevice i2cDevice;
-    ClockPtr clock;
 };
 
 #endif

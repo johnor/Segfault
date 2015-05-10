@@ -10,8 +10,7 @@
 #include "interfaces/imu.h"
 #include "classes/imu/alt_imu.h"
 #include "classes/imu/log_reader_imu.h"
-#include "classes/clock/softwareclock.h"
-#include "classes/clock/hardwareclock.h"
+#include "classes/service_locator/service_locator.h"
 #include "classes/filter/bias_model/bias_model.h"
 #include "classes/measurements/measurements.h"
 
@@ -34,11 +33,11 @@ int main(int argc, char **argv)
             {
                 logFileName = argv[1];
             }
-            ClockPtr clock{new SoftwareClock};
-            SensorApp sensorApp{IMUPtr{new LogReaderIMU{clock, logFileName}}, clock};
+            ServiceLocator::UseSoftwareClock();
+            SensorApp sensorApp{IMUPtr{new LogReaderIMU{logFileName}}};
         #else
-            ClockPtr clock{new HardwareClock};
-            SensorApp sensorApp{IMUPtr{new AltIMU{clock}}, clock};
+            ServiceLocator::UseHardwareClock();
+            SensorApp sensorApp{IMUPtr{new AltIMU}};
         #endif
 
         asio::io_service ioService;

@@ -6,14 +6,15 @@
 #include "interfaces/measurement.h"
 
 #include "classes/filter/model.h"
+#include "classes/service_locator/service_locator.h"
 
 #include "components/server/src/connection_manager.h"
 #include "components/server/src/message.h"
 
 #include "sensor_app.h"
 
-SensorApp::SensorApp(IMUPtr imu, ClockPtr clock)
-    : imu{std::move(imu)}, clock{clock}
+SensorApp::SensorApp(IMUPtr imu)
+    : imu{std::move(imu)}
 {
 }
 
@@ -29,7 +30,7 @@ void SensorApp::Update()
 
     std::cout << "EulerAngles:\n" << biasModel.GetState().GetEulerAngles() << std::endl;
 
-    clock->IncreaseTime(1.f / 20.f);
+    ServiceLocator::GetClock().IncreaseTime(1.f / 20.f);
 }
 
 void SensorApp::SendData(ConnectionManager& connectionManager)

@@ -12,7 +12,7 @@
 class AccAndMagHandler
 {
 public:
-    explicit AccAndMagHandler(ClockPtr clock);
+    AccAndMagHandler();
     MeasurementBatch GetMeasurements() const;
 private:
     AccAndMagHandler(const AccAndMagHandler&) = delete;
@@ -27,7 +27,6 @@ private:
     MeasurementPtr GetNextMagnetometerMeasurement() const;
 
     I2CDevice i2cDevice;
-    ClockPtr clock;
 };
 
 #endif

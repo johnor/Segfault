@@ -6,10 +6,7 @@
 #include "alt_imu.h"
 #include "interfaces/measurement.h"
 
-AltIMU::AltIMU(ClockPtr clock)
-    : accAndMagHandler{clock},
-      gyroscopeHandler{clock},
-      barometerHandler{clock}
+AltIMU::AltIMU()
 {
 }
 

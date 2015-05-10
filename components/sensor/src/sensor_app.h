@@ -8,7 +8,7 @@
 class SensorApp
 {
 public:
-    SensorApp(IMUPtr imu, ClockPtr clock);
+    explicit SensorApp(IMUPtr imu);
     ~SensorApp() = default;
     void Update();
     void SendData(ConnectionManager& connectionManager);
@@ -21,7 +21,6 @@ private:
     IMUPtr imu;
     BiasModel biasModel;
     GyroInputModel gyroInputModel;
-    ClockPtr clock;
 };
 
 #endif

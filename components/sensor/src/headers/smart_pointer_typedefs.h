@@ -13,13 +13,11 @@ class Measurement;
 class IMU;
 class Model;
 class LogStream;
-class Clock;
 
 typedef std::unique_ptr<Measurement> MeasurementPtr;
 typedef std::unique_ptr<IMU> IMUPtr;
 typedef std::unique_ptr<Model> ModelPtr;
 typedef std::unique_ptr<LogStream> LogStreamPtr;
 typedef std::vector<MeasurementPtr> MeasurementBatch;
-typedef std::shared_ptr<Clock> ClockPtr;
 
 #endif

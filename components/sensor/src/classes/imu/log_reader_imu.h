@@ -9,7 +9,7 @@
 class LogReaderIMU : public IMU
 {
 public:
-    LogReaderIMU(ClockPtr clock, const std::string& logFile);
+    explicit LogReaderIMU(const std::string& logFile);
     virtual ~LogReaderIMU() {}
     virtual MeasurementBatch GetNextMeasurementBatch() const override;
 private:
@@ -20,7 +20,6 @@ private:
     MeasurementPtr CreateMeasurement(const std::string& inputLine) const;
     std::vector<std::string> SplitString(const std::string& input, const char delim) const;
 
-    ClockPtr clock;
     mutable MeasurementBatch measurementList;
 };
 

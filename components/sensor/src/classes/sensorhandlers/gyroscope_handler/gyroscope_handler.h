@@ -12,7 +12,7 @@
 class GyroscopeHandler
 {
 public:
-    explicit GyroscopeHandler(ClockPtr clock);
+    GyroscopeHandler();
     MeasurementBatch GetMeasurements() const;
 private:
     GyroscopeHandler(const GyroscopeHandler&) = delete;
@@ -25,7 +25,6 @@ private:
     MeasurementPtr GetNextGyroscopeMeasurement() const;
 
     I2CDevice i2cDevice;
-    ClockPtr clock;
 };
 
 #endif

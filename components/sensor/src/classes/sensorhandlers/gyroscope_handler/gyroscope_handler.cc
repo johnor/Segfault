@@ -22,6 +22,7 @@
 #include "headers/exceptions.h"
 #include "interfaces/clock.h"
 #include "classes/measurements/measurements.h"
+#include "classes/service_locator/service_locator.h"
 
 #include "gyroscope_handler.h"
 
@@ -47,8 +48,8 @@ const F32 PI = 3.14159265358979323846f;
 const F32 scaleToDegreesPerSecond = 245.f / INT16_MAX;
 const F32 scaleToRadiansPerSecond = scaleToDegreesPerSecond * (PI / 180.f);
 
-GyroscopeHandler::GyroscopeHandler(ClockPtr clock)
-    : i2cDevice{I2C_ADDRESS_SA0_HIGH}, clock{clock}
+GyroscopeHandler::GyroscopeHandler()
+    : i2cDevice{I2C_ADDRESS_SA0_HIGH}
 {
     SetupRegisters();
 }
@@ -90,7 +91,7 @@ bool GyroscopeHandler::HasNewGyroscopeMeasurement() const
 
 MeasurementPtr GyroscopeHandler::GetNextGyroscopeMeasurement() const
 {
-    const TimePoint timeStamp{ clock->GetTime() };
+    const TimePoint timeStamp{ServiceLocator::GetClock().GetTime()};
     const F32 xValue{i2cDevice.ReadTwo8BitRegsToFloat(X_OUT_LOW_ADDRESS, scaleToRadiansPerSecond)};
     const F32 yValue{i2cDevice.ReadTwo8BitRegsToFloat(Y_OUT_LOW_ADDRESS, scaleToRadiansPerSecond)};
     const F32 zValue{i2cDevice.ReadTwo8BitRegsToFloat(Z_OUT_LOW_ADDRESS, scaleToRadiansPerSecond)};

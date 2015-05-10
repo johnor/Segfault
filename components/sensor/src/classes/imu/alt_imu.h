@@ -15,7 +15,7 @@
 class AltIMU : public IMU
 {
 public:
-    explicit AltIMU(ClockPtr clock);
+    AltIMU();
     virtual ~AltIMU() {};
     virtual MeasurementBatch GetNextMeasurementBatch() const override;
 private:

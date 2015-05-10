@@ -6,11 +6,11 @@
 #include "headers/exceptions.h"
 #include "interfaces/clock.h"
 #include "classes/measurements/measurements.h"
+#include "classes/service_locator/service_locator.h"
 
 #include "log_reader_imu.h"
 
-LogReaderIMU::LogReaderIMU(ClockPtr clock, const std::string& logFile)
-    : clock{clock}
+LogReaderIMU::LogReaderIMU(const std::string& logFile)
 {
     std::ifstream logStream{logFile};
     if (!logStream)
@@ -47,7 +47,7 @@ MeasurementBatch LogReaderIMU::GetNextMeasurementBatch() const
 
 bool LogReaderIMU::HasNewMeasurements() const
 {
-    const TimePoint currentTime{clock->GetTime()};
+    const TimePoint currentTime{ServiceLocator::GetClock().GetTime()};
     return (measurementList.front()->GetTime() < currentTime);
 }
 

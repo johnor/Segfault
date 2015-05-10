@@ -28,6 +28,7 @@
 #include "headers/exceptions.h"
 #include "interfaces/clock.h"
 #include "classes/measurements/measurements.h"
+#include "classes/service_locator/service_locator.h"
 
 #include "acc_and_mag_handler.h"
 
@@ -73,8 +74,8 @@ const F32 accelerometerScaleFactor = 0.000122f * gravitationalAcceleration; /* 0
 const F32 gaussToTesla = 0.0001f;
 const F32 magnetometerScaleFactor = 0.00008f * gaussToTesla; /* 0.080 mGauss/LSB at +- 2 Gauss full-scale */
 
-AccAndMagHandler::AccAndMagHandler(ClockPtr clock)
-    : i2cDevice{I2C_ADDRESS_SA0_HIGH}, clock{clock}
+AccAndMagHandler::AccAndMagHandler()
+    : i2cDevice{I2C_ADDRESS_SA0_HIGH}
 {
     SetUpRegisters();
 }
@@ -132,7 +133,7 @@ MeasurementPtr AccAndMagHandler::GetNextAccelerometerMeasurement() const
     const F32 yAcc{i2cDevice.ReadTwo8BitRegsToFloat(ACC_Y_OUT_LOW_ADDRESS, accelerometerScaleFactor)};
     const F32 zAcc{i2cDevice.ReadTwo8BitRegsToFloat(ACC_Z_OUT_LOW_ADDRESS, accelerometerScaleFactor)};
 
-    return MeasurementPtr{new AccelerometerMeasurement{clock->GetTime(), xAcc, yAcc, zAcc }};
+    return MeasurementPtr{new AccelerometerMeasurement{ServiceLocator::GetClock().GetTime(), xAcc, yAcc, zAcc }};
 }
 
 MeasurementPtr AccAndMagHandler::GetNextMagnetometerMeasurement() const
@@ -141,5 +142,5 @@ MeasurementPtr AccAndMagHandler::GetNextMagnetometerMeasurement() const
     const F32 yMag{i2cDevice.ReadTwo8BitRegsToFloat(MAG_Y_OUT_LOW_ADDRESS, magnetometerScaleFactor)};
     const F32 zMag{i2cDevice.ReadTwo8BitRegsToFloat(MAG_Z_OUT_LOW_ADDRESS, magnetometerScaleFactor)};
 
-    return MeasurementPtr{new CompassMeasurement{clock->GetTime(), xMag, yMag, zMag}};
+    return MeasurementPtr{new CompassMeasurement{ServiceLocator::GetClock().GetTime(), xMag, yMag, zMag}};
 }
