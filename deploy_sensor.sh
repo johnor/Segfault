@@ -6,7 +6,7 @@ if [ "$SEGFAULT_IP" != "" ] && [ "SEGFAULT_USERNAME" != "" ]; then
     echo "Compilation done, transferring"
     scp bin/debug/SensorApp $SEGFAULT_USERNAME@$SEGFAULT_IP:/home/$SEGFAULT_USERNAME
     
-    ssh -t $SEGFAULT_USERNAME@$SEGFAULT_IP "chmod +x SensorApp; ./SensorApp"
+    ssh -t $SEGFAULT_USERNAME@$SEGFAULT_IP "chmod +x SensorApp; sudo ./SensorApp"
 
     #copy log back
     currentdate=$(date +"D%Y-%m-%d_T%H-%M")

@@ -13,7 +13,6 @@ void BiasModel::TimeUpdate(const TimePoint& newTime)
 {
     const TimePoint timeDifference{newTime - state.GetTime()};
     const F32 dt = timeDifference.GetSeconds();
-
     const MatrixXf F{GetF(dt)};
 
     state.GetX() = F * state.GetX();
@@ -26,7 +25,19 @@ void BiasModel::TimeUpdate(const TimePoint& newTime)
 
 void BiasModel::Visit(const AccelerometerMeasurement& accMeas)
 {
+    const TimePoint measurementTime{accMeas.GetTime()};
+    TimeUpdate(measurementTime);
 
+    const VectorXf acc{accMeas.GetVector()};
+    const VectorXf innovation{acc - GetYAcc()};
+
+    const MatrixXf H{GetHAcc()};
+    const MatrixXf S{H * state.GetP() * H.transpose() + GetRAcc()};
+    const MatrixXf K{state.GetP() * H.transpose() * S.inverse()};
+
+    state.GetX() = state.GetX() + K * innovation;
+    state.GetP() = (Matrix<F32, NUM_STATES, NUM_STATES>::Identity() - K * H) * state.GetP();
+    state.GetX().segment(Q0, Q_SIZE).normalize();
 }
 
 void BiasModel::Visit(const GyroscopeMeasurement& gyroMeas)
@@ -69,7 +80,7 @@ MatrixXf BiasModel::GetF(const F32 dt) const
     const MatrixXf sQ{GetS(q)};
 
     F.block(Q0, Q0, Q_SIZE, Q_SIZE) = MatrixXf::Identity(Q_SIZE, Q_SIZE) + (dt / 2.f) * sOmega;
-    F.block(Q0, WX, Q_SIZE, W_SIZE) = (dt * dt / 2.f) * sQ;
+    F.block(Q0, WX, Q_SIZE, W_SIZE) = (dt / 2.f) * sQ;
     F.block(WX, WX, W_SIZE, W_SIZE).setIdentity();
     F.block(BAX, BAX, BA_SIZE, BA_SIZE).setIdentity();
     F.block(BGX, BGX, BG_SIZE, BG_SIZE).setIdentity();
@@ -84,10 +95,10 @@ MatrixXf BiasModel::GetHAcc() const
     MatrixXf Hq{Matrix<F32, BA_SIZE, Q_SIZE>::Zero()};
     const VectorXf q{state.GetX().segment(Q0, Q_SIZE)};
 
-    Hq << q(2),  q(3),  q(0), q(1),
-         -q(1), -q(0),  q(3), q(2),
-          q(0), -q(1), -q(2), q(3);
-    Hq *= 2.f * 9.82f;
+    Hq << -q(2),  q(3), -q(0), q(1),
+           q(1),  q(0),  q(3), q(2),
+           q(0), -q(1), -q(2), q(3);
+    Hq *= 2.f * g;
 
     H.block(0, Q0, BA_SIZE, Q_SIZE) = Hq;
     H.block(0, BAX, BA_SIZE, BA_SIZE).setIdentity();
@@ -113,6 +124,20 @@ VectorXf BiasModel::GetYGyr() const
     return omega + gyroBias;
 }
 
+VectorXf BiasModel::GetYAcc() const
+{
+    const VectorXf q{state.GetX().segment(Q0, Q_SIZE)};
+    const VectorXf accBias{state.GetX().segment(BAX, BA_SIZE)};
+
+    VectorXf rotG{3};
+
+    rotG << 2*g*(q(1)*q(3)  - q(0)*q(2)),
+            2*g*(q(0)*q(1)) + q(2)*q(3),
+              g*(q(0)*q(0)  - q(1)*q(1) - q(2)*q(2) + q(3)*q(3));
+
+    return rotG + accBias;
+}
+
 MatrixXf BiasModel::GetQ()
 {
     return Matrix<F32, NUM_STATES, NUM_STATES>::Identity();
@@ -127,3 +152,5 @@ MatrixXf BiasModel::GetRAcc()
 {
     return Matrix<F32, BA_SIZE, BA_SIZE>::Identity();
 }
+
+const F32 BiasModel::g{9.82f};

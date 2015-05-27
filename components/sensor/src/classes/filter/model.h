@@ -26,7 +26,7 @@ protected:
         W_SIZE = 3
     };
 
-    static Eigen::Matrix4f GetS(const Eigen::Vector3f& omega);
+    static Eigen::Matrix4f GetS(const Eigen::Vector3f& w);
     static Eigen::Matrix<F32, Q_SIZE, W_SIZE> GetS(const Eigen::Vector4f& q);
 
     State state;

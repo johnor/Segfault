@@ -51,9 +51,12 @@ private:
     Eigen::MatrixXf GetHAcc() const;
     Eigen::MatrixXf GetHGyr() const;
     Eigen::VectorXf GetYGyr() const;
+    Eigen::VectorXf GetYAcc() const;
+
     static Eigen::MatrixXf GetQ();
     static Eigen::MatrixXf GetRGyr();
     static Eigen::MatrixXf GetRAcc();
+    static const F32 g;
 };
 
 #endif /* BIAS_MODEL_H_ */

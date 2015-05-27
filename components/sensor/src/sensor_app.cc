@@ -28,8 +28,6 @@ void SensorApp::Update()
         measurement->Accept(biasModel);
     }
 
-    std::cout << "EulerAngles:\n" << biasModel.GetState().GetEulerAngles() << std::endl;
-
     ServiceLocator::GetClock().IncreaseTime(1.f / 20.f);
 }
 
