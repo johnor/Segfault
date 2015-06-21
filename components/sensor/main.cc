@@ -24,6 +24,7 @@
 int main(int argc, char **argv)
 {
     Logger::SetMinLogLevel(LogLevel::Info);
+    Logger::Log(LogLevel::Info) << "Starting SensorApp!";
 
     try
     {
@@ -52,10 +53,17 @@ int main(int argc, char **argv)
 
         asio::signal_set signal_set(ioService, SIGINT);
         signal_set.async_wait(
-            [](const std::error_code &ec,
+            [](const std::error_code &errorCode,
                const int signalNumber)
         {
-            std::cout << "Caught signal: " << signalNumber << std::endl;
+            if (!errorCode)
+            {
+                std::cout << "Caught signal: " << signalNumber << std::endl;
+            }
+            else
+            {
+                Logger::Log(LogLevel::Error) << errorCode;
+            }
             exit(0);
         });
 

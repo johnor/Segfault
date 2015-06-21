@@ -9,6 +9,9 @@ public:
     BinaryOStream(std::vector<unsigned char>& vec) : buffer(vec) {}
     ~BinaryOStream() = default;
 
+    BinaryOStream(const BinaryOStream&) = default;
+    BinaryOStream& operator=(const BinaryOStream&) = delete;
+
     template<typename T>
     void write(const T& t)
     {
@@ -25,9 +28,6 @@ public:
         }
     }
 private:
-    BinaryOStream(const BinaryOStream&) = delete;
-    BinaryOStream& operator=(const BinaryOStream&) = delete;
-
     std::vector<unsigned char> &buffer;
 };
 

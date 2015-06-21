@@ -18,8 +18,10 @@ void ConnectionManager::Leave(Client::Ptr client)
     client->Stop();
 }
 
-void ConnectionManager::SendToAll(const Message& msg)
+void ConnectionManager::SendToAll(Message& msg)
 {
+    msg.EncodeHeader();
+
     for (auto client : connectedClients)
     {
         client->Send(msg);

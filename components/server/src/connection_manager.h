@@ -15,7 +15,7 @@ public:
 
     void Join(Client::Ptr client);
     void Leave(Client::Ptr client);
-    void SendToAll(const Message& msg);
+    void SendToAll(Message& msg);
 
     void OnRecieveMessage(const Message& msg);
 private:

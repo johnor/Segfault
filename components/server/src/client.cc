@@ -46,6 +46,7 @@ void ClientSession::ReadHeader()
         }
         else
         {
+            Logger::Log(LogLevel::Error) << errorCode;
             connectionManager.Leave(shared_from_this());
         }
     });

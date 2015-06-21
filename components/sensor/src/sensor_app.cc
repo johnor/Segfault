@@ -33,22 +33,18 @@ void SensorApp::Update()
 
 void SensorApp::SendData(ConnectionManager& connectionManager)
 {
-    const auto gyroInputModelQuaternion = gyroInputModel.GetState().GetQuaternion();
+    const Eigen::Quaternionf gyroInputModelQuaternion = gyroInputModel.GetState().GetQuaternion();
     Message gyroMsg;
     gyroMsg.SetMsgType(3);
-    gyroMsg.SetBodyLength(sizeof(F32)* 4);
-    gyroMsg.EncodeHeader();
     gyroMsg.WriteFloat(gyroInputModelQuaternion.w());
     gyroMsg.WriteFloat(gyroInputModelQuaternion.x());
     gyroMsg.WriteFloat(gyroInputModelQuaternion.y());
     gyroMsg.WriteFloat(gyroInputModelQuaternion.z());
     connectionManager.SendToAll(gyroMsg);
 
-    const auto biasModelQuaternion = biasModel.GetState().GetQuaternion();
+    const Eigen::Quaternionf biasModelQuaternion = biasModel.GetState().GetQuaternion();
     Message biasModelMsg;
     biasModelMsg.SetMsgType(4);
-    biasModelMsg.SetBodyLength(sizeof(F32)* 4);
-    biasModelMsg.EncodeHeader();
     biasModelMsg.WriteFloat(biasModelQuaternion.w());
     biasModelMsg.WriteFloat(biasModelQuaternion.x());
     biasModelMsg.WriteFloat(biasModelQuaternion.y());

@@ -14,49 +14,44 @@ public:
     static const S32 maxBodyLength = 512;
 
     Message()
-        : bodyLength(0)
+        : ostream{buffer}
     {
-        memset(buffer, 0, headerLength + maxBodyLength);
-        currentWritePos = headerLength;
+        buffer.resize(headerLength);
     }
+
+    ~Message() = default;
+
+    Message(const Message&) = default;
+    Message& operator=(const Message&) = delete;
 
     const U8* data() const
     {
-        return buffer;
+        return buffer.data();
     }
 
     U8* data()
     {
-        return buffer;
+        return buffer.data();
     }
 
     std::size_t getLength() const
     {
-        return headerLength + bodyLength;
+        return buffer.size();
     }
 
     const U8* body() const
     {
-        return buffer + headerLength;
+        return buffer.data() + headerLength;
     }
 
     U8* body()
     {
-        return buffer + headerLength;
+        return buffer.data() + headerLength;
     }
 
     S32 GetBodyLength() const
     {
-        return bodyLength;
-    }
-
-    void SetBodyLength(std::size_t new_length)
-    {
-        bodyLength = new_length;
-        if (bodyLength > maxBodyLength)
-        {
-            bodyLength = maxBodyLength;
-        }
+        return buffer.size() - headerLength;
     }
 
     void SetMsgType(const S32 type)
@@ -66,43 +61,45 @@ public:
 
     bool DecodeHeader()
     {
-        std::memcpy(&bodyLength, buffer, sizeof(bodyLength));
+        S32 bodyLength;
+        std::memcpy(&bodyLength, buffer.data(), sizeof(bodyLength));
 
         if (bodyLength > maxBodyLength)
         {
             bodyLength = 0;
             return false;
         }
+
+        buffer.resize(bodyLength + headerLength);
+
         return true;
     }
 
     void EncodeHeader()
     {
-        std::memcpy(buffer, &bodyLength, 4);
-        std::memcpy(buffer + 4, &msgType, 4);
+        S32 bodyLength = GetBodyLength();
+        std::memcpy(buffer.data(), &bodyLength, 4);
+        std::memcpy(buffer.data() + 4, &msgType, 4);
     }
 
     void WriteFloat(const F32 number)
     {
-        std::memcpy(buffer + currentWritePos, &number, sizeof(number));
-        currentWritePos += sizeof(number);
+        ostream.write(number);
     }
 
     void WriteS32(const S32 number)
     {
-        std::memcpy(buffer + currentWritePos, &number, sizeof(number));
-        currentWritePos += sizeof(number);
+        ostream.write(number);
     }
 
     void WriteChar(const char ch)
     {
-        std::memcpy(buffer + currentWritePos, &ch, sizeof(ch));
-        currentWritePos += sizeof(ch);
+        ostream.write(ch);
     }
 private:
-    U8 buffer[headerLength + maxBodyLength];
-    S32 currentWritePos;
-    S32 bodyLength;
+    std::vector<unsigned char> buffer;
+    BinaryOStream ostream;
+
     S32 msgType{ 0 };
 };
 
