@@ -2,6 +2,9 @@
 #define MESSAGE_H_
 
 #include "components/common/src/numeric_typedefs.h"
+#include "BinaryIStream.h"
+#include "BinaryOStream.h"
+
 #include <deque>
 
 class Message
