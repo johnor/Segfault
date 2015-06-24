@@ -11,6 +11,8 @@
 #include "components/server/src/connection_manager.h"
 #include "components/server/src/message.h"
 
+#include "components/server/src/MessageIds.h"
+
 #include "sensor_app.h"
 
 SensorApp::SensorApp(IMUPtr imu)
@@ -34,20 +36,12 @@ void SensorApp::Update()
 void SensorApp::SendData(ConnectionManager& connectionManager)
 {
     const Eigen::Quaternionf gyroInputModelQuaternion = gyroInputModel.GetState().GetQuaternion();
-    Message gyroMsg;
-    gyroMsg.SetMsgType(3);
-    gyroMsg.WriteFloat(gyroInputModelQuaternion.w());
-    gyroMsg.WriteFloat(gyroInputModelQuaternion.x());
-    gyroMsg.WriteFloat(gyroInputModelQuaternion.y());
-    gyroMsg.WriteFloat(gyroInputModelQuaternion.z());
+    Message gyroMsg{Message_GyroInputModel_Quaternion};
+    gyroMsg << gyroInputModelQuaternion;
     connectionManager.SendToAll(gyroMsg);
 
     const Eigen::Quaternionf biasModelQuaternion = biasModel.GetState().GetQuaternion();
-    Message biasModelMsg;
-    biasModelMsg.SetMsgType(4);
-    biasModelMsg.WriteFloat(biasModelQuaternion.w());
-    biasModelMsg.WriteFloat(biasModelQuaternion.x());
-    biasModelMsg.WriteFloat(biasModelQuaternion.y());
-    biasModelMsg.WriteFloat(biasModelQuaternion.z());
+    Message biasModelMsg{Message_BiasModel_Quaternion};
+    biasModelMsg << biasModelQuaternion;
     connectionManager.SendToAll(biasModelMsg);
 }

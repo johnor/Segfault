@@ -6,6 +6,7 @@
 #include "BinaryOStream.h"
 
 #include <deque>
+#include <eigen/Eigen>
 
 class Message
 {
@@ -13,8 +14,8 @@ public:
     static const S32 headerLength = 8;
     static const S32 maxBodyLength = 512;
 
-    Message()
-        : ostream{buffer}
+    Message(const U32 messageType = 0u)
+        : ostream{ buffer }, msgType{messageType}
     {
         buffer.resize(headerLength);
     }
@@ -24,13 +25,10 @@ public:
     Message(const Message&) = default;
     Message& operator=(const Message&) = delete;
 
-    const U8* data() const
-    {
-        return buffer.data();
-    }
+    const U8* data() const { return buffer.data(); }
 
     U8* data()
-    {
+{
         return buffer.data();
     }
 
@@ -54,54 +52,26 @@ public:
         return buffer.size() - headerLength;
     }
 
-    void SetMsgType(const S32 type)
+    bool DecodeHeader();
+    void EncodeHeader();
+
+    template<typename T>
+    Message& operator<<(const T& t)
     {
-        msgType = type;
-    }
-
-    bool DecodeHeader()
-    {
-        S32 bodyLength;
-        std::memcpy(&bodyLength, buffer.data(), sizeof(bodyLength));
-
-        if (bodyLength > maxBodyLength)
-        {
-            bodyLength = 0;
-            return false;
-        }
-
-        buffer.resize(bodyLength + headerLength);
-
-        return true;
-    }
-
-    void EncodeHeader()
-    {
-        S32 bodyLength = GetBodyLength();
-        std::memcpy(buffer.data(), &bodyLength, 4);
-        std::memcpy(buffer.data() + 4, &msgType, 4);
-    }
-
-    void WriteFloat(const F32 number)
-    {
-        ostream.write(number);
-    }
-
-    void WriteS32(const S32 number)
-    {
-        ostream.write(number);
-    }
-
-    void WriteChar(const char ch)
-    {
-        ostream.write(ch);
+        ostream.write(t);
+        return *this;
     }
 private:
     std::vector<unsigned char> buffer;
     BinaryOStream ostream;
 
-    S32 msgType{ 0 };
+    U32 msgType{ 0 };
 };
+
+inline Message& operator<<(Message& stream, const Eigen::Quaternionf &quat)
+{
+    return stream << quat.w() << quat.x() << quat.y() << quat.z();
+}
 
 typedef std::deque<Message> MessageQueue;
 

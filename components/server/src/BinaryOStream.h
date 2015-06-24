@@ -2,6 +2,7 @@
 #define BINARY_OSTREAM_H_
 
 #include <vector>
+#include <cstring>
 
 class BinaryOStream
 {

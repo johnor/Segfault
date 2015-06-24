@@ -2,6 +2,9 @@
 #define BINARY_ISTREAM_H_
 
 #include <vector>
+#include <cstddef>
+#include <stdexcept>
+#include <cstring>
 
 class BinaryIStream
 {
@@ -23,7 +26,7 @@ private:
     BinaryIStream(const BinaryIStream&) = delete;
     BinaryIStream& operator=(const BinaryIStream&) = delete;
 
-    void RawRead(unsigned char dest[], const size_t size)
+    void RawRead(unsigned char dest[], const std::size_t size)
     {
         if ((index + size) > buffer.size())
         {
@@ -34,7 +37,7 @@ private:
         index += size;
     }
 
-    size_t index;
+    std::size_t index;
     std::vector<unsigned char> &buffer;
 };
 
